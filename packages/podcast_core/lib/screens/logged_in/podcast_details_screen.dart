@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:podcast_core/data/episode_with_status.dart';
 import 'package:podcast_core/data/podcast.model.dart';
+import 'package:podcast_core/gen/strings.g.dart';
 import 'package:podcast_core/hooks/menu_controller_hook.dart';
 import 'package:podcast_core/providers/episodes_filter_provider.dart';
 import 'package:podcast_core/providers/episodes_provider.dart';
@@ -65,7 +66,7 @@ class PodcastDetailsScreen
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: 'Episodes ',
+                            text: '${context.t.podcastDetailsScreen.episodes} ',
                             style: theme.textTheme.titleMedium,
                           ),
                           TextSpan(
@@ -98,7 +99,7 @@ class PodcastDetailsScreen
                         icon: AnimatedSwitcher(
                           duration: const Duration(milliseconds: 300),
                           child: Icon(
-                            semanticLabel: 'Filter episodes',
+                            semanticLabel: context.t.filterEpisodesPopup.filterEpisodes,
                             Icons.filter_list,
                             key: ValueKey(episodesFilterState.isDefault),
                             color: episodesFilterState.isDefault
@@ -133,14 +134,14 @@ class PodcastDetailsScreen
                   trailing: PopupMenuButton<_PopupActions>(
                     itemBuilder: (context) => [
                       if (episodeWithStatus.isPlayed)
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: _PopupActions.markUnlistened,
-                          child: Text('Mark unlistened'),
+                          child: Text(context.t.podcastDetailsScreen.markUnlistened),
                         )
                       else
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: _PopupActions.markListened,
-                          child: Text('Mark listened'),
+                          child: Text(context.t.podcastDetailsScreen.markListened),
                         ),
                     ],
                     icon: const Icon(Icons.more_vert),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:podcast_core/gen/strings.g.dart';
 
 class GetTextDialog extends HookWidget {
   final String title;
@@ -11,17 +12,17 @@ class GetTextDialog extends HookWidget {
     required this.textFieldHint,
   });
 
-  factory GetTextDialog.addPodcastDialog() {
-    return const GetTextDialog(
-      title: 'Add podcast by RSS',
-      textFieldHint: 'Rss url',
+  factory GetTextDialog.addPodcastDialog(BuildContext context) {
+    return GetTextDialog(
+      title: context.t.addPodcastDialog.title,
+      textFieldHint: context.t.addPodcastDialog.textFieldHint,
     );
   }
 
-  factory GetTextDialog.importListenedEpisodesDialog() {
-    return const GetTextDialog(
-      title: 'Import listened episodes',
-      textFieldHint: 'Listened episodes JSON url',
+  factory GetTextDialog.importListenedEpisodesDialog(BuildContext context) {
+    return GetTextDialog(
+      title: context.t.importListenedEpisodesDialog.title,
+      textFieldHint: context.t.importListenedEpisodesDialog.textFieldHint,
     );
   }
 
@@ -45,7 +46,7 @@ class GetTextDialog extends HookWidget {
       actions: [
         TextButton(
           onPressed: () => finish(textController.text),
-          child: const Text('Ok'),
+          child: Text(context.t.ok),
         ),
       ],
     );

@@ -6,6 +6,7 @@ import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:podcast_core/data/podcast.model.dart';
 import 'package:podcast_core/data/podcast_search.model.dart';
+import 'package:podcast_core/gen/strings.g.dart';
 import 'package:podcast_core/providers/find_podcast_provider.dart';
 import 'package:podcast_core/providers/podcasts_provider.dart';
 import 'package:podcast_core/widgets/rounded_image.dart';
@@ -75,7 +76,7 @@ class PodcastDetails extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               RoundedImage(
-                semanticLabel: 'Podcast image',
+                semanticLabel: context.t.podcastDetails.podcastImage,
                 imageUri: podcast.artwork,
                 imageSize: 100,
               ),
@@ -106,7 +107,7 @@ class PodcastDetails extends StatelessWidget {
                           spacing: 6,
                           children: [
                             Text(
-                              'Rss feed',
+                              context.t.podcastDetails.rssFeed,
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.onSurface.withValues(
                                   alpha: 0.6,
@@ -175,9 +176,9 @@ class _ExpansibleHtmlWidget extends HookWidget {
               isExpanded.value = CrossFadeState.showSecond;
             },
             child: Semantics(
-              label: 'Show more',
+              label: context.t.podcastDetails.expandDescription,
               child: Text(
-                'Expand description',
+                context.t.podcastDetails.expandDescription,
                 style: TextStyle(color: Theme.of(context).colorScheme.primary),
               ),
             ),
@@ -199,9 +200,9 @@ class _ExpansibleHtmlWidget extends HookWidget {
               isExpanded.value = CrossFadeState.showFirst;
             },
             child: Semantics(
-              label: 'Collapse description',
+              label: context.t.podcastDetails.showLess,
               child: Text(
-                'Show less',
+                context.t.podcastDetails.showLess,
                 style: TextStyle(color: Theme.of(context).colorScheme.primary),
               ),
             ),
@@ -222,26 +223,26 @@ class _SubscribeChip extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).colorScheme;
     return switch (ref.watch(subscribedPodcastProvider(rssUrl: rssUrl)).value) {
-      null => const Chip(label: Text('Loading...')),
+      null => Chip(label: Text(context.t.podcastDetails.loading)),
       true => ActionChip(
         backgroundColor: colors.errorContainer,
         onPressed: () async {
           final shouldDelete = await showDialog<bool>(
             context: context,
             builder: (context) => AlertDialog(
-              title: const Text('Are you sure you want to unsubscribe?'),
+              title: Text(context.t.podcastDetails.areYouSureToUnsubscribe),
               actions: <Widget>[
                 SimpleDialogOption(
                   onPressed: () {
                     Navigator.pop(context, true);
                   },
-                  child: const Text('Yes'),
+                  child: Text(context.t.podcastDetails.yes),
                 ),
                 SimpleDialogOption(
                   onPressed: () {
                     Navigator.pop(context, false);
                   },
-                  child: const Text('No'),
+                  child: Text(context.t.podcastDetails.no),
                 ),
               ],
             ),
@@ -256,7 +257,7 @@ class _SubscribeChip extends ConsumerWidget {
             Icon(Icons.remove_circle_outline, color: colors.onErrorContainer),
             const SizedBox(width: 8),
             Text(
-              'Unsubscribe',
+              context.t.podcastDetails.unsubscribe,
               style: TextStyle(color: colors.onErrorContainer),
             ),
           ],
@@ -272,7 +273,7 @@ class _SubscribeChip extends ConsumerWidget {
             Icon(Icons.add, color: colors.onErrorContainer),
             const SizedBox(width: 8),
             Text(
-              'Add podcast',
+              context.t.podcastDetails.addPodcast,
               style: TextStyle(color: colors.onErrorContainer),
             ),
           ],

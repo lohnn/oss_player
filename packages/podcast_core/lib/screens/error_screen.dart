@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:podcast_core/gen/strings.g.dart';
 
 class ErrorScreen extends ConsumerWidget {
   final VoidCallback onRefresh;
@@ -18,10 +19,10 @@ class ErrorScreen extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Something went wrong.'),
+            Text(context.t.errorScreen.somethingWentWrong),
             TextButton(
               onPressed: onRefresh,
-              child: const Text('Try reloading the page'),
+              child: Text(context.t.errorScreen.tryReloading),
             ),
           ],
         ),
@@ -36,20 +37,20 @@ class _LogOutDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Log out?'),
-      content: const Text("If you log out, you'll need to log in again."),
+      title: Text(context.t.logOutDialog.title),
+      content: Text(context.t.logOutDialog.content),
       actions: [
         TextButton(
           onPressed: () {
             Navigator.pop(context, false);
           },
-          child: const Text('Stay logged in'),
+          child: Text(context.t.logOutDialog.stayLoggedIn),
         ),
         TextButton(
           onPressed: () {
             Navigator.pop(context, true);
           },
-          child: const Text('Log out'),
+          child: Text(context.t.logOutDialog.logOut),
         ),
       ],
     );

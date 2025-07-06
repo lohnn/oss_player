@@ -2,6 +2,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:podcast_core/gen/strings.g.dart';
 import 'package:podcast_core/providers/audio_player_provider.dart';
 import 'package:podcast_core/widgets/long_press_swipe_menu.dart';
 
@@ -23,16 +24,16 @@ class MediaActionButton extends HookConsumerWidget {
     return MediaActionButton(
       action: MediaAction.rewind,
       icon: Icons.replay_10,
-      tooltip: 'Rewind 10 seconds',
+      tooltip: t.mediaPlayer.rewind10,
       options: [
         SwipeOption(
           icon: Icons.replay_5,
           value: const Duration(seconds: -5),
-          tooltip: 'Rewind 5 seconds',
+          tooltip: t.mediaPlayer.rewind5,
         ),
         SwipeOption(
           icon: Icons.replay_30,
-          tooltip: 'Rewind 30 seconds',
+          tooltip: t.mediaPlayer.rewind30,
           value: const Duration(seconds: -30),
         ),
       ],
@@ -43,16 +44,16 @@ class MediaActionButton extends HookConsumerWidget {
     return MediaActionButton(
       action: MediaAction.fastForward,
       icon: Icons.forward_10,
-      tooltip: 'Skip forward 10 seconds',
+      tooltip: t.mediaPlayer.forward10,
       options: [
         SwipeOption(
           icon: Icons.forward_5,
           value: const Duration(seconds: 5),
-          tooltip: 'Forward 5 seconds',
+          tooltip: t.mediaPlayer.forward5,
         ),
         SwipeOption(
           icon: Icons.forward_30,
-          tooltip: 'Forward 30 seconds',
+          tooltip: t.mediaPlayer.forward30,
           value: const Duration(seconds: 30),
         ),
       ],
