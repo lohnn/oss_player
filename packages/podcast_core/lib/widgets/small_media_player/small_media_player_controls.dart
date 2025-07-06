@@ -42,9 +42,13 @@ class SmallMediaPlayerControls extends HookConsumerWidget {
             AsyncLoading() => const Center(
               child: CircularProgressIndicator.adaptive(),
             ),
-            AsyncError() => Center(child: Text(context.t.smallMediaPlayer.errorLoadingEpisode)),
+            AsyncError() => Center(
+              child: Text(context.t.smallMediaPlayer.errorLoadingEpisode),
+            ),
             AsyncData(value: final episode) => switch (episode) {
-              null => Center(child: Text(context.t.smallMediaPlayer.nothingIsPlaying)),
+              null => Center(
+                child: Text(context.t.smallMediaPlayer.nothingIsPlaying),
+              ),
               EpisodeWithStatus(:final episode) => InkWell(
                 onTap: () async {
                   final action =
@@ -74,7 +78,8 @@ class SmallMediaPlayerControls extends HookConsumerWidget {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: RoundedImage(
-                              semanticLabel: context.t.episodePlayerModal.episodeImage,
+                              semanticLabel:
+                                  context.t.episodePlayerModal.episodeImage,
                               imageUri: episode.imageUrl,
                               imageSize: 60,
                             ),
@@ -95,7 +100,10 @@ class SmallMediaPlayerControls extends HookConsumerWidget {
                         ],
                       ),
                     ),
-                    EpisodeProgressBar(episode, height: 4),
+                    EpisodeProgressBar(
+                      episode,
+                      height: MediaQuery.paddingOf(context).bottom + 4,
+                    ),
                   ],
                 ),
               ),
