@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:podcast_core/data/episode.model.dart';
+import 'package:podcast_core/gen/strings.g.dart';
 import 'package:podcast_core/providers/playlist_pod_provider.dart';
 import 'package:podcast_core/widgets/rive/podcast_animation.dart';
 import 'package:podcast_core/widgets/rive/podcast_animation_config.dart';
@@ -28,8 +29,8 @@ class QueueButton extends ConsumerWidget {
     };
 
     final tooltip = switch (queue.contains(episode)) {
-      true => 'Remove from queue',
-      false => 'Add to queue',
+      true => context.t.queue.removeFromQueue,
+      false => context.t.queue.addToQueue,
     };
 
     return Tooltip(

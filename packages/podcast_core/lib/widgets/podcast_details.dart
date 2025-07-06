@@ -223,26 +223,26 @@ class _SubscribeChip extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).colorScheme;
     return switch (ref.watch(subscribedPodcastProvider(rssUrl: rssUrl)).value) {
-      null => const Chip(label: Text('Loading...')),
+      null => Chip(label: Text(context.t.podcastDetails.loading)),
       true => ActionChip(
         backgroundColor: colors.errorContainer,
         onPressed: () async {
           final shouldDelete = await showDialog<bool>(
             context: context,
             builder: (context) => AlertDialog(
-              title: const Text('Are you sure you want to unsubscribe?'),
+              title: Text(context.t.podcastDetails.areYouSureToUnsubscribe),
               actions: <Widget>[
                 SimpleDialogOption(
                   onPressed: () {
                     Navigator.pop(context, true);
                   },
-                  child: const Text('Yes'),
+                  child: Text(context.t.podcastDetails.yes),
                 ),
                 SimpleDialogOption(
                   onPressed: () {
                     Navigator.pop(context, false);
                   },
-                  child: const Text('No'),
+                  child: Text(context.t.podcastDetails.no),
                 ),
               ],
             ),
@@ -257,7 +257,7 @@ class _SubscribeChip extends ConsumerWidget {
             Icon(Icons.remove_circle_outline, color: colors.onErrorContainer),
             const SizedBox(width: 8),
             Text(
-              'Unsubscribe',
+              context.t.podcastDetails.unsubscribe,
               style: TextStyle(color: colors.onErrorContainer),
             ),
           ],
@@ -273,7 +273,7 @@ class _SubscribeChip extends ConsumerWidget {
             Icon(Icons.add, color: colors.onErrorContainer),
             const SizedBox(width: 8),
             Text(
-              'Add podcast',
+              context.t.podcastDetails.addPodcast,
               style: TextStyle(color: colors.onErrorContainer),
             ),
           ],

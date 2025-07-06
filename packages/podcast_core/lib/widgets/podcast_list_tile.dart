@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:podcast_core/data/podcast.model.dart';
+import 'package:podcast_core/gen/strings.g.dart';
 import 'package:podcast_core/widgets/rounded_image.dart';
 
 class PodcastListTile extends StatelessWidget {
@@ -40,7 +41,7 @@ class PodcastListTile extends StatelessWidget {
     return ListTile(
       onTap: onTap,
       leading: RoundedImage(
-        semanticLabel: 'Podcast image',
+        semanticLabel: context.t.podcastDetails.podcastImage,
         imageUri: imageUrl,
         showDot: showDot,
         imageSize: 40,

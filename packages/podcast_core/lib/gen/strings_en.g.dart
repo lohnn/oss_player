@@ -44,15 +44,21 @@ class Translations implements BaseTranslations<AppLocale, Translations> {
 	late final TranslationsImportListenedEpisodesDialogEn importListenedEpisodesDialog = TranslationsImportListenedEpisodesDialogEn._(_root);
 	late final TranslationsErrorScreenEn errorScreen = TranslationsErrorScreenEn._(_root);
 	late final TranslationsLogOutDialogEn logOutDialog = TranslationsLogOutDialogEn._(_root);
+	late final TranslationsEpisodeListItemEn episodeListItem = TranslationsEpisodeListItemEn._(_root);
 	late final TranslationsEpisodeDetailsScreenEn episodeDetailsScreen = TranslationsEpisodeDetailsScreenEn._(_root);
+	late final TranslationsPlayEpisodeButtonEn playEpisodeButton = TranslationsPlayEpisodeButtonEn._(_root);
 	late final TranslationsPodcastDetailsScreenEn podcastDetailsScreen = TranslationsPodcastDetailsScreenEn._(_root);
 	late final TranslationsPodcastSearchScreenEn podcastSearchScreen = TranslationsPodcastSearchScreenEn._(_root);
 	late final TranslationsEpisodePlayerModalEn episodePlayerModal = TranslationsEpisodePlayerModalEn._(_root);
 	late final TranslationsCurrentlyPlayingInformationEn currentlyPlayingInformation = TranslationsCurrentlyPlayingInformationEn._(_root);
 	late final TranslationsFilterEpisodesPopupEn filterEpisodesPopup = TranslationsFilterEpisodesPopupEn._(_root);
+	late final TranslationsMediaEventsEn mediaEvents = TranslationsMediaEventsEn._(_root);
+	late final TranslationsMediaPlayerEn mediaPlayer = TranslationsMediaPlayerEn._(_root);
 	late final TranslationsPodcastDetailsEn podcastDetails = TranslationsPodcastDetailsEn._(_root);
 	late final TranslationsSettingsEn settings = TranslationsSettingsEn._(_root);
+	late final TranslationsSmallMediaPlayerEn smallMediaPlayer = TranslationsSmallMediaPlayerEn._(_root);
 	late final TranslationsExitDialogEn exitDialog = TranslationsExitDialogEn._(_root);
+	late final TranslationsQueueEn queue = TranslationsQueueEn._(_root);
 }
 
 // Path: addPodcastDialog
@@ -101,6 +107,19 @@ class TranslationsLogOutDialogEn {
 	String get logOut => 'Log out';
 }
 
+// Path: episodeListItem
+class TranslationsEpisodeListItemEn {
+	TranslationsEpisodeListItemEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	String get imageSemanticLabel => 'Episode image';
+	String get played => 'Played episode';
+	String get unplayed => 'Unplayed episode';
+	String duration({required Object duration}) => ' • ${duration}';
+}
+
 // Path: episodeDetailsScreen
 class TranslationsEpisodeDetailsScreenEn {
 	TranslationsEpisodeDetailsScreenEn._(this._root);
@@ -110,6 +129,17 @@ class TranslationsEpisodeDetailsScreenEn {
 	// Translations
 	String get podcastTitle => 'Podcast Title';
 	String get episodeTitle => 'Episode Title';
+}
+
+// Path: playEpisodeButton
+class TranslationsPlayEpisodeButtonEn {
+	TranslationsPlayEpisodeButtonEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	String playEpisodeTooltip({required Object title}) => 'Play episode ${title}';
+	String get playEpisodeSemanticLabel => 'Play episode';
 }
 
 // Path: podcastDetailsScreen
@@ -144,6 +174,7 @@ class TranslationsEpisodePlayerModalEn {
 
 	// Translations
 	String get episodeImage => 'Episode image';
+	String get showPlaylist => 'Show playlist';
 }
 
 // Path: currentlyPlayingInformation
@@ -171,6 +202,34 @@ class TranslationsFilterEpisodesPopupEn {
 	String get changeSortOrder => 'Change sort order';
 	String get sortAscending => 'Sort ascending';
 	String get sortDescending => 'Sort descending';
+}
+
+// Path: mediaEvents
+class TranslationsMediaEventsEn {
+	TranslationsMediaEventsEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	String get rewind => 'Rewind';
+	String get fastForward => 'Fast forward';
+}
+
+// Path: mediaPlayer
+class TranslationsMediaPlayerEn {
+	TranslationsMediaPlayerEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	String get play => 'Play';
+	String get pause => 'Pause';
+	String get rewind10 => 'Rewind 10 seconds';
+	String get rewind5 => 'Rewind 5 seconds';
+	String get rewind30 => 'Rewind 30 seconds';
+	String get forward10 => 'Skip forward 10 seconds';
+	String get forward5 => 'Skip forward 5 seconds';
+	String get forward30 => 'Skip forward 30 seconds';
 }
 
 // Path: podcastDetails
@@ -203,6 +262,17 @@ class TranslationsSettingsEn {
 	String get title => 'Settings';
 }
 
+// Path: smallMediaPlayer
+class TranslationsSmallMediaPlayerEn {
+	TranslationsSmallMediaPlayerEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	String get errorLoadingEpisode => 'Error loading episode';
+	String get nothingIsPlaying => 'Nothing is playing right now';
+}
+
 // Path: exitDialog
 class TranslationsExitDialogEn {
 	TranslationsExitDialogEn._(this._root);
@@ -213,6 +283,17 @@ class TranslationsExitDialogEn {
 	String get title => 'Are you sure you want to exit?';
 	String get yes => 'Yes';
 	String get no => 'No';
+}
+
+// Path: queue
+class TranslationsQueueEn {
+	TranslationsQueueEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	String get addToQueue => 'Add to queue';
+	String get removeFromQueue => 'Remove from queue';
 }
 
 /// Flat map(s) containing all translations.
@@ -231,8 +312,14 @@ extension on Translations {
 			case 'logOutDialog.content': return 'If you log out, you\'ll need to log in again.';
 			case 'logOutDialog.stayLoggedIn': return 'Stay logged in';
 			case 'logOutDialog.logOut': return 'Log out';
+			case 'episodeListItem.imageSemanticLabel': return 'Episode image';
+			case 'episodeListItem.played': return 'Played episode';
+			case 'episodeListItem.unplayed': return 'Unplayed episode';
+			case 'episodeListItem.duration': return ({required Object duration}) => ' • ${duration}';
 			case 'episodeDetailsScreen.podcastTitle': return 'Podcast Title';
 			case 'episodeDetailsScreen.episodeTitle': return 'Episode Title';
+			case 'playEpisodeButton.playEpisodeTooltip': return ({required Object title}) => 'Play episode ${title}';
+			case 'playEpisodeButton.playEpisodeSemanticLabel': return 'Play episode';
 			case 'podcastDetailsScreen.episodes': return 'Episodes';
 			case 'podcastDetailsScreen.markUnlistened': return 'Mark unlistened';
 			case 'podcastDetailsScreen.markListened': return 'Mark listened';
@@ -240,6 +327,7 @@ extension on Translations {
 			case 'podcastSearchScreen.somethingWentWrong': return 'Something went wrong.\nPlease send an error report to podcast@lohnn.se with your search term.';
 			case 'podcastSearchScreen.podcastArtwork': return 'Podcast artwork';
 			case 'episodePlayerModal.episodeImage': return 'Episode image';
+			case 'episodePlayerModal.showPlaylist': return 'Show playlist';
 			case 'currentlyPlayingInformation.showPlaylist': return 'Show playlist';
 			case 'currentlyPlayingInformation.inYourQueue': return 'In your queue:';
 			case 'filterEpisodesPopup.filterEpisodes': return 'Filter episodes';
@@ -249,6 +337,16 @@ extension on Translations {
 			case 'filterEpisodesPopup.changeSortOrder': return 'Change sort order';
 			case 'filterEpisodesPopup.sortAscending': return 'Sort ascending';
 			case 'filterEpisodesPopup.sortDescending': return 'Sort descending';
+			case 'mediaEvents.rewind': return 'Rewind';
+			case 'mediaEvents.fastForward': return 'Fast forward';
+			case 'mediaPlayer.play': return 'Play';
+			case 'mediaPlayer.pause': return 'Pause';
+			case 'mediaPlayer.rewind10': return 'Rewind 10 seconds';
+			case 'mediaPlayer.rewind5': return 'Rewind 5 seconds';
+			case 'mediaPlayer.rewind30': return 'Rewind 30 seconds';
+			case 'mediaPlayer.forward10': return 'Skip forward 10 seconds';
+			case 'mediaPlayer.forward5': return 'Skip forward 5 seconds';
+			case 'mediaPlayer.forward30': return 'Skip forward 30 seconds';
 			case 'podcastDetails.podcastImage': return 'Podcast image';
 			case 'podcastDetails.rssFeed': return 'Rss feed';
 			case 'podcastDetails.expandDescription': return 'Expand description';
@@ -261,9 +359,13 @@ extension on Translations {
 			case 'podcastDetails.unsubscribe': return 'Unsubscribe';
 			case 'podcastDetails.addPodcast': return 'Add podcast';
 			case 'settings.title': return 'Settings';
+			case 'smallMediaPlayer.errorLoadingEpisode': return 'Error loading episode';
+			case 'smallMediaPlayer.nothingIsPlaying': return 'Nothing is playing right now';
 			case 'exitDialog.title': return 'Are you sure you want to exit?';
 			case 'exitDialog.yes': return 'Yes';
 			case 'exitDialog.no': return 'No';
+			case 'queue.addToQueue': return 'Add to queue';
+			case 'queue.removeFromQueue': return 'Remove from queue';
 			default: return null;
 		}
 	}

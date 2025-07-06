@@ -6,6 +6,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:logging/logging.dart';
 import 'package:podcast_core/data/episode.model.dart';
 import 'package:podcast_core/data/episode_with_status.dart';
+import 'package:podcast_core/gen/strings.g.dart';
 import 'package:podcast_core/repository.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -239,15 +240,15 @@ class PodcastAudioHandler extends BaseAudioHandler
     return PlaybackState(
       updateTime: event.updateTime,
       controls: [
-        const MediaControl(
+        MediaControl(
           androidIcon: 'drawable/baseline_replay_10_24',
-          label: 'Rewind',
+          label: t.mediaEvents.rewind,
           action: MediaAction.rewind,
         ),
         if (_player.playing) MediaControl.pause else MediaControl.play,
-        const MediaControl(
+        MediaControl(
           androidIcon: 'drawable/baseline_forward_10_24',
-          label: 'Fast Forward',
+          label: t.mediaEvents.fastForward,
           action: MediaAction.fastForward,
         ),
       ],

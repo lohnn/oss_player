@@ -18,9 +18,19 @@
     "stayLoggedIn": "Stay logged in",
     "logOut": "Log out"
   },
+  "episodeListItem": {
+    "imageSemanticLabel": "Episode image",
+    "played": "Played episode",
+    "unplayed": "Unplayed episode",
+    "duration": " • ${duration}"
+  },
   "episodeDetailsScreen": {
     "podcastTitle": "Podcast Title",
     "episodeTitle": "Episode Title"
+  },
+  "playEpisodeButton": {
+    "playEpisodeTooltip": "Play episode ${title}",
+    "playEpisodeSemanticLabel": "Play episode"
   },
   "podcastDetailsScreen": {
     "episodes": "Episodes",
@@ -33,7 +43,8 @@
     "podcastArtwork": "Podcast artwork"
   },
   "episodePlayerModal": {
-    "episodeImage": "Episode image"
+    "episodeImage": "Episode image",
+    "showPlaylist": "Show playlist"
   },
   "currentlyPlayingInformation": {
     "showPlaylist": "Show playlist",
@@ -47,6 +58,20 @@
     "changeSortOrder": "Change sort order",
     "sortAscending": "Sort ascending",
     "sortDescending": "Sort descending"
+  },
+  "mediaEvents": {
+    "rewind": "Rewind",
+    "fastForward": "Fast forward"
+  },
+  "mediaPlayer": {
+    "play": "Play",
+    "pause": "Pause",
+    "rewind10": "Rewind 10 seconds",
+    "rewind5": "Rewind 5 seconds",
+    "rewind30": "Rewind 30 seconds",
+    "forward10": "Skip forward 10 seconds",
+    "forward5": "Skip forward 5 seconds",
+    "forward30": "Skip forward 30 seconds"
   },
   "podcastDetails": {
     "podcastImage": "Podcast image",
@@ -64,9 +89,17 @@
   "settings": {
     "title": "Settings"
   },
+  "smallMediaPlayer": {
+    "errorLoadingEpisode": "Error loading episode",
+    "nothingIsPlaying": "Nothing is playing right now"
+  },
   "exitDialog": {
     "title": "Are you sure you want to exit?",
     "yes": "Yes",
     "no": "No"
+  },
+  "queue": {
+    "addToQueue": "Add to queue",
+    "removeFromQueue": "Remove from queue"
   }
 }
