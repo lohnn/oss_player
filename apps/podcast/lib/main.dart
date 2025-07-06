@@ -42,27 +42,25 @@ Future<void> main() async {
   MapperContainer.globals.use(const UriMapper());
 
   runApp(
-    TranslationProvider(
-      child: ProviderScope(
-        overrides: [
-          repositoryProvider.overrideWith((ref) => HiveRepositoryImpl()),
-          userEpisodeStatusProvider.overrideWith((ref, episodeId) async {
-            final status = await ref.watch(
-              userEpisodeStatusPodProvider.selectAsync((statuses) {
-                return statuses[episodeId];
-              }),
-            );
-            return status ??
-                UserEpisodeStatusImpl(
-                  backingEpisodeId: episodeId.id,
-                  isPlayed: false,
-                  currentPosition: Duration.zero,
-                );
-          }),
-        ],
-        child: const PodcastApp(
-          child: EntryAnimationScreen(child: LoggedInScreen()),
-        ),
+    ProviderScope(
+      overrides: [
+        repositoryProvider.overrideWith((ref) => HiveRepositoryImpl()),
+        userEpisodeStatusProvider.overrideWith((ref, episodeId) async {
+          final status = await ref.watch(
+            userEpisodeStatusPodProvider.selectAsync((statuses) {
+              return statuses[episodeId];
+            }),
+          );
+          return status ??
+              UserEpisodeStatusImpl(
+                backingEpisodeId: episodeId.id,
+                isPlayed: false,
+                currentPosition: Duration.zero,
+              );
+        }),
+      ],
+      child: const PodcastApp(
+        child: EntryAnimationScreen(child: LoggedInScreen()),
       ),
     ),
   );
