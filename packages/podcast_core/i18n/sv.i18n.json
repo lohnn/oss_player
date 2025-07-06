@@ -1,0 +1,105 @@
+{
+  "ok": "Ok",
+  "addPodcastDialog": {
+    "title": "Lägg till podd via RSS",
+    "textFieldHint": "Rss-url"
+  },
+  "importListenedEpisodesDialog": {
+    "title": "Importera lyssnade avsnitt",
+    "textFieldHint": "JSON-url för lyssnade avsnitt"
+  },
+  "errorScreen": {
+    "somethingWentWrong": "Något gick fel.",
+    "tryReloading": "Försök att ladda om sidan"
+  },
+  "logOutDialog": {
+    "title": "Logga ut?",
+    "content": "Om du loggar ut måste du logga in igen.",
+    "stayLoggedIn": "Förbli inloggad",
+    "logOut": "Logga ut"
+  },
+  "episodeListItem": {
+    "imageSemanticLabel": "Avsnittsbild",
+    "played": "Spelat avsnitt",
+    "unplayed": "Ospelat avsnitt",
+    "duration": " • ${duration}"
+  },
+  "episodeDetailsScreen": {
+    "podcastTitle": "Poddtitel",
+    "episodeTitle": "Avsnittstitel"
+  },
+  "playEpisodeButton": {
+    "playEpisodeTooltip": "Spela avsnitt ${title}",
+    "playEpisodeSemanticLabel": "Spela avsnitt"
+  },
+  "podcastDetailsScreen": {
+    "episodes": "Avsnitt",
+    "markUnlistened": "Markera som olyssnad",
+    "markListened": "Markera som lyssnad"
+  },
+  "podcastSearchScreen": {
+    "searchForPodcasts": "Sök efter poddar",
+    "somethingWentWrong": "Något gick fel.\nSkicka en felrapport till podcast@lohnn.se med din sökterm.",
+    "podcastArtwork": "Poddbild"
+  },
+  "episodePlayerModal": {
+    "episodeImage": "Avsnittsbild",
+    "showPlaylist": "Visa spellista"
+  },
+  "currentlyPlayingInformation": {
+    "showPlaylist": "Visa spellista",
+    "inYourQueue": "I din kö:"
+  },
+  "filterEpisodesPopup": {
+    "filterEpisodes": "Filtrera avsnitt",
+    "clearAllFilters": "Rensa alla filter",
+    "hidePlayedEpisodes": "Dölj spelade avsnitt",
+    "sortBy": "Sortera efter",
+    "changeSortOrder": "Ändra sorteringsordning",
+    "sortAscending": "Sortera stigande",
+    "sortDescending": "Sortera fallande"
+  },
+  "mediaEvents": {
+    "rewind": "Spola tillbaka",
+    "fastForward": "Spola framåt"
+  },
+  "mediaPlayer": {
+    "play": "Spela",
+    "pause": "Pausa",
+    "rewind10": "Spola tillbaka 10 sekunder",
+    "rewind5": "Spola tillbaka 5 sekunder",
+    "rewind30": "Spola tillbaka 30 sekunder",
+    "forward10": "Hoppa framåt 10 sekunder",
+    "forward5": "Hoppa framåt 5 sekunder",
+    "forward30": "Hoppa framåt 30 sekunder"
+  },
+  "podcastDetails": {
+    "podcastImage": "Poddbild",
+    "rssFeed": "Rss-flöde",
+    "expandDescription": "Visa mer",
+    "showLess": "Visa mindre",
+    "showMore": "Visa mer",
+    "loading": "Laddar...",
+    "areYouSureToUnsubscribe": "Är du säker på att du vill avprenumerera?",
+    "yes": "Ja",
+    "no": "Nej",
+    "unsubscribe": "Avprenumerera",
+    "addPodcast": "Lägg till podd"
+  },
+  "settings": {
+    "title": "Inställningar"
+  },
+  "smallMediaPlayer": {
+    "errorLoadingEpisode": "Fel vid laddning av avsnitt",
+    "nothingIsPlaying": "Inget spelas just nu"
+  },
+  "exitDialog": {
+    "title": "Är du säker på att du vill avsluta?",
+    "yes": "Ja",
+    "no": "Nej"
+  },
+  "queue": {
+    "addToQueue": "Lägg till i kö",
+    "removeFromQueue": "Ta bort från kö"
+  }
+}
