@@ -9,6 +9,7 @@ import 'package:logging/logging.dart';
 import 'package:podcast/data/mappers/uri_mapper.dart';
 import 'package:podcast/data/user_episode_status_impl.model.dart';
 import 'package:podcast/repository/repository_impl.dart';
+import 'package:podcast_core/gen/strings.g.dart';
 import 'package:podcast_core/providers/user_episode_status_provider.dart';
 import 'package:podcast_core/repository.dart';
 import 'package:podcast_core/screens/logged_in/logged_in_screen.dart';
@@ -19,6 +20,7 @@ import 'package:rive_native/rive_native.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await RiveNative.init();
+  await LocaleSettings.useDeviceLocale();
 
   if (kDebugMode) {
     hierarchicalLoggingEnabled = true;

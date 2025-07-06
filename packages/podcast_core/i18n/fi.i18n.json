@@ -1,0 +1,105 @@
+{
+  "ok": "Ok",
+  "addPodcastDialog": {
+    "title": "Lisää podcast RSS-syötteellä",
+    "textFieldHint": "Rss-url"
+  },
+  "importListenedEpisodesDialog": {
+    "title": "Tuo kuunnellut jaksot",
+    "textFieldHint": "Kuunneltujen jaksojen JSON-url"
+  },
+  "errorScreen": {
+    "somethingWentWrong": "Jotain meni pieleen.",
+    "tryReloading": "Yritä ladata sivu uudelleen"
+  },
+  "logOutDialog": {
+    "title": "Kirjaudu ulos?",
+    "content": "Jos kirjaudut ulos, sinun on kirjauduttava uudelleen sisään.",
+    "stayLoggedIn": "Pysy kirjautuneena",
+    "logOut": "Kirjaudu ulos"
+  },
+  "episodeListItem": {
+    "imageSemanticLabel": "Jakson kuva",
+    "played": "Toistettu jakso",
+    "unplayed": "Toistamaton jakso",
+    "duration": " • ${duration}"
+  },
+  "episodeDetailsScreen": {
+    "podcastTitle": "Podcastin nimi",
+    "episodeTitle": "Jakson nimi"
+  },
+  "playEpisodeButton": {
+    "playEpisodeTooltip": "Toista jakso ${title}",
+    "playEpisodeSemanticLabel": "Toista jakso"
+  },
+  "podcastDetailsScreen": {
+    "episodes": "Jaksot",
+    "markUnlistened": "Merkitse kuuntelemattomaksi",
+    "markListened": "Merkitse kuunnelluksi"
+  },
+  "podcastSearchScreen": {
+    "searchForPodcasts": "Etsi podcasteja",
+    "somethingWentWrong": "Jotain meni pieleen.\nLähetä virheraportti osoitteeseen podcast@lohnn.se hakusanallasi.",
+    "podcastArtwork": "Podcastin kansikuva"
+  },
+  "episodePlayerModal": {
+    "episodeImage": "Jakson kuva",
+    "showPlaylist": "Näytä soittolista"
+  },
+  "currentlyPlayingInformation": {
+    "showPlaylist": "Näytä soittolista",
+    "inYourQueue": "Jonossasi:"
+  },
+  "filterEpisodesPopup": {
+    "filterEpisodes": "Suodata jaksoja",
+    "clearAllFilters": "Poista kaikki suodattimet",
+    "hidePlayedEpisodes": "Piilota toistetut jaksot",
+    "sortBy": "Järjestä",
+    "changeSortOrder": "Vaihda järjestystä",
+    "sortAscending": "Järjestä nousevasti",
+    "sortDescending": "Järjestä laskevasti"
+  },
+  "mediaEvents": {
+    "rewind": "Kelaa taaksepäin",
+    "fastForward": "Kelaa eteenpäin"
+  },
+  "mediaPlayer": {
+    "play": "Toista",
+    "pause": "Tauko",
+    "rewind10": "Kelaa 10 sekuntia taaksepäin",
+    "rewind5": "Kelaa 5 sekuntia taaksepäin",
+    "rewind30": "Kelaa 30 sekuntia taaksepäin",
+    "forward10": "Hyppää 10 sekuntia eteenpäin",
+    "forward5": "Hyppää 5 sekuntia eteenpäin",
+    "forward30": "Hyppää 30 sekuntia eteenpäin"
+  },
+  "podcastDetails": {
+    "podcastImage": "Podcastin kuva",
+    "rssFeed": "Rss-syöte",
+    "expandDescription": "Laajenna kuvaus",
+    "showLess": "Näytä vähemmän",
+    "showMore": "Näytä lisää",
+    "loading": "Ladataan...",
+    "areYouSureToUnsubscribe": "Haluatko varmasti lopettaa tilauksen?",
+    "yes": "Kyllä",
+    "no": "Ei",
+    "unsubscribe": "Lopeta tilaus",
+    "addPodcast": "Lisää podcast"
+  },
+  "settings": {
+    "title": "Asetukset"
+  },
+  "smallMediaPlayer": {
+    "errorLoadingEpisode": "Virhe ladattaessa jaksoa",
+    "nothingIsPlaying": "Mitään ei toisteta juuri nyt"
+  },
+  "exitDialog": {
+    "title": "Haluatko varmasti poistua?",
+    "yes": "Kyllä",
+    "no": "Ei"
+  },
+  "queue": {
+    "addToQueue": "Lisää jonoon",
+    "removeFromQueue": "Poista jonosta"
+  }
+}

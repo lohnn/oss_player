@@ -2,6 +2,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:podcast_core/gen/strings.g.dart';
 import 'package:podcast_core/providers/audio_player_provider.dart';
 import 'package:podcast_core/widgets/rive/podcast_animation.dart';
 import 'package:podcast_core/widgets/rive/podcast_animation_config.dart';
@@ -22,8 +23,8 @@ class PlayPauseButton extends ConsumerWidget {
                 processingState != AudioProcessingState.buffering =>
           IconButton(
             tooltip: switch (playing) {
-              false => 'Play',
-              true => 'Pause',
+              false => context.t.mediaPlayer.play,
+              true => context.t.mediaPlayer.pause,
             },
             onPressed: () {
               HapticFeedback.lightImpact();

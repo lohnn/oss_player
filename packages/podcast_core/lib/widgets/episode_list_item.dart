@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:podcast_core/data/episode.model.dart';
 import 'package:podcast_core/extensions/duration_extensions.dart';
 import 'package:podcast_core/extensions/string_extensions.dart';
+import 'package:podcast_core/gen/strings.g.dart';
 import 'package:podcast_core/widgets/play_episode_button.dart';
 import 'package:podcast_core/widgets/pub_date_text.dart';
 import 'package:podcast_core/widgets/queue_button.dart';
@@ -41,11 +42,11 @@ class EpisodeListItem extends StatelessWidget {
             children: [
               Tooltip(
                 message: switch (isPlayed) {
-                  true => 'Played episode',
-                  false => 'Unplayed episode',
+                  true => context.t.episodeListItem.played,
+                  false => context.t.episodeListItem.unplayed,
                 },
                 child: RoundedImage(
-                  semanticLabel: 'Episode image',
+                  semanticLabel: context.t.episodeListItem.imageSemanticLabel,
                   imageUri: episodeWithStatus.imageUrl,
                   showDot: !isPlayed,
                   imageSize: 40,
@@ -68,7 +69,7 @@ class EpisodeListItem extends StatelessWidget {
                               WidgetSpan(child: PubDateText(pubDate)),
                             if (episodeWithStatus.duration case final duration?)
                               TextSpan(
-                                text: ' • ${duration.prettyPrint()}',
+                                text: context.t.episodeListItem.duration(duration: duration.prettyPrint()),
                                 style: const TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w200,

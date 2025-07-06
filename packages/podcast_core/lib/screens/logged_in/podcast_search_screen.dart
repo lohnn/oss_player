@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:podcast_core/gen/strings.g.dart';
 import 'package:podcast_core/providers/find_podcast_provider.dart';
 import 'package:podcast_core/providers/podcasts_provider.dart';
 import 'package:podcast_core/screens/modals/podcast_details_modal.dart';
@@ -18,7 +19,7 @@ class PodcastSearchScreen extends ConsumerWidget {
           builder: (context, controller) {
             return SearchBar(
               autoFocus: true,
-              hintText: 'Search for podcasts',
+              hintText: context.t.podcastSearchScreen.searchForPodcasts,
               controller: controller,
               padding: const WidgetStatePropertyAll(
                 EdgeInsets.symmetric(horizontal: 16),
@@ -61,8 +62,7 @@ class PodcastSearchScreen extends ConsumerWidget {
               sliver: SliverFillRemaining(
                 child: Center(
                   child: Text(
-                    'Something went wrong.\n'
-                    'Please send an error report to podcast@lohnn.se with your search term.',
+                    context.t.podcastSearchScreen.somethingWentWrong,
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                 ),
@@ -79,7 +79,7 @@ class PodcastSearchScreen extends ConsumerWidget {
                   titleAlignment: ListTileTitleAlignment.titleHeight,
                   key: ValueKey(podcast),
                   leading: RoundedImage(
-                    semanticLabel: 'Podcast artwork',
+                    semanticLabel: context.t.podcastSearchScreen.podcastArtwork,
                     imageUri: podcast.artwork,
                     imageSize: 40,
                   ),

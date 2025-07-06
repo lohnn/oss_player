@@ -5,6 +5,7 @@ import 'package:podcast_core/data/episode.model.dart';
 import 'package:podcast_core/data/episode_with_status.dart';
 import 'package:podcast_core/data/podcast.model.dart';
 import 'package:podcast_core/extensions/text_style_extensions.dart';
+import 'package:podcast_core/gen/strings.g.dart';
 import 'package:podcast_core/providers/color_scheme_from_remote_image_provider.dart';
 import 'package:podcast_core/providers/episodes_provider.dart';
 import 'package:podcast_core/screens/async_value_screen.dart';
@@ -66,7 +67,7 @@ class EpisodeDetailsScreen
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       RoundedImage(
-                        semanticLabel: 'Episode image',
+                        semanticLabel: context.t.episodePlayerModal.episodeImage,
                         imageUri: episode.imageUrl,
                         imageSize: 100,
                       ),
