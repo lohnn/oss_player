@@ -31,7 +31,7 @@ melos:
       exec: dart run build_runner build -d
       description: Run code generation.
     slang:
-      exec: dart run slang
+      exec: dart run slang && dart run slang configure
       description: Generate slang file
       packageFilters:
         slang: true
