@@ -31,6 +31,8 @@ class SmallMediaPlayerControls extends HookConsumerWidget {
     final episodeSnapshot = ref.watch(audioPlayerPodProvider);
 
     final theme = Theme.of(context);
+
+    final safeAreaBottom = MediaQuery.paddingOf(context).bottom;
     return Material(
       child: Shortcuts(
         shortcuts: const {
@@ -39,7 +41,7 @@ class SmallMediaPlayerControls extends HookConsumerWidget {
           ),
         },
         child: SizedBox(
-          height: MediaQuery.paddingOf(context).bottom + 85,
+          height: safeAreaBottom + 85,
           child: switch (episodeSnapshot) {
             AsyncLoading() => const Center(
               child: CircularProgressIndicator.adaptive(),
@@ -103,18 +105,18 @@ class SmallMediaPlayerControls extends HookConsumerWidget {
                       ),
                     ),
                     SizedBox(
-                      height: MediaQuery.paddingOf(context).bottom + 4,
+                      height: safeAreaBottom + 4,
                       child: Stack(
                         children: [
                           EpisodeProgressBar(
                             episode,
-                            height: MediaQuery.paddingOf(context).bottom + 4,
+                            height: safeAreaBottom + 4,
                           ),
                           Positioned(
                             bottom: 0,
                             left: 0,
                             right: 0,
-                            height: MediaQuery.paddingOf(context).bottom,
+                            height: safeAreaBottom,
                             child: ClipRect(
                               child: BackdropFilter(
                                 filter: ImageFilter.blur(
@@ -122,16 +124,8 @@ class SmallMediaPlayerControls extends HookConsumerWidget {
                                   sigmaY: 10.0,
                                 ),
                                 child: ColoredBox(
-                                  color: switch (theme.brightness) {
-                                    Brightness.light =>
-                                      Colors.grey.shade200.withValues(
-                                        alpha: 0.5,
-                                      ),
-                                    Brightness.dark =>
-                                      Colors.grey.shade900.withValues(
-                                        alpha: 0.5,
-                                      ),
-                                  },
+                                  color: theme.colorScheme.surfaceContainerLow
+                                      .withValues(alpha: 0.6),
                                 ),
                               ),
                             ),
