@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,9 @@ class SmallMediaPlayerControls extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final episodeSnapshot = ref.watch(audioPlayerPodProvider);
 
+    final theme = Theme.of(context);
+
+    final safeAreaBottom = MediaQuery.paddingOf(context).bottom;
     return Material(
       child: Shortcuts(
         shortcuts: const {
@@ -37,7 +41,7 @@ class SmallMediaPlayerControls extends HookConsumerWidget {
           ),
         },
         child: SizedBox(
-          height: 85,
+          height: safeAreaBottom + 85,
           child: switch (episodeSnapshot) {
             AsyncLoading() => const Center(
               child: CircularProgressIndicator.adaptive(),
@@ -100,9 +104,34 @@ class SmallMediaPlayerControls extends HookConsumerWidget {
                         ],
                       ),
                     ),
-                    EpisodeProgressBar(
-                      episode,
-                      height: MediaQuery.paddingOf(context).bottom + 4,
+                    SizedBox(
+                      height: safeAreaBottom + 4,
+                      child: Stack(
+                        children: [
+                          EpisodeProgressBar(
+                            episode,
+                            height: safeAreaBottom + 4,
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            height: safeAreaBottom,
+                            child: ClipRect(
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(
+                                  sigmaX: 10.0,
+                                  sigmaY: 10.0,
+                                ),
+                                child: ColoredBox(
+                                  color: theme.colorScheme.surfaceContainerLow
+                                      .withValues(alpha: 0.6),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

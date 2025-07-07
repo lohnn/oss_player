@@ -40,12 +40,12 @@ class EpisodeProgressBar extends ConsumerWidget {
               duration: const Duration(milliseconds: 750),
               height: height,
               width: constraints.maxWidth,
-              color: Colors.grey,
+              color: colorScheme.surface,
             ),
             if (bufferProgress case final bufferProgress?)
               Positioned(
                 child: AnimatedContainer(
-                  key: const ValueKey('ProgressBar background'),
+                  key: const ValueKey('ProgressBar buffer progress'),
                   duration: const Duration(milliseconds: 300),
                   height: height,
                   width: constraints.maxWidth * bufferProgress,
@@ -55,7 +55,7 @@ class EpisodeProgressBar extends ConsumerWidget {
             if (progress case final progress?)
               Positioned(
                 child: AnimatedContainer(
-                  key: const ValueKey('ProgressBar background'),
+                  key: const ValueKey('ProgressBar progress'),
                   duration: const Duration(milliseconds: 300),
                   height: height,
                   width: constraints.maxWidth * progress,
