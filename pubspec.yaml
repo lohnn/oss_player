@@ -14,7 +14,7 @@ dependencies:
   pubspec_parse: ^1.5.0
 
 dev_dependencies:
-  melos: ^7.0.0-dev.9
+  melos: ^7.1.1
 
 melos:
   command:
@@ -23,8 +23,8 @@ melos:
       branch: main
     bootstrap:
       environment:
-        sdk: '>=3.8.1 <4.0.0'
-        flutter: 3.32.4
+        sdk: '>=3.9.2 <4.0.0'
+        flutter: 3.35.4
   
   scripts:
     generate:
