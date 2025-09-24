@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:podcast_core/data/podcast.model.dart';
 import 'package:podcast_core/gen/strings.g.dart';
 import 'package:podcast_core/providers/find_podcast_provider.dart';
 import 'package:podcast_core/providers/podcasts_provider.dart';
+import 'package:podcast_core/screens/dialogs/add_podcast_dialog.dart';
+import 'package:podcast_core/screens/loading_screen.dart';
 import 'package:podcast_core/screens/modals/podcast_details_modal.dart';
 import 'package:podcast_core/widgets/plasma_sphere_widget.dart';
 import 'package:podcast_core/widgets/rounded_image.dart';
@@ -25,25 +28,24 @@ class PodcastSearchScreen extends ConsumerWidget {
                 EdgeInsets.symmetric(horizontal: 16),
               ),
               onChanged: ref.read(findPodcastProvider.notifier).search,
-              trailing: const [
-                // @TODO: Implement somehow
-                // IconButton(
-                //   onPressed: () async {
-                //     final rssUrl = await showDialog<String>(
-                //       context: context,
-                //       builder: (context) => GetTextDialog.addPodcastDialog(),
-                //     );
-                //     if (rssUrl == null || !context.mounted) return;
-                //
-                //     await LoadingScreen.showLoading(
-                //       context: context,
-                //       job: ref
-                //           .read(findPodcastProvider.notifier)
-                //           .subscribe(rssUrl),
-                //     );
-                //   },
-                //   icon: const Icon(Icons.rss_feed),
-                // ),
+              trailing: [
+                IconButton(
+                  onPressed: () async {
+                    final rssUrl = await showDialog<String>(
+                      context: context,
+                      builder: GetTextDialog.addPodcastDialog,
+                    );
+                    if (rssUrl == null || !context.mounted) return;
+
+                    await LoadingScreen.showLoading(
+                      context: context,
+                      job: ref
+                          .read(findPodcastProvider.notifier)
+                          .subscribe(PodcastRssUrl(Uri.parse(rssUrl))),
+                    );
+                  },
+                  icon: const Icon(Icons.rss_feed),
+                ),
               ],
             );
           },
