@@ -6,6 +6,9 @@ part of 'audio_player_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(_podcastAudioHandler)
 const _podcastAudioHandlerProvider = _PodcastAudioHandlerProvider._();
 
@@ -31,7 +34,7 @@ final class _PodcastAudioHandlerProvider
       );
 
   @override
-  String debugGetCreateSourceHash() => _$podcastAudioHandlerHash();
+  String debugGetCreateSourceHash() => _$_podcastAudioHandlerHash();
 
   @$internal
   @override
@@ -45,8 +48,8 @@ final class _PodcastAudioHandlerProvider
   }
 }
 
-String _$podcastAudioHandlerHash() =>
-    r'23325c1f6e7e8c1f8f10c4ede1a5c82491cc4e77';
+String _$_podcastAudioHandlerHash() =>
+    r'0c55d813a3e06d8eae6137b10c8163f5b8861f57';
 
 @ProviderFor(_AudioServicePod)
 const _audioServicePodProvider = _AudioServicePodProvider._();
@@ -65,14 +68,14 @@ final class _AudioServicePodProvider
       );
 
   @override
-  String debugGetCreateSourceHash() => _$audioServicePodHash();
+  String debugGetCreateSourceHash() => _$_audioServicePodHash();
 
   @$internal
   @override
   _AudioServicePod create() => _AudioServicePod();
 }
 
-String _$audioServicePodHash() => r'166479c7bdc5b280527442922f716103fbf3c856';
+String _$_audioServicePodHash() => r'166479c7bdc5b280527442922f716103fbf3c856';
 
 abstract class _$AudioServicePod extends $AsyncNotifier<PodcastAudioHandler> {
   FutureOr<PodcastAudioHandler> build();
@@ -118,7 +121,7 @@ final class AudioPlayerPodProvider
   AudioPlayerPod create() => AudioPlayerPod();
 }
 
-String _$audioPlayerPodHash() => r'a1232c701092a307da6771cd2d2afe5cd6ec1c69';
+String _$audioPlayerPodHash() => r'a3093d04d4e476163a2d539daa07f2a6d2c666a8';
 
 abstract class _$AudioPlayerPod extends $AsyncNotifier<EpisodeWithStatus?> {
   FutureOr<EpisodeWithStatus?> build();
@@ -147,17 +150,17 @@ final class CurrentPositionProvider
     extends
         $FunctionalProvider<
           AsyncValue<
-            ({Duration position, Duration buffered, Duration? duration})
+            ({Duration buffered, Duration? duration, Duration position})
           >,
-          ({Duration position, Duration buffered, Duration? duration}),
-          Stream<({Duration position, Duration buffered, Duration? duration})>
+          ({Duration buffered, Duration? duration, Duration position}),
+          Stream<({Duration buffered, Duration? duration, Duration position})>
         >
     with
         $FutureModifier<
-          ({Duration position, Duration buffered, Duration? duration})
+          ({Duration buffered, Duration? duration, Duration position})
         >,
         $StreamProvider<
-          ({Duration position, Duration buffered, Duration? duration})
+          ({Duration buffered, Duration? duration, Duration position})
         > {
   const CurrentPositionProvider._()
     : super(
@@ -176,12 +179,12 @@ final class CurrentPositionProvider
   @$internal
   @override
   $StreamProviderElement<
-    ({Duration position, Duration buffered, Duration? duration})
+    ({Duration buffered, Duration? duration, Duration position})
   >
   $createElement($ProviderPointer pointer) => $StreamProviderElement(pointer);
 
   @override
-  Stream<({Duration position, Duration buffered, Duration? duration})> create(
+  Stream<({Duration buffered, Duration? duration, Duration position})> create(
     Ref ref,
   ) {
     return currentPosition(ref);
@@ -228,6 +231,3 @@ final class AudioStateProvider
 }
 
 String _$audioStateHash() => r'8f700801439f1fd64e400b937b16182b7ea75bd8';
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

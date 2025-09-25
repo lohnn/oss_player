@@ -6,12 +6,20 @@ part of 'repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(repository)
 const repositoryProvider = RepositoryProvider._();
 
 final class RepositoryProvider
-    extends $FunctionalProvider<Repository, Repository, Repository>
-    with $Provider<Repository> {
+    extends
+        $FunctionalProvider<
+          AsyncValue<Repository>,
+          Repository,
+          FutureOr<Repository>
+        >
+    with $FutureModifier<Repository>, $FutureProvider<Repository> {
   const RepositoryProvider._()
     : super(
         from: null,
@@ -28,24 +36,13 @@ final class RepositoryProvider
 
   @$internal
   @override
-  $ProviderElement<Repository> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $FutureProviderElement<Repository> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
 
   @override
-  Repository create(Ref ref) {
+  FutureOr<Repository> create(Ref ref) {
     return repository(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(Repository value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<Repository>(value),
-    );
   }
 }
 
-String _$repositoryHash() => r'81b4f8c65d0d9f4c512d6619224b4af300589097';
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+String _$repositoryHash() => r'24d4a964608e5f245038ada884aa1a6b6f42bf9a';

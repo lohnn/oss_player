@@ -6,6 +6,9 @@ part of 'find_podcast_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(FindPodcast)
 const findPodcastProvider = FindPodcastProvider._();
 
@@ -30,7 +33,7 @@ final class FindPodcastProvider
   FindPodcast create() => FindPodcast();
 }
 
-String _$findPodcastHash() => r'e4475f029e5a14e7288cda507eb9faee2c404c37';
+String _$findPodcastHash() => r'2dbf64eb15d80f894a52621b2db8f53a75e3f779';
 
 abstract class _$FindPodcast extends $AsyncNotifier<List<PodcastSearch>> {
   FutureOr<List<PodcastSearch>> build();
@@ -51,6 +54,3 @@ abstract class _$FindPodcast extends $AsyncNotifier<List<PodcastSearch>> {
     element.handleValue(ref, created);
   }
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

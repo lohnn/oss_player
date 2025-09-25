@@ -6,6 +6,9 @@ part of 'podcasts_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(subscribedPodcast)
 const subscribedPodcastProvider = SubscribedPodcastFamily._();
 
@@ -100,7 +103,7 @@ final class _SubscribedPodcastRssUrlsProvider
       );
 
   @override
-  String debugGetCreateSourceHash() => _$subscribedPodcastRssUrlsHash();
+  String debugGetCreateSourceHash() => _$_subscribedPodcastRssUrlsHash();
 
   @$internal
   @override
@@ -114,7 +117,7 @@ final class _SubscribedPodcastRssUrlsProvider
   }
 }
 
-String _$subscribedPodcastRssUrlsHash() =>
+String _$_subscribedPodcastRssUrlsHash() =>
     r'5c45b5aa5f10dfdfbcedd7d02ca3b862f90691bc';
 
 @ProviderFor(PodcastPod)
@@ -158,7 +161,7 @@ final class PodcastPodProvider
   }
 }
 
-String _$podcastPodHash() => r'77f981421c3d7c1a388b2fade47aae2598a341ca';
+String _$podcastPodHash() => r'ee544b4a42034cc2fac8e73989173030d5881d0d';
 
 final class PodcastPodFamily extends $Family
     with
@@ -231,7 +234,7 @@ final class PodcastsProvider
   Podcasts create() => Podcasts();
 }
 
-String _$podcastsHash() => r'5d4410738e357e7c7ad4f9b15fb1e3025dbe6fb3';
+String _$podcastsHash() => r'bb98a52d6621e97e36bc8e2a30ead07e44dc89cd';
 
 abstract class _$Podcasts extends $StreamNotifier<EquatableList<Podcast>> {
   Stream<EquatableList<Podcast>> build();
@@ -256,6 +259,3 @@ abstract class _$Podcasts extends $StreamNotifier<EquatableList<Podcast>> {
     element.handleValue(ref, created);
   }
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
