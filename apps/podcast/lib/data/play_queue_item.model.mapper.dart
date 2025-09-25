@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -22,21 +23,41 @@ class PlayQueueItemMapper extends ClassMapperBase<PlayQueueItem> {
   final String id = 'PlayQueueItem';
 
   static EpisodeImpl _$episode(PlayQueueItem v) => v.episode;
-  static const Field<PlayQueueItem, EpisodeImpl> _f$episode =
-      Field('episode', _$episode);
+  static const Field<PlayQueueItem, EpisodeImpl> _f$episode = Field(
+    'episode',
+    _$episode,
+  );
   static int _$queueOrder(PlayQueueItem v) => v.queueOrder;
-  static const Field<PlayQueueItem, int> _f$queueOrder =
-      Field('queueOrder', _$queueOrder);
+  static const Field<PlayQueueItem, int> _f$queueOrder = Field(
+    'queueOrder',
+    _$queueOrder,
+  );
+  static EpisodeId _$episodeId(PlayQueueItem v) => v.episodeId;
+  static const Field<PlayQueueItem, EpisodeId> _f$episodeId = Field(
+    'episodeId',
+    _$episodeId,
+    mode: FieldMode.member,
+  );
+  static String _$episodeHiveId(PlayQueueItem v) => v.episodeHiveId;
+  static const Field<PlayQueueItem, String> _f$episodeHiveId = Field(
+    'episodeHiveId',
+    _$episodeHiveId,
+    mode: FieldMode.member,
+  );
 
   @override
   final MappableFields<PlayQueueItem> fields = const {
     #episode: _f$episode,
     #queueOrder: _f$queueOrder,
+    #episodeId: _f$episodeId,
+    #episodeHiveId: _f$episodeHiveId,
   };
 
   static PlayQueueItem _instantiate(DecodingData data) {
     return PlayQueueItem(
-        episode: data.dec(_f$episode), queueOrder: data.dec(_f$queueOrder));
+      episode: data.dec(_f$episode),
+      queueOrder: data.dec(_f$queueOrder),
+    );
   }
 
   @override
@@ -53,34 +74,43 @@ class PlayQueueItemMapper extends ClassMapperBase<PlayQueueItem> {
 
 mixin PlayQueueItemMappable {
   String toJson() {
-    return PlayQueueItemMapper.ensureInitialized()
-        .encodeJson<PlayQueueItem>(this as PlayQueueItem);
+    return PlayQueueItemMapper.ensureInitialized().encodeJson<PlayQueueItem>(
+      this as PlayQueueItem,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return PlayQueueItemMapper.ensureInitialized()
-        .encodeMap<PlayQueueItem>(this as PlayQueueItem);
+    return PlayQueueItemMapper.ensureInitialized().encodeMap<PlayQueueItem>(
+      this as PlayQueueItem,
+    );
   }
 
   PlayQueueItemCopyWith<PlayQueueItem, PlayQueueItem, PlayQueueItem>
-      get copyWith => _PlayQueueItemCopyWithImpl<PlayQueueItem, PlayQueueItem>(
-          this as PlayQueueItem, $identity, $identity);
+  get copyWith => _PlayQueueItemCopyWithImpl<PlayQueueItem, PlayQueueItem>(
+    this as PlayQueueItem,
+    $identity,
+    $identity,
+  );
   @override
   String toString() {
-    return PlayQueueItemMapper.ensureInitialized()
-        .stringifyValue(this as PlayQueueItem);
+    return PlayQueueItemMapper.ensureInitialized().stringifyValue(
+      this as PlayQueueItem,
+    );
   }
 
   @override
   bool operator ==(Object other) {
-    return PlayQueueItemMapper.ensureInitialized()
-        .equalsValue(this as PlayQueueItem, other);
+    return PlayQueueItemMapper.ensureInitialized().equalsValue(
+      this as PlayQueueItem,
+      other,
+    );
   }
 
   @override
   int get hashCode {
-    return PlayQueueItemMapper.ensureInitialized()
-        .hashValue(this as PlayQueueItem);
+    return PlayQueueItemMapper.ensureInitialized().hashValue(
+      this as PlayQueueItem,
+    );
   }
 }
 
@@ -109,17 +139,21 @@ class _PlayQueueItemCopyWithImpl<$R, $Out>
   EpisodeImplCopyWith<$R, EpisodeImpl, EpisodeImpl> get episode =>
       $value.episode.copyWith.$chain((v) => call(episode: v));
   @override
-  $R call({EpisodeImpl? episode, int? queueOrder}) => $apply(FieldCopyWithData({
-        if (episode != null) #episode: episode,
-        if (queueOrder != null) #queueOrder: queueOrder
-      }));
+  $R call({EpisodeImpl? episode, int? queueOrder}) => $apply(
+    FieldCopyWithData({
+      if (episode != null) #episode: episode,
+      if (queueOrder != null) #queueOrder: queueOrder,
+    }),
+  );
   @override
   PlayQueueItem $make(CopyWithData data) => PlayQueueItem(
-      episode: data.get(#episode, or: $value.episode),
-      queueOrder: data.get(#queueOrder, or: $value.queueOrder));
+    episode: data.get(#episode, or: $value.episode),
+    queueOrder: data.get(#queueOrder, or: $value.queueOrder),
+  );
 
   @override
   PlayQueueItemCopyWith<$R2, PlayQueueItem, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _PlayQueueItemCopyWithImpl<$R2, $Out2>($value, $cast, t);
+    Then<$Out2, $R2> t,
+  ) => _PlayQueueItemCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
+
