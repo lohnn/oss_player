@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -21,28 +22,68 @@ class PodcastImplMapper extends ClassMapperBase<PodcastImpl> {
   final String id = 'PodcastImpl';
 
   static String _$backingId(PodcastImpl v) => v.backingId;
-  static const Field<PodcastImpl, String> _f$backingId =
-      Field('backingId', _$backingId);
+  static const Field<PodcastImpl, String> _f$backingId = Field(
+    'backingId',
+    _$backingId,
+  );
   static String _$backingUrl(PodcastImpl v) => v.backingUrl;
-  static const Field<PodcastImpl, String> _f$backingUrl =
-      Field('backingUrl', _$backingUrl);
+  static const Field<PodcastImpl, String> _f$backingUrl = Field(
+    'backingUrl',
+    _$backingUrl,
+  );
   static String _$title(PodcastImpl v) => v.title;
   static const Field<PodcastImpl, String> _f$title = Field('title', _$title);
   static String _$description(PodcastImpl v) => v.description;
-  static const Field<PodcastImpl, String> _f$description =
-      Field('description', _$description);
+  static const Field<PodcastImpl, String> _f$description = Field(
+    'description',
+    _$description,
+  );
   static String _$backingArtwork(PodcastImpl v) => v.backingArtwork;
-  static const Field<PodcastImpl, String> _f$backingArtwork =
-      Field('backingArtwork', _$backingArtwork);
+  static const Field<PodcastImpl, String> _f$backingArtwork = Field(
+    'backingArtwork',
+    _$backingArtwork,
+  );
   static DateTime _$lastPublished(PodcastImpl v) => v.lastPublished;
-  static const Field<PodcastImpl, DateTime> _f$lastPublished =
-      Field('lastPublished', _$lastPublished);
+  static const Field<PodcastImpl, DateTime> _f$lastPublished = Field(
+    'lastPublished',
+    _$lastPublished,
+  );
   static String? _$language(PodcastImpl v) => v.language;
-  static const Field<PodcastImpl, String> _f$language =
-      Field('language', _$language);
+  static const Field<PodcastImpl, String> _f$language = Field(
+    'language',
+    _$language,
+  );
   static Set<String> _$categories(PodcastImpl v) => v.categories;
-  static const Field<PodcastImpl, Set<String>> _f$categories =
-      Field('categories', _$categories, opt: true, def: const {});
+  static const Field<PodcastImpl, Set<String>> _f$categories = Field(
+    'categories',
+    _$categories,
+    opt: true,
+    def: const {},
+  );
+  static PodcastRssUrl _$url(PodcastImpl v) => v.url;
+  static const Field<PodcastImpl, PodcastRssUrl> _f$url = Field(
+    'url',
+    _$url,
+    mode: FieldMode.member,
+  );
+  static Uri _$artwork(PodcastImpl v) => v.artwork;
+  static const Field<PodcastImpl, Uri> _f$artwork = Field(
+    'artwork',
+    _$artwork,
+    mode: FieldMode.member,
+  );
+  static PodcastId _$id(PodcastImpl v) => v.id;
+  static const Field<PodcastImpl, PodcastId> _f$id = Field(
+    'id',
+    _$id,
+    mode: FieldMode.member,
+  );
+  static Uri _$link(PodcastImpl v) => v.link;
+  static const Field<PodcastImpl, Uri> _f$link = Field(
+    'link',
+    _$link,
+    mode: FieldMode.member,
+  );
 
   @override
   final MappableFields<PodcastImpl> fields = const {
@@ -54,18 +95,23 @@ class PodcastImplMapper extends ClassMapperBase<PodcastImpl> {
     #lastPublished: _f$lastPublished,
     #language: _f$language,
     #categories: _f$categories,
+    #url: _f$url,
+    #artwork: _f$artwork,
+    #id: _f$id,
+    #link: _f$link,
   };
 
   static PodcastImpl _instantiate(DecodingData data) {
     return PodcastImpl(
-        backingId: data.dec(_f$backingId),
-        backingUrl: data.dec(_f$backingUrl),
-        title: data.dec(_f$title),
-        description: data.dec(_f$description),
-        backingArtwork: data.dec(_f$backingArtwork),
-        lastPublished: data.dec(_f$lastPublished),
-        language: data.dec(_f$language),
-        categories: data.dec(_f$categories));
+      backingId: data.dec(_f$backingId),
+      backingUrl: data.dec(_f$backingUrl),
+      title: data.dec(_f$title),
+      description: data.dec(_f$description),
+      backingArtwork: data.dec(_f$backingArtwork),
+      lastPublished: data.dec(_f$lastPublished),
+      language: data.dec(_f$language),
+      categories: data.dec(_f$categories),
+    );
   }
 
   @override
@@ -82,28 +128,36 @@ class PodcastImplMapper extends ClassMapperBase<PodcastImpl> {
 
 mixin PodcastImplMappable {
   String toJson() {
-    return PodcastImplMapper.ensureInitialized()
-        .encodeJson<PodcastImpl>(this as PodcastImpl);
+    return PodcastImplMapper.ensureInitialized().encodeJson<PodcastImpl>(
+      this as PodcastImpl,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return PodcastImplMapper.ensureInitialized()
-        .encodeMap<PodcastImpl>(this as PodcastImpl);
+    return PodcastImplMapper.ensureInitialized().encodeMap<PodcastImpl>(
+      this as PodcastImpl,
+    );
   }
 
   PodcastImplCopyWith<PodcastImpl, PodcastImpl, PodcastImpl> get copyWith =>
       _PodcastImplCopyWithImpl<PodcastImpl, PodcastImpl>(
-          this as PodcastImpl, $identity, $identity);
+        this as PodcastImpl,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
-    return PodcastImplMapper.ensureInitialized()
-        .stringifyValue(this as PodcastImpl);
+    return PodcastImplMapper.ensureInitialized().stringifyValue(
+      this as PodcastImpl,
+    );
   }
 
   @override
   bool operator ==(Object other) {
-    return PodcastImplMapper.ensureInitialized()
-        .equalsValue(this as PodcastImpl, other);
+    return PodcastImplMapper.ensureInitialized().equalsValue(
+      this as PodcastImpl,
+      other,
+    );
   }
 
   @override
@@ -120,15 +174,16 @@ extension PodcastImplValueCopy<$R, $Out>
 
 abstract class PodcastImplCopyWith<$R, $In extends PodcastImpl, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call(
-      {String? backingId,
-      String? backingUrl,
-      String? title,
-      String? description,
-      String? backingArtwork,
-      DateTime? lastPublished,
-      String? language,
-      Set<String>? categories});
+  $R call({
+    String? backingId,
+    String? backingUrl,
+    String? title,
+    String? description,
+    String? backingArtwork,
+    DateTime? lastPublished,
+    String? language,
+    Set<String>? categories,
+  });
   PodcastImplCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -141,38 +196,42 @@ class _PodcastImplCopyWithImpl<$R, $Out>
   late final ClassMapperBase<PodcastImpl> $mapper =
       PodcastImplMapper.ensureInitialized();
   @override
-  $R call(
-          {String? backingId,
-          String? backingUrl,
-          String? title,
-          String? description,
-          String? backingArtwork,
-          DateTime? lastPublished,
-          Object? language = $none,
-          Set<String>? categories}) =>
-      $apply(FieldCopyWithData({
-        if (backingId != null) #backingId: backingId,
-        if (backingUrl != null) #backingUrl: backingUrl,
-        if (title != null) #title: title,
-        if (description != null) #description: description,
-        if (backingArtwork != null) #backingArtwork: backingArtwork,
-        if (lastPublished != null) #lastPublished: lastPublished,
-        if (language != $none) #language: language,
-        if (categories != null) #categories: categories
-      }));
+  $R call({
+    String? backingId,
+    String? backingUrl,
+    String? title,
+    String? description,
+    String? backingArtwork,
+    DateTime? lastPublished,
+    Object? language = $none,
+    Set<String>? categories,
+  }) => $apply(
+    FieldCopyWithData({
+      if (backingId != null) #backingId: backingId,
+      if (backingUrl != null) #backingUrl: backingUrl,
+      if (title != null) #title: title,
+      if (description != null) #description: description,
+      if (backingArtwork != null) #backingArtwork: backingArtwork,
+      if (lastPublished != null) #lastPublished: lastPublished,
+      if (language != $none) #language: language,
+      if (categories != null) #categories: categories,
+    }),
+  );
   @override
   PodcastImpl $make(CopyWithData data) => PodcastImpl(
-      backingId: data.get(#backingId, or: $value.backingId),
-      backingUrl: data.get(#backingUrl, or: $value.backingUrl),
-      title: data.get(#title, or: $value.title),
-      description: data.get(#description, or: $value.description),
-      backingArtwork: data.get(#backingArtwork, or: $value.backingArtwork),
-      lastPublished: data.get(#lastPublished, or: $value.lastPublished),
-      language: data.get(#language, or: $value.language),
-      categories: data.get(#categories, or: $value.categories));
+    backingId: data.get(#backingId, or: $value.backingId),
+    backingUrl: data.get(#backingUrl, or: $value.backingUrl),
+    title: data.get(#title, or: $value.title),
+    description: data.get(#description, or: $value.description),
+    backingArtwork: data.get(#backingArtwork, or: $value.backingArtwork),
+    lastPublished: data.get(#lastPublished, or: $value.lastPublished),
+    language: data.get(#language, or: $value.language),
+    categories: data.get(#categories, or: $value.categories),
+  );
 
   @override
   PodcastImplCopyWith<$R2, PodcastImpl, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _PodcastImplCopyWithImpl<$R2, $Out2>($value, $cast, t);
+    Then<$Out2, $R2> t,
+  ) => _PodcastImplCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
+

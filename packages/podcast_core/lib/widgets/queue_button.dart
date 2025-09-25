@@ -33,9 +33,17 @@ class QueueButton extends ConsumerWidget {
       false => context.t.queue.addToQueue,
     };
 
+    final color = switch (queue.contains(episode)) {
+      true => Theme.of(
+        context,
+      ).colorScheme.errorContainer.withValues(alpha: 0.85),
+      false => null,
+    };
+
     return Tooltip(
       message: tooltip,
       child: FilledButton.tonal(
+        style: FilledButton.styleFrom(backgroundColor: color),
         onPressed: onPressed,
         child: Semantics(
           label: tooltip,

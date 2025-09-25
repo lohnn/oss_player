@@ -6,6 +6,9 @@ part of 'podcasts_with_status_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(PodcastsWithStatus)
 const podcastsWithStatusProvider = PodcastsWithStatusProvider._();
 
@@ -35,7 +38,7 @@ final class PodcastsWithStatusProvider
 }
 
 String _$podcastsWithStatusHash() =>
-    r'8093847d9c9165b1c45eb0607fb4de2b9cabccfa';
+    r'37782e6aa982d610883553f44f0cb29e4c741c66';
 
 abstract class _$PodcastsWithStatus
     extends $AsyncNotifier<EquatableList<PodcastWithStatus>> {
@@ -64,6 +67,3 @@ abstract class _$PodcastsWithStatus
     element.handleValue(ref, created);
   }
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

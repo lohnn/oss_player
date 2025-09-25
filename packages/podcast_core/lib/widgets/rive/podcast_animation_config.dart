@@ -55,9 +55,11 @@ abstract class DualStateIcon extends PodcastAnimationConfig {
 
   final bool isActive;
 
+  Color? overrideColor(BuildContext context) => null;
+
   @override
   Map<String, dynamic> params(BuildContext context) => {
-    'Color': Theme.of(context).colorScheme.primary,
+    'Color': overrideColor(context) ?? Theme.of(context).colorScheme.primary,
     'Active': isActive,
   };
 
@@ -92,4 +94,11 @@ final class QueueAnimation extends DualStateIcon {
 
   @override
   String get artboardName => 'Queue';
+
+  @override
+  Color? overrideColor(BuildContext context) {
+    return isActive
+        ? Theme.of(context).colorScheme.onErrorContainer
+        : null;
+  }
 }

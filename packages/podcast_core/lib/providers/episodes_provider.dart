@@ -97,9 +97,10 @@ class Episodes extends _$Episodes {
 }
 
 @riverpod
-Stream<List<Episode>> _episodesImpl(Ref ref, PodcastId podcast) {
+Stream<List<Episode>> _episodesImpl(Ref ref, PodcastId podcast) async* {
   final lifecycleState = ref.watch(appLifecycleStatePodProvider);
-  if (lifecycleState != AppLifecycleState.resumed) return const Stream.empty();
+  if (lifecycleState != AppLifecycleState.resumed) return;
 
-  return ref.watch(repositoryProvider).watchEpisodesFor(podcast: podcast);
+  final repository = await ref.watch(repositoryProvider.future);
+  yield* repository.watchEpisodesFor(podcast: podcast);
 }

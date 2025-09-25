@@ -6,6 +6,9 @@ part of 'episodes_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(EpisodePod)
 const episodePodProvider = EpisodePodFamily._();
 
@@ -271,7 +274,7 @@ final class _EpisodesImplProvider
        );
 
   @override
-  String debugGetCreateSourceHash() => _$episodesImplHash();
+  String debugGetCreateSourceHash() => _$_episodesImplHash();
 
   @override
   String toString() {
@@ -303,7 +306,7 @@ final class _EpisodesImplProvider
   }
 }
 
-String _$episodesImplHash() => r'0351da9b9b7baf6c3df189267fd7ad18b659811e';
+String _$_episodesImplHash() => r'794fb9c0d958f47936dfeaa20d64f2a77cd87d5a';
 
 final class _EpisodesImplFamily extends $Family
     with $FunctionalFamilyOverride<Stream<List<Episode>>, PodcastId> {
@@ -322,6 +325,3 @@ final class _EpisodesImplFamily extends $Family
   @override
   String toString() => r'_episodesImplProvider';
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

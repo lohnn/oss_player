@@ -21,7 +21,7 @@ class UserEpisodeStatusPod extends _$UserEpisodeStatusPod {
 
   @override
   Stream<EquatableMap<EpisodeId, UserEpisodeStatus>> build() async* {
-    _repository = ref.watch(repositoryProvider);
+    _repository = await ref.watch(repositoryProvider.future);
 
     final lifecycleState = ref.watch(appLifecycleStatePodProvider);
     if (lifecycleState != AppLifecycleState.resumed) return;

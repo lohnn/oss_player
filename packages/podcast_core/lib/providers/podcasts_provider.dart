@@ -38,7 +38,7 @@ class PodcastPod extends _$PodcastPod {
 
   @override
   Future<Podcast> build(PodcastId podcastId) async {
-    _repository = ref.watch(repositoryProvider);
+    _repository = await ref.watch(repositoryProvider.future);
     return ref.watch(
       podcastsProvider.selectAsync(
         (podcasts) => podcasts.firstWhere((podcast) => podcast.id == podcastId),
@@ -58,7 +58,7 @@ class Podcasts extends _$Podcasts {
 
   @override
   Stream<EquatableList<Podcast>> build() async* {
-    _repository = ref.watch(repositoryProvider);
+    _repository = await ref.watch(repositoryProvider.future);
     final lifecycleState = ref.watch(appLifecycleStatePodProvider);
     if (lifecycleState != AppLifecycleState.resumed) return;
 

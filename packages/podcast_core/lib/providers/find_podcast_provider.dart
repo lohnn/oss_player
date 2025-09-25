@@ -19,7 +19,8 @@ class FindPodcast extends _$FindPodcast {
     _mounted = true;
     ref.onDispose(() => _mounted = false);
     try {
-      return await (_repository = ref.watch(repositoryProvider)).findPodcasts();
+      _repository = await ref.watch(repositoryProvider.future);
+      return _repository.findPodcasts();
     } catch (e, stackTrace) {
       debugPrint(e.toString());
       debugPrintStack(stackTrace: stackTrace);

@@ -6,6 +6,9 @@ part of 'playlist_pod_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(PlaylistPod)
 const playlistPodProvider = PlaylistPodProvider._();
 
@@ -30,7 +33,7 @@ final class PlaylistPodProvider
   PlaylistPod create() => PlaylistPod();
 }
 
-String _$playlistPodHash() => r'6587fd69f7617330f9eb2fef6381dc1fe579ec97';
+String _$playlistPodHash() => r'397a331777de529c18d8e96869b0ac1a126b5b7b';
 
 abstract class _$PlaylistPod extends $StreamNotifier<List<Episode>> {
   Stream<List<Episode>> build();
@@ -50,6 +53,3 @@ abstract class _$PlaylistPod extends $StreamNotifier<List<Episode>> {
     element.handleValue(ref, created);
   }
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

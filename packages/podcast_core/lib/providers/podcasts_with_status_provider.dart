@@ -14,8 +14,8 @@ class PodcastsWithStatus extends _$PodcastsWithStatus {
   late Repository _repository;
 
   @override
-  Future<EquatableList<PodcastWithStatus>> build() {
-    _repository = ref.watch(repositoryProvider);
+  Future<EquatableList<PodcastWithStatus>> build() async {
+    _repository = await ref.watch(repositoryProvider.future);
     // @TODO: Maybe find a way to store the value locally as well for offline first
 
     // keepUpToDateWithSubscriptions();

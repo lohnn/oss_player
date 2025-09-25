@@ -23,7 +23,7 @@ Future<PodcastAudioHandler> _podcastAudioHandler(Ref ref) async {
   await audioSession.configure(const AudioSessionConfiguration.speech());
   return PodcastAudioHandler(
     audioSession: audioSession,
-    repository: ref.watch(repositoryProvider),
+    repository: await ref.watch(repositoryProvider.future),
   );
 }
 
@@ -64,7 +64,7 @@ class AudioPlayerPod extends _$AudioPlayerPod {
   Future<EpisodeWithStatus?> build() async {
     try {
       _player = await ref.watch(_audioServicePodProvider.future);
-      _repository = ref.watch(repositoryProvider);
+      _repository = await ref.watch(repositoryProvider.future);
 
       final subscription = _player.episodeFinished.listen((_) {
         _onEpisodeFinished();

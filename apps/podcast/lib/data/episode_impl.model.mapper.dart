@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// dart format off
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
@@ -21,28 +22,84 @@ class EpisodeImplMapper extends ClassMapperBase<EpisodeImpl> {
   final String id = 'EpisodeImpl';
 
   static String _$backingId(EpisodeImpl v) => v.backingId;
-  static const Field<EpisodeImpl, String> _f$backingId =
-      Field('backingId', _$backingId);
+  static const Field<EpisodeImpl, String> _f$backingId = Field(
+    'backingId',
+    _$backingId,
+  );
   static String _$backingUrl(EpisodeImpl v) => v.backingUrl;
-  static const Field<EpisodeImpl, String> _f$backingUrl =
-      Field('backingUrl', _$backingUrl);
+  static const Field<EpisodeImpl, String> _f$backingUrl = Field(
+    'backingUrl',
+    _$backingUrl,
+  );
   static String _$title(EpisodeImpl v) => v.title;
   static const Field<EpisodeImpl, String> _f$title = Field('title', _$title);
   static int _$datePublished(EpisodeImpl v) => v.datePublished;
-  static const Field<EpisodeImpl, int> _f$datePublished =
-      Field('datePublished', _$datePublished);
+  static const Field<EpisodeImpl, int> _f$datePublished = Field(
+    'datePublished',
+    _$datePublished,
+  );
   static String? _$description(EpisodeImpl v) => v.description;
-  static const Field<EpisodeImpl, String> _f$description =
-      Field('description', _$description);
+  static const Field<EpisodeImpl, String> _f$description = Field(
+    'description',
+    _$description,
+  );
   static String _$backingImageUrl(EpisodeImpl v) => v.backingImageUrl;
-  static const Field<EpisodeImpl, String> _f$backingImageUrl =
-      Field('backingImageUrl', _$backingImageUrl);
+  static const Field<EpisodeImpl, String> _f$backingImageUrl = Field(
+    'backingImageUrl',
+    _$backingImageUrl,
+  );
   static int? _$backingDuration(EpisodeImpl v) => v.backingDuration;
-  static const Field<EpisodeImpl, int> _f$backingDuration =
-      Field('backingDuration', _$backingDuration);
+  static const Field<EpisodeImpl, int> _f$backingDuration = Field(
+    'backingDuration',
+    _$backingDuration,
+  );
   static String _$backingPodcastId(EpisodeImpl v) => v.backingPodcastId;
-  static const Field<EpisodeImpl, String> _f$backingPodcastId =
-      Field('backingPodcastId', _$backingPodcastId);
+  static const Field<EpisodeImpl, String> _f$backingPodcastId = Field(
+    'backingPodcastId',
+    _$backingPodcastId,
+  );
+  static EpisodeId _$id(EpisodeImpl v) => v.id;
+  static const Field<EpisodeImpl, EpisodeId> _f$id = Field(
+    'id',
+    _$id,
+    mode: FieldMode.member,
+  );
+  static Uri _$url(EpisodeImpl v) => v.url;
+  static const Field<EpisodeImpl, Uri> _f$url = Field(
+    'url',
+    _$url,
+    mode: FieldMode.member,
+  );
+  static DateTime _$pubDate(EpisodeImpl v) => v.pubDate;
+  static const Field<EpisodeImpl, DateTime> _f$pubDate = Field(
+    'pubDate',
+    _$pubDate,
+    mode: FieldMode.member,
+  );
+  static String _$localFilePath(EpisodeImpl v) => v.localFilePath;
+  static const Field<EpisodeImpl, String> _f$localFilePath = Field(
+    'localFilePath',
+    _$localFilePath,
+    mode: FieldMode.member,
+  );
+  static Uri _$imageUrl(EpisodeImpl v) => v.imageUrl;
+  static const Field<EpisodeImpl, Uri> _f$imageUrl = Field(
+    'imageUrl',
+    _$imageUrl,
+    mode: FieldMode.member,
+  );
+  static Duration? _$duration(EpisodeImpl v) => v.duration;
+  static const Field<EpisodeImpl, Duration> _f$duration = Field(
+    'duration',
+    _$duration,
+    mode: FieldMode.member,
+  );
+  static PodcastId _$podcastId(EpisodeImpl v) => v.podcastId;
+  static const Field<EpisodeImpl, PodcastId> _f$podcastId = Field(
+    'podcastId',
+    _$podcastId,
+    mode: FieldMode.member,
+  );
 
   @override
   final MappableFields<EpisodeImpl> fields = const {
@@ -54,18 +111,26 @@ class EpisodeImplMapper extends ClassMapperBase<EpisodeImpl> {
     #backingImageUrl: _f$backingImageUrl,
     #backingDuration: _f$backingDuration,
     #backingPodcastId: _f$backingPodcastId,
+    #id: _f$id,
+    #url: _f$url,
+    #pubDate: _f$pubDate,
+    #localFilePath: _f$localFilePath,
+    #imageUrl: _f$imageUrl,
+    #duration: _f$duration,
+    #podcastId: _f$podcastId,
   };
 
   static EpisodeImpl _instantiate(DecodingData data) {
     return EpisodeImpl(
-        backingId: data.dec(_f$backingId),
-        backingUrl: data.dec(_f$backingUrl),
-        title: data.dec(_f$title),
-        datePublished: data.dec(_f$datePublished),
-        description: data.dec(_f$description),
-        backingImageUrl: data.dec(_f$backingImageUrl),
-        backingDuration: data.dec(_f$backingDuration),
-        backingPodcastId: data.dec(_f$backingPodcastId));
+      backingId: data.dec(_f$backingId),
+      backingUrl: data.dec(_f$backingUrl),
+      title: data.dec(_f$title),
+      datePublished: data.dec(_f$datePublished),
+      description: data.dec(_f$description),
+      backingImageUrl: data.dec(_f$backingImageUrl),
+      backingDuration: data.dec(_f$backingDuration),
+      backingPodcastId: data.dec(_f$backingPodcastId),
+    );
   }
 
   @override
@@ -82,28 +147,36 @@ class EpisodeImplMapper extends ClassMapperBase<EpisodeImpl> {
 
 mixin EpisodeImplMappable {
   String toJson() {
-    return EpisodeImplMapper.ensureInitialized()
-        .encodeJson<EpisodeImpl>(this as EpisodeImpl);
+    return EpisodeImplMapper.ensureInitialized().encodeJson<EpisodeImpl>(
+      this as EpisodeImpl,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return EpisodeImplMapper.ensureInitialized()
-        .encodeMap<EpisodeImpl>(this as EpisodeImpl);
+    return EpisodeImplMapper.ensureInitialized().encodeMap<EpisodeImpl>(
+      this as EpisodeImpl,
+    );
   }
 
   EpisodeImplCopyWith<EpisodeImpl, EpisodeImpl, EpisodeImpl> get copyWith =>
       _EpisodeImplCopyWithImpl<EpisodeImpl, EpisodeImpl>(
-          this as EpisodeImpl, $identity, $identity);
+        this as EpisodeImpl,
+        $identity,
+        $identity,
+      );
   @override
   String toString() {
-    return EpisodeImplMapper.ensureInitialized()
-        .stringifyValue(this as EpisodeImpl);
+    return EpisodeImplMapper.ensureInitialized().stringifyValue(
+      this as EpisodeImpl,
+    );
   }
 
   @override
   bool operator ==(Object other) {
-    return EpisodeImplMapper.ensureInitialized()
-        .equalsValue(this as EpisodeImpl, other);
+    return EpisodeImplMapper.ensureInitialized().equalsValue(
+      this as EpisodeImpl,
+      other,
+    );
   }
 
   @override
@@ -120,15 +193,16 @@ extension EpisodeImplValueCopy<$R, $Out>
 
 abstract class EpisodeImplCopyWith<$R, $In extends EpisodeImpl, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
-  $R call(
-      {String? backingId,
-      String? backingUrl,
-      String? title,
-      int? datePublished,
-      String? description,
-      String? backingImageUrl,
-      int? backingDuration,
-      String? backingPodcastId});
+  $R call({
+    String? backingId,
+    String? backingUrl,
+    String? title,
+    int? datePublished,
+    String? description,
+    String? backingImageUrl,
+    int? backingDuration,
+    String? backingPodcastId,
+  });
   EpisodeImplCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -141,39 +215,42 @@ class _EpisodeImplCopyWithImpl<$R, $Out>
   late final ClassMapperBase<EpisodeImpl> $mapper =
       EpisodeImplMapper.ensureInitialized();
   @override
-  $R call(
-          {String? backingId,
-          String? backingUrl,
-          String? title,
-          int? datePublished,
-          Object? description = $none,
-          String? backingImageUrl,
-          Object? backingDuration = $none,
-          String? backingPodcastId}) =>
-      $apply(FieldCopyWithData({
-        if (backingId != null) #backingId: backingId,
-        if (backingUrl != null) #backingUrl: backingUrl,
-        if (title != null) #title: title,
-        if (datePublished != null) #datePublished: datePublished,
-        if (description != $none) #description: description,
-        if (backingImageUrl != null) #backingImageUrl: backingImageUrl,
-        if (backingDuration != $none) #backingDuration: backingDuration,
-        if (backingPodcastId != null) #backingPodcastId: backingPodcastId
-      }));
+  $R call({
+    String? backingId,
+    String? backingUrl,
+    String? title,
+    int? datePublished,
+    Object? description = $none,
+    String? backingImageUrl,
+    Object? backingDuration = $none,
+    String? backingPodcastId,
+  }) => $apply(
+    FieldCopyWithData({
+      if (backingId != null) #backingId: backingId,
+      if (backingUrl != null) #backingUrl: backingUrl,
+      if (title != null) #title: title,
+      if (datePublished != null) #datePublished: datePublished,
+      if (description != $none) #description: description,
+      if (backingImageUrl != null) #backingImageUrl: backingImageUrl,
+      if (backingDuration != $none) #backingDuration: backingDuration,
+      if (backingPodcastId != null) #backingPodcastId: backingPodcastId,
+    }),
+  );
   @override
   EpisodeImpl $make(CopyWithData data) => EpisodeImpl(
-      backingId: data.get(#backingId, or: $value.backingId),
-      backingUrl: data.get(#backingUrl, or: $value.backingUrl),
-      title: data.get(#title, or: $value.title),
-      datePublished: data.get(#datePublished, or: $value.datePublished),
-      description: data.get(#description, or: $value.description),
-      backingImageUrl: data.get(#backingImageUrl, or: $value.backingImageUrl),
-      backingDuration: data.get(#backingDuration, or: $value.backingDuration),
-      backingPodcastId:
-          data.get(#backingPodcastId, or: $value.backingPodcastId));
+    backingId: data.get(#backingId, or: $value.backingId),
+    backingUrl: data.get(#backingUrl, or: $value.backingUrl),
+    title: data.get(#title, or: $value.title),
+    datePublished: data.get(#datePublished, or: $value.datePublished),
+    description: data.get(#description, or: $value.description),
+    backingImageUrl: data.get(#backingImageUrl, or: $value.backingImageUrl),
+    backingDuration: data.get(#backingDuration, or: $value.backingDuration),
+    backingPodcastId: data.get(#backingPodcastId, or: $value.backingPodcastId),
+  );
 
   @override
   EpisodeImplCopyWith<$R2, EpisodeImpl, $Out2> $chain<$R2, $Out2>(
-          Then<$Out2, $R2> t) =>
-      _EpisodeImplCopyWithImpl<$R2, $Out2>($value, $cast, t);
+    Then<$Out2, $R2> t,
+  ) => _EpisodeImplCopyWithImpl<$R2, $Out2>($value, $cast, t);
 }
+
