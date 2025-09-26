@@ -121,7 +121,6 @@ class SmallMediaPlayerControls extends HookConsumerWidget {
                               child: BackdropFilter(
                                 filter: ImageFilter.blur(
                                   sigmaX: 10.0,
-                                  sigmaY: 10.0,
                                 ),
                                 child: ColoredBox(
                                   color: theme.colorScheme.surfaceContainerLow
