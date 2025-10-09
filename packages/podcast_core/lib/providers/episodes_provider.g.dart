@@ -9,39 +9,108 @@ part of 'episodes_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(EpisodePod)
-const episodePodProvider = EpisodePodFamily._();
+@ProviderFor(episode)
+const episodeProvider = EpisodeFamily._();
 
-final class EpisodePodProvider
+final class EpisodeProvider
+    extends $FunctionalProvider<AsyncValue<Episode>, Episode, FutureOr<Episode>>
+    with $FutureModifier<Episode>, $FutureProvider<Episode> {
+  const EpisodeProvider._({
+    required EpisodeFamily super.from,
+    required EpisodeId super.argument,
+  }) : super(
+         retry: null,
+         name: r'episodeProvider',
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$episodeHash();
+
+  @override
+  String toString() {
+    return r'episodeProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<Episode> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<Episode> create(Ref ref) {
+    final argument = this.argument as EpisodeId;
+    return episode(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is EpisodeProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$episodeHash() => r'aa712a9e50098698143a8157a860948f8a40645a';
+
+final class EpisodeFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<Episode>, EpisodeId> {
+  const EpisodeFamily._()
+    : super(
+        retry: null,
+        name: r'episodeProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  EpisodeProvider call(EpisodeId episodeId) =>
+      EpisodeProvider._(argument: episodeId, from: this);
+
+  @override
+  String toString() => r'episodeProvider';
+}
+
+@ProviderFor(PodcastAndEpisodePod)
+const podcastAndEpisodePodProvider = PodcastAndEpisodePodFamily._();
+
+final class PodcastAndEpisodePodProvider
     extends
         $NotifierProvider<
-          EpisodePod,
+          PodcastAndEpisodePod,
           AsyncValue<(Podcast, EpisodeWithStatus)>
         > {
-  const EpisodePodProvider._({
-    required EpisodePodFamily super.from,
+  const PodcastAndEpisodePodProvider._({
+    required PodcastAndEpisodePodFamily super.from,
     required ({PodcastId podcastId, EpisodeId episodeId}) super.argument,
   }) : super(
          retry: null,
-         name: r'episodePodProvider',
+         name: r'podcastAndEpisodePodProvider',
          isAutoDispose: true,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
 
   @override
-  String debugGetCreateSourceHash() => _$episodePodHash();
+  String debugGetCreateSourceHash() => _$podcastAndEpisodePodHash();
 
   @override
   String toString() {
-    return r'episodePodProvider'
+    return r'podcastAndEpisodePodProvider'
         ''
         '$argument';
   }
 
   @$internal
   @override
-  EpisodePod create() => EpisodePod();
+  PodcastAndEpisodePod create() => PodcastAndEpisodePod();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(AsyncValue<(Podcast, EpisodeWithStatus)> value) {
@@ -54,7 +123,7 @@ final class EpisodePodProvider
 
   @override
   bool operator ==(Object other) {
-    return other is EpisodePodProvider && other.argument == argument;
+    return other is PodcastAndEpisodePodProvider && other.argument == argument;
   }
 
   @override
@@ -63,39 +132,40 @@ final class EpisodePodProvider
   }
 }
 
-String _$episodePodHash() => r'b02c69e276b6cbb11048beb9eb29a8d89d930a61';
+String _$podcastAndEpisodePodHash() =>
+    r'19661ca894ad15616f54e949b822590f07c7a888';
 
-final class EpisodePodFamily extends $Family
+final class PodcastAndEpisodePodFamily extends $Family
     with
         $ClassFamilyOverride<
-          EpisodePod,
+          PodcastAndEpisodePod,
           AsyncValue<(Podcast, EpisodeWithStatus)>,
           AsyncValue<(Podcast, EpisodeWithStatus)>,
           AsyncValue<(Podcast, EpisodeWithStatus)>,
           ({PodcastId podcastId, EpisodeId episodeId})
         > {
-  const EpisodePodFamily._()
+  const PodcastAndEpisodePodFamily._()
     : super(
         retry: null,
-        name: r'episodePodProvider',
+        name: r'podcastAndEpisodePodProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
         isAutoDispose: true,
       );
 
-  EpisodePodProvider call({
+  PodcastAndEpisodePodProvider call({
     required PodcastId podcastId,
     required EpisodeId episodeId,
-  }) => EpisodePodProvider._(
+  }) => PodcastAndEpisodePodProvider._(
     argument: (podcastId: podcastId, episodeId: episodeId),
     from: this,
   );
 
   @override
-  String toString() => r'episodePodProvider';
+  String toString() => r'podcastAndEpisodePodProvider';
 }
 
-abstract class _$EpisodePod
+abstract class _$PodcastAndEpisodePod
     extends $Notifier<AsyncValue<(Podcast, EpisodeWithStatus)>> {
   late final _$args = ref.$arg as ({PodcastId podcastId, EpisodeId episodeId});
   PodcastId get podcastId => _$args.podcastId;
@@ -133,39 +203,39 @@ abstract class _$EpisodePod
   }
 }
 
-@ProviderFor(Episodes)
-const episodesProvider = EpisodesFamily._();
+@ProviderFor(PodcastAndEpisodes)
+const podcastAndEpisodesProvider = PodcastAndEpisodesFamily._();
 
-final class EpisodesProvider
+final class PodcastAndEpisodesProvider
     extends
         $NotifierProvider<
-          Episodes,
+          PodcastAndEpisodes,
           AsyncValue<(Podcast, List<EpisodeWithStatus>)>
         > {
-  const EpisodesProvider._({
-    required EpisodesFamily super.from,
+  const PodcastAndEpisodesProvider._({
+    required PodcastAndEpisodesFamily super.from,
     required PodcastId super.argument,
   }) : super(
          retry: null,
-         name: r'episodesProvider',
+         name: r'podcastAndEpisodesProvider',
          isAutoDispose: true,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
 
   @override
-  String debugGetCreateSourceHash() => _$episodesHash();
+  String debugGetCreateSourceHash() => _$podcastAndEpisodesHash();
 
   @override
   String toString() {
-    return r'episodesProvider'
+    return r'podcastAndEpisodesProvider'
         ''
         '($argument)';
   }
 
   @$internal
   @override
-  Episodes create() => Episodes();
+  PodcastAndEpisodes create() => PodcastAndEpisodes();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(
@@ -182,7 +252,7 @@ final class EpisodesProvider
 
   @override
   bool operator ==(Object other) {
-    return other is EpisodesProvider && other.argument == argument;
+    return other is PodcastAndEpisodesProvider && other.argument == argument;
   }
 
   @override
@@ -191,34 +261,35 @@ final class EpisodesProvider
   }
 }
 
-String _$episodesHash() => r'4549065ed14d288296483c43dcde5c744d2aedbc';
+String _$podcastAndEpisodesHash() =>
+    r'36d24a96d77ab550194b060719e7f4ce01f23b29';
 
-final class EpisodesFamily extends $Family
+final class PodcastAndEpisodesFamily extends $Family
     with
         $ClassFamilyOverride<
-          Episodes,
+          PodcastAndEpisodes,
           AsyncValue<(Podcast, List<EpisodeWithStatus>)>,
           AsyncValue<(Podcast, List<EpisodeWithStatus>)>,
           AsyncValue<(Podcast, List<EpisodeWithStatus>)>,
           PodcastId
         > {
-  const EpisodesFamily._()
+  const PodcastAndEpisodesFamily._()
     : super(
         retry: null,
-        name: r'episodesProvider',
+        name: r'podcastAndEpisodesProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
         isAutoDispose: true,
       );
 
-  EpisodesProvider call({required PodcastId podcastId}) =>
-      EpisodesProvider._(argument: podcastId, from: this);
+  PodcastAndEpisodesProvider call({required PodcastId podcastId}) =>
+      PodcastAndEpisodesProvider._(argument: podcastId, from: this);
 
   @override
-  String toString() => r'episodesProvider';
+  String toString() => r'podcastAndEpisodesProvider';
 }
 
-abstract class _$Episodes
+abstract class _$PodcastAndEpisodes
     extends $Notifier<AsyncValue<(Podcast, List<EpisodeWithStatus>)>> {
   late final _$args = ref.$arg as PodcastId;
   PodcastId get podcastId => _$args;

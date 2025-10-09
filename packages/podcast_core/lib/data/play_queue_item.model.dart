@@ -1,9 +1,7 @@
 import 'package:podcast_core/data/episode.model.dart';
 
 abstract class PlayQueueItem {
-  Episode get episode;
+  EpisodeId get episodeId;
 
   int get queueOrder;
-
-  EpisodeId get episodeId => episode.id;
 }

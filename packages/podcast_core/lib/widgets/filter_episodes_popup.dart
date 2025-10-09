@@ -87,7 +87,7 @@ class FilterEpisodesPopup extends ConsumerWidget {
                         ),
                       ),
                       onChanged: filterStateNotifier.changeSortBy,
-                      value: filterState.sortBy,
+                      initialValue: filterState.sortBy,
                       items: [
                         for (final sortBy in SortBy.values)
                           DropdownMenuItem(

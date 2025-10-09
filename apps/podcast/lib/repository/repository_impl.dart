@@ -93,6 +93,17 @@ class HiveRepositoryImpl implements core.Repository {
   }
 
   @override
+  Future<Episode> getEpisode(EpisodeId episodeId) {
+    return episodeBox.then((box) {
+      final episode = box.get(episodeId);
+      if (episode == null) {
+        throw Exception('Episode not found');
+      }
+      return episode;
+    });
+  }
+
+  @override
   Future<void> deletePlayQueueItem(covariant PlayQueueItem queueItem) async {
     final box = await queueItemBox;
     await box.delete(queueItem.episodeId);

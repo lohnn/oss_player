@@ -27,8 +27,8 @@ class EpisodeDetailsScreen
   });
 
   @override
-  EpisodePodProvider get provider =>
-      episodePodProvider(podcastId: podcastId, episodeId: episodeId);
+  PodcastAndEpisodePodProvider get provider =>
+      podcastAndEpisodePodProvider(podcastId: podcastId, episodeId: episodeId);
 
   @override
   Widget buildWithData(

@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:podcast_core/data/episode.model.dart';
 import 'package:podcast_core/extensions/list_extension.dart';
+import 'package:podcast_core/providers/episodes_provider.dart';
 import 'package:podcast_core/repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -19,7 +20,10 @@ class PlaylistPod extends _$PlaylistPod {
     } catch (_) {}
 
     await for (final queue in _repository.watchPlayQueue()) {
-      yield [for (final item in queue) item.episode];
+      yield [
+        for (final item in queue)
+          await ref.read(episodeProvider(item.episodeId).future),
+      ];
     }
   }
 

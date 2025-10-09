@@ -22,7 +22,7 @@ class PodcastDetailsScreen
   const PodcastDetailsScreen(this.podcastId, {super.key});
 
   @override
-  EpisodesProvider get provider => episodesProvider(podcastId: podcastId);
+  PodcastAndEpisodesProvider get provider => podcastAndEpisodesProvider(podcastId: podcastId);
 
   @override
   Widget buildWithData(

@@ -16,26 +16,34 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'episodes_provider.g.dart';
 
+@Riverpod(keepAlive: true)
+Future<Episode> episode(Ref ref, EpisodeId episodeId) async {
+  final repository = await ref.watch(repositoryProvider.future);
+  return repository.getEpisode(episodeId);
+}
+
 @riverpod
-class EpisodePod extends _$EpisodePod {
+class PodcastAndEpisodePod extends _$PodcastAndEpisodePod {
   @override
   AsyncValue<(Podcast, EpisodeWithStatus)> build({
     required PodcastId podcastId,
     required EpisodeId episodeId,
   }) {
-    return ref.watch(episodesProvider(podcastId: podcastId)).whenData((pair) {
-      final (podcast, episodes) = pair;
-      final episode = episodes.firstWhere(
-        (episodeWithStatus) => episodeWithStatus.episode.id == episodeId,
-      );
+    return ref.watch(podcastAndEpisodesProvider(podcastId: podcastId)).whenData(
+      (pair) {
+        final (podcast, episodes) = pair;
+        final episode = episodes.firstWhere(
+          (episodeWithStatus) => episodeWithStatus.episode.id == episodeId,
+        );
 
-      return (podcast, episode);
-    });
+        return (podcast, episode);
+      },
+    );
   }
 }
 
 @riverpod
-class Episodes extends _$Episodes {
+class PodcastAndEpisodes extends _$PodcastAndEpisodes {
   @override
   AsyncValue<(Podcast, List<EpisodeWithStatus>)> build({
     required PodcastId podcastId,

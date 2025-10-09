@@ -50,7 +50,7 @@ void main() {
         () => tester.pumpWidget(
           ProviderScope(
             overrides: [
-              episodePodProvider(
+              podcastAndEpisodePodProvider(
                 podcastId: PodcastId('1'),
                 episodeId: EpisodeId('1'),
               ).overrideWithBuild(
