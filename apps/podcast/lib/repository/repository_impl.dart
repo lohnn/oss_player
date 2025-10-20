@@ -156,11 +156,11 @@ class HiveRepositoryImpl implements core.Repository {
             case final episodesForPodcast)
           PodcastWithStatus(
             podcast: podcast,
-            listenedEpisodes: episodesForPodcast
+            playedEpisodeCount: episodesForPodcast
                 .map((episode) => userEpisodeStatusBox.get(episode.id))
                 .nonNulls
                 .length,
-            totalEpisodes: episodesForPodcast.length,
+            episodeCount: episodesForPodcast.length,
             hasUnseenEpisodes:
                 lastSeenBox.get(podcast.id)?.isBefore(podcast.lastPublished) ??
                 true,
