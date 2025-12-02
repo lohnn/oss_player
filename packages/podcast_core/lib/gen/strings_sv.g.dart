@@ -3,6 +3,7 @@
 ///
 // coverage:ignore-file
 // ignore_for_file: type=lint, unused_import
+// dart format off
 
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -10,7 +11,7 @@ import 'package:slang/generated.dart';
 import 'strings.g.dart';
 
 // Path: <root>
-class TranslationsSv implements Translations {
+class TranslationsSv with BaseTranslations<AppLocale, Translations> implements Translations {
 	/// You can call this constructor and build your own translation instance of this locale.
 	/// Constructing via the enum [AppLocale.build] is preferred.
 	TranslationsSv({Map<String, Node>? overrides, PluralResolver? cardinalResolver, PluralResolver? ordinalResolver, TranslationMetadata<AppLocale, Translations>? meta})
@@ -293,78 +294,80 @@ class _TranslationsQueueSv implements TranslationsQueueEn {
 	@override String get removeFromQueue => 'Ta bort från kö';
 }
 
-/// Flat map(s) containing all translations.
+/// The flat map containing all translations for locale <sv>.
 /// Only for edge cases! For simple maps, use the map function of this library.
+///
+/// The Dart AOT compiler has issues with very large switch statements,
+/// so the map is split into smaller functions (512 entries each).
 extension on TranslationsSv {
 	dynamic _flatMapFunction(String path) {
-		switch (path) {
-			case 'ok': return 'Ok';
-			case 'addPodcastDialog.title': return 'Lägg till podd via RSS';
-			case 'addPodcastDialog.textFieldHint': return 'Rss-url';
-			case 'importListenedEpisodesDialog.title': return 'Importera lyssnade avsnitt';
-			case 'importListenedEpisodesDialog.textFieldHint': return 'JSON-url för lyssnade avsnitt';
-			case 'errorScreen.somethingWentWrong': return 'Något gick fel.';
-			case 'errorScreen.tryReloading': return 'Försök att ladda om sidan';
-			case 'logOutDialog.title': return 'Logga ut?';
-			case 'logOutDialog.content': return 'Om du loggar ut måste du logga in igen.';
-			case 'logOutDialog.stayLoggedIn': return 'Förbli inloggad';
-			case 'logOutDialog.logOut': return 'Logga ut';
-			case 'episodeListItem.imageSemanticLabel': return 'Avsnittsbild';
-			case 'episodeListItem.played': return 'Spelat avsnitt';
-			case 'episodeListItem.unplayed': return 'Ospelat avsnitt';
-			case 'episodeListItem.duration': return ({required Object duration}) => ' • ${duration}';
-			case 'episodeDetailsScreen.podcastTitle': return 'Poddtitel';
-			case 'episodeDetailsScreen.episodeTitle': return 'Avsnittstitel';
-			case 'playEpisodeButton.playEpisodeTooltip': return ({required Object title}) => 'Spela avsnitt ${title}';
-			case 'playEpisodeButton.playEpisodeSemanticLabel': return 'Spela avsnitt';
-			case 'podcastDetailsScreen.episodes': return 'Avsnitt';
-			case 'podcastDetailsScreen.markUnlistened': return 'Markera som olyssnad';
-			case 'podcastDetailsScreen.markListened': return 'Markera som lyssnad';
-			case 'podcastSearchScreen.searchForPodcasts': return 'Sök efter poddar';
-			case 'podcastSearchScreen.somethingWentWrong': return 'Något gick fel.\nSkicka en felrapport till podcast@lohnn.se med din sökterm.';
-			case 'podcastSearchScreen.podcastArtwork': return 'Poddbild';
-			case 'episodePlayerModal.episodeImage': return 'Avsnittsbild';
-			case 'episodePlayerModal.showPlaylist': return 'Visa spellista';
-			case 'currentlyPlayingInformation.showPlaylist': return 'Visa spellista';
-			case 'currentlyPlayingInformation.inYourQueue': return 'I din kö:';
-			case 'filterEpisodesPopup.filterEpisodes': return 'Filtrera avsnitt';
-			case 'filterEpisodesPopup.clearAllFilters': return 'Rensa alla filter';
-			case 'filterEpisodesPopup.hidePlayedEpisodes': return 'Dölj spelade avsnitt';
-			case 'filterEpisodesPopup.sortBy': return 'Sortera efter';
-			case 'filterEpisodesPopup.changeSortOrder': return 'Ändra sorteringsordning';
-			case 'filterEpisodesPopup.sortAscending': return 'Sortera stigande';
-			case 'filterEpisodesPopup.sortDescending': return 'Sortera fallande';
-			case 'mediaEvents.rewind': return 'Spola tillbaka';
-			case 'mediaEvents.fastForward': return 'Spola framåt';
-			case 'mediaPlayer.play': return 'Spela';
-			case 'mediaPlayer.pause': return 'Pausa';
-			case 'mediaPlayer.rewind10': return 'Spola tillbaka 10 sekunder';
-			case 'mediaPlayer.rewind5': return 'Spola tillbaka 5 sekunder';
-			case 'mediaPlayer.rewind30': return 'Spola tillbaka 30 sekunder';
-			case 'mediaPlayer.forward10': return 'Hoppa framåt 10 sekunder';
-			case 'mediaPlayer.forward5': return 'Hoppa framåt 5 sekunder';
-			case 'mediaPlayer.forward30': return 'Hoppa framåt 30 sekunder';
-			case 'podcastDetails.podcastImage': return 'Poddbild';
-			case 'podcastDetails.rssFeed': return 'Rss-flöde';
-			case 'podcastDetails.expandDescription': return 'Visa mer';
-			case 'podcastDetails.showLess': return 'Visa mindre';
-			case 'podcastDetails.showMore': return 'Visa mer';
-			case 'podcastDetails.loading': return 'Laddar...';
-			case 'podcastDetails.areYouSureToUnsubscribe': return 'Är du säker på att du vill avprenumerera?';
-			case 'podcastDetails.yes': return 'Ja';
-			case 'podcastDetails.no': return 'Nej';
-			case 'podcastDetails.unsubscribe': return 'Avprenumerera';
-			case 'podcastDetails.addPodcast': return 'Lägg till podd';
-			case 'settings.title': return 'Inställningar';
-			case 'smallMediaPlayer.errorLoadingEpisode': return 'Fel vid laddning av avsnitt';
-			case 'smallMediaPlayer.nothingIsPlaying': return 'Inget spelas just nu';
-			case 'exitDialog.title': return 'Är du säker på att du vill avsluta?';
-			case 'exitDialog.yes': return 'Ja';
-			case 'exitDialog.no': return 'Nej';
-			case 'queue.addToQueue': return 'Lägg till i kö';
-			case 'queue.removeFromQueue': return 'Ta bort från kö';
-			default: return null;
-		}
+		return switch (path) {
+			'ok' => 'Ok',
+			'addPodcastDialog.title' => 'Lägg till podd via RSS',
+			'addPodcastDialog.textFieldHint' => 'Rss-url',
+			'importListenedEpisodesDialog.title' => 'Importera lyssnade avsnitt',
+			'importListenedEpisodesDialog.textFieldHint' => 'JSON-url för lyssnade avsnitt',
+			'errorScreen.somethingWentWrong' => 'Något gick fel.',
+			'errorScreen.tryReloading' => 'Försök att ladda om sidan',
+			'logOutDialog.title' => 'Logga ut?',
+			'logOutDialog.content' => 'Om du loggar ut måste du logga in igen.',
+			'logOutDialog.stayLoggedIn' => 'Förbli inloggad',
+			'logOutDialog.logOut' => 'Logga ut',
+			'episodeListItem.imageSemanticLabel' => 'Avsnittsbild',
+			'episodeListItem.played' => 'Spelat avsnitt',
+			'episodeListItem.unplayed' => 'Ospelat avsnitt',
+			'episodeListItem.duration' => ({required Object duration}) => ' • ${duration}',
+			'episodeDetailsScreen.podcastTitle' => 'Poddtitel',
+			'episodeDetailsScreen.episodeTitle' => 'Avsnittstitel',
+			'playEpisodeButton.playEpisodeTooltip' => ({required Object title}) => 'Spela avsnitt ${title}',
+			'playEpisodeButton.playEpisodeSemanticLabel' => 'Spela avsnitt',
+			'podcastDetailsScreen.episodes' => 'Avsnitt',
+			'podcastDetailsScreen.markUnlistened' => 'Markera som olyssnad',
+			'podcastDetailsScreen.markListened' => 'Markera som lyssnad',
+			'podcastSearchScreen.searchForPodcasts' => 'Sök efter poddar',
+			'podcastSearchScreen.somethingWentWrong' => 'Något gick fel.\nSkicka en felrapport till podcast@lohnn.se med din sökterm.',
+			'podcastSearchScreen.podcastArtwork' => 'Poddbild',
+			'episodePlayerModal.episodeImage' => 'Avsnittsbild',
+			'episodePlayerModal.showPlaylist' => 'Visa spellista',
+			'currentlyPlayingInformation.showPlaylist' => 'Visa spellista',
+			'currentlyPlayingInformation.inYourQueue' => 'I din kö:',
+			'filterEpisodesPopup.filterEpisodes' => 'Filtrera avsnitt',
+			'filterEpisodesPopup.clearAllFilters' => 'Rensa alla filter',
+			'filterEpisodesPopup.hidePlayedEpisodes' => 'Dölj spelade avsnitt',
+			'filterEpisodesPopup.sortBy' => 'Sortera efter',
+			'filterEpisodesPopup.changeSortOrder' => 'Ändra sorteringsordning',
+			'filterEpisodesPopup.sortAscending' => 'Sortera stigande',
+			'filterEpisodesPopup.sortDescending' => 'Sortera fallande',
+			'mediaEvents.rewind' => 'Spola tillbaka',
+			'mediaEvents.fastForward' => 'Spola framåt',
+			'mediaPlayer.play' => 'Spela',
+			'mediaPlayer.pause' => 'Pausa',
+			'mediaPlayer.rewind10' => 'Spola tillbaka 10 sekunder',
+			'mediaPlayer.rewind5' => 'Spola tillbaka 5 sekunder',
+			'mediaPlayer.rewind30' => 'Spola tillbaka 30 sekunder',
+			'mediaPlayer.forward10' => 'Hoppa framåt 10 sekunder',
+			'mediaPlayer.forward5' => 'Hoppa framåt 5 sekunder',
+			'mediaPlayer.forward30' => 'Hoppa framåt 30 sekunder',
+			'podcastDetails.podcastImage' => 'Poddbild',
+			'podcastDetails.rssFeed' => 'Rss-flöde',
+			'podcastDetails.expandDescription' => 'Visa mer',
+			'podcastDetails.showLess' => 'Visa mindre',
+			'podcastDetails.showMore' => 'Visa mer',
+			'podcastDetails.loading' => 'Laddar...',
+			'podcastDetails.areYouSureToUnsubscribe' => 'Är du säker på att du vill avprenumerera?',
+			'podcastDetails.yes' => 'Ja',
+			'podcastDetails.no' => 'Nej',
+			'podcastDetails.unsubscribe' => 'Avprenumerera',
+			'podcastDetails.addPodcast' => 'Lägg till podd',
+			'settings.title' => 'Inställningar',
+			'smallMediaPlayer.errorLoadingEpisode' => 'Fel vid laddning av avsnitt',
+			'smallMediaPlayer.nothingIsPlaying' => 'Inget spelas just nu',
+			'exitDialog.title' => 'Är du säker på att du vill avsluta?',
+			'exitDialog.yes' => 'Ja',
+			'exitDialog.no' => 'Nej',
+			'queue.addToQueue' => 'Lägg till i kö',
+			'queue.removeFromQueue' => 'Ta bort från kö',
+			_ => null,
+		};
 	}
 }
-

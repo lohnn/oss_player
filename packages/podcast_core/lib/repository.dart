@@ -32,9 +32,7 @@ abstract class Repository {
 
   Future<void> updateLastSeenPodcast(PodcastId podcast);
 
-  Future<List<Podcast>> getPodcasts();
-
-  Stream<List<Podcast>> watchPodcasts();
+  Stream<List<PodcastWithStatus>> watchPodcasts();
 
   Future<void> subscribeToPodcast(PodcastRssUrl podcast);
 
@@ -57,6 +55,4 @@ abstract class Repository {
   Listenable get episodesUpdated;
 
   Future<List<PodcastSearch>> findPodcasts([String? searchTerm]);
-
-  Future<List<PodcastWithStatus>> getPodcastsWithCount();
 }

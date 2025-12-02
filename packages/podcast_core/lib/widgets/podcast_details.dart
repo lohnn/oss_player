@@ -222,7 +222,7 @@ class _SubscribeChip extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).colorScheme;
-    return switch (ref.watch(subscribedPodcastProvider(rssUrl: rssUrl)).value) {
+    return switch (ref.watch(isSubscribedToRssProvider(rssUrl: rssUrl)).value) {
       null => Chip(label: Text(context.t.podcastDetails.loading)),
       true => ActionChip(
         backgroundColor: colors.errorContainer,

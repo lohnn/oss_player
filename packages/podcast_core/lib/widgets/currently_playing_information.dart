@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:podcast_core/data/episode.model.dart';
 import 'package:podcast_core/gen/strings.g.dart';
 import 'package:podcast_core/providers/playlist_pod_provider.dart';
-import 'package:podcast_core/providers/podcasts_provider.dart';
+import 'package:podcast_core/providers/podcasts_with_status_provider.dart';
 import 'package:podcast_core/widgets/plasma_sphere_widget.dart';
 import 'package:podcast_core/widgets/pub_date_text.dart';
 import 'package:podcast_core/widgets/rounded_image.dart';
@@ -40,7 +40,10 @@ class CurrentlyPlayingInformation extends ConsumerWidget {
                   color: Theme.of(context).colorScheme.primary,
                 ),
               ),
-              Text(context.t.currentlyPlayingInformation.inYourQueue, style: textTheme.titleLarge),
+              Text(
+                context.t.currentlyPlayingInformation.inYourQueue,
+                style: textTheme.titleLarge,
+              ),
             ],
           ),
           Expanded(
@@ -53,11 +56,16 @@ class CurrentlyPlayingInformation extends ConsumerWidget {
                     itemSnapping: true,
                     onTap: (index) async {
                       final podcast = await ref.read(
-                        podcastPodProvider(queue[index].podcastId).future,
+                        podcastWithStatusProvider(
+                          queue[index].podcastId,
+                        ).future,
                       );
 
                       if (!context.mounted) return;
-                      onNavigate('/${podcast.id.safe}/${queue[index].id.safe}');
+                      // TODO: We should probably alert logging tool if podcast was not returned
+                      onNavigate(
+                        '/${podcast!.podcast.id.safe}/${queue[index].id.safe}',
+                      );
                     },
                     flexWeights: [
                       1,
@@ -103,7 +111,10 @@ class _CarouselInformation extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final podcast = ref.watch(podcastPodProvider(episode.podcastId)).value;
+    final podcast = ref
+        .watch(podcastWithStatusProvider(episode.podcastId))
+        .value
+        ?.podcast;
 
     final textTheme = Theme.of(context).textTheme;
     return OverflowBox(

@@ -9,8 +9,10 @@ import 'package:podcast_core/data/podcast.model.dart';
 import 'package:podcast_core/gen/strings.g.dart';
 import 'package:podcast_core/hooks/menu_controller_hook.dart';
 import 'package:podcast_core/providers/episodes_filter_provider.dart';
-import 'package:podcast_core/providers/episodes_provider.dart';
+import 'package:podcast_core/providers/podcasts_with_status_provider.dart';
+import 'package:podcast_core/providers/user_episode_status_provider.dart';
 import 'package:podcast_core/screens/async_value_screen.dart';
+import 'package:podcast_core/screens/logged_in/podcast_details_screen/podcast_details_screen_provider.dart';
 import 'package:podcast_core/widgets/episode_list_item.dart';
 import 'package:podcast_core/widgets/filter_episodes_popup.dart';
 import 'package:podcast_core/widgets/podcast_details.dart';
@@ -22,7 +24,8 @@ class PodcastDetailsScreen
   const PodcastDetailsScreen(this.podcastId, {super.key});
 
   @override
-  PodcastAndEpisodesProvider get provider => podcastAndEpisodesProvider(podcastId: podcastId);
+  PodcastDetailsScreenProvider get provider =>
+      podcastDetailsScreenProvider(podcastId: podcastId);
 
   @override
   Widget buildWithData(
@@ -33,7 +36,9 @@ class PodcastDetailsScreen
     final (podcast, episodes) = data;
 
     useEffect(() {
-      unawaited(ref.read(provider.notifier).updateLastSeen());
+      unawaited(
+        ref.read(podcastsWithStatusProvider.notifier).updateLastSeen(podcastId),
+      );
       return null;
     }, []);
 
@@ -45,7 +50,8 @@ class PodcastDetailsScreen
     return Scaffold(
       appBar: AppBar(title: Text(podcast.title)),
       body: RefreshIndicator(
-        onRefresh: ref.read(provider.notifier).updateList,
+        onRefresh: () =>
+            ref.read(podcastsWithStatusProvider.notifier).refresh(podcast),
         child: CustomScrollView(
           slivers: [
             SliverPadding(
@@ -99,7 +105,8 @@ class PodcastDetailsScreen
                         icon: AnimatedSwitcher(
                           duration: const Duration(milliseconds: 300),
                           child: Icon(
-                            semanticLabel: context.t.filterEpisodesPopup.filterEpisodes,
+                            semanticLabel:
+                                context.t.filterEpisodesPopup.filterEpisodes,
                             Icons.filter_list,
                             key: ValueKey(episodesFilterState.isDefault),
                             color: episodesFilterState.isDefault
@@ -136,12 +143,16 @@ class PodcastDetailsScreen
                       if (episodeWithStatus.isPlayed)
                         PopupMenuItem(
                           value: _PopupActions.markUnlistened,
-                          child: Text(context.t.podcastDetailsScreen.markUnlistened),
+                          child: Text(
+                            context.t.podcastDetailsScreen.markUnlistened,
+                          ),
                         )
                       else
                         PopupMenuItem(
                           value: _PopupActions.markListened,
-                          child: Text(context.t.podcastDetailsScreen.markListened),
+                          child: Text(
+                            context.t.podcastDetailsScreen.markListened,
+                          ),
                         ),
                     ],
                     icon: const Icon(Icons.more_vert),
@@ -149,11 +160,11 @@ class PodcastDetailsScreen
                       switch (value) {
                         case _PopupActions.markListened:
                           await ref
-                              .read(provider.notifier)
+                              .read(userEpisodeStatusPodProvider.notifier)
                               .markListened(episodeWithStatus);
                         case _PopupActions.markUnlistened:
                           await ref
-                              .read(provider.notifier)
+                              .read(userEpisodeStatusPodProvider.notifier)
                               .markUnlistened(episodeWithStatus);
                       }
                     },

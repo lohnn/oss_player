@@ -112,7 +112,7 @@ class PodcastSearchScreen extends ConsumerWidget {
                     );
                   },
                   trailing: switch (ref
-                      .watch(subscribedPodcastProvider(rssUrl: podcast.url))
+                      .watch(isSubscribedToRssProvider(rssUrl: podcast.url))
                       .value) {
                     null => null,
                     true => IconButton(

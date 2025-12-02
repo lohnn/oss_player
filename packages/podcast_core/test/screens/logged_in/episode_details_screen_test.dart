@@ -5,8 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 import 'package:podcast_core/data/episode_with_status.dart';
 import 'package:podcast_core/providers/color_scheme_from_remote_image_provider.dart';
-import 'package:podcast_core/providers/episodes_provider.dart';
-import 'package:podcast_core/screens/logged_in/episode_details_screen.dart';
+import 'package:podcast_core/screens/logged_in/episode_details_screen/episode_details_screen.dart';
+import 'package:podcast_core/screens/logged_in/episode_details_screen/episode_details_screen_provider.dart';
 import 'package:podcast_core/widgets/queue_button.dart';
 
 import '../../helpers/widget_tester_helpers.dart';
@@ -50,12 +50,10 @@ void main() {
         () => tester.pumpWidget(
           ProviderScope(
             overrides: [
-              podcastAndEpisodePodProvider(
+              episodeDetailsScreenProvider(
                 podcastId: PodcastId('1'),
                 episodeId: EpisodeId('1'),
-              ).overrideWithBuild(
-                (_, _) => AsyncData((testPodcast, testEpisodeWithStatus)),
-              ),
+              ).overrideWith((_) => (testPodcast, testEpisodeWithStatus)),
               colorSchemeFromRemoteImageProvider(
                 Uri.parse('http://example.com/episode_image.png'),
                 Brightness.light,

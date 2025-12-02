@@ -3,6 +3,7 @@
 ///
 // coverage:ignore-file
 // ignore_for_file: type=lint, unused_import
+// dart format off
 
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -10,7 +11,7 @@ import 'package:slang/generated.dart';
 import 'strings.g.dart';
 
 // Path: <root>
-class TranslationsFi implements Translations {
+class TranslationsFi with BaseTranslations<AppLocale, Translations> implements Translations {
 	/// You can call this constructor and build your own translation instance of this locale.
 	/// Constructing via the enum [AppLocale.build] is preferred.
 	TranslationsFi({Map<String, Node>? overrides, PluralResolver? cardinalResolver, PluralResolver? ordinalResolver, TranslationMetadata<AppLocale, Translations>? meta})
@@ -293,78 +294,80 @@ class _TranslationsQueueFi implements TranslationsQueueEn {
 	@override String get removeFromQueue => 'Poista jonosta';
 }
 
-/// Flat map(s) containing all translations.
+/// The flat map containing all translations for locale <fi>.
 /// Only for edge cases! For simple maps, use the map function of this library.
+///
+/// The Dart AOT compiler has issues with very large switch statements,
+/// so the map is split into smaller functions (512 entries each).
 extension on TranslationsFi {
 	dynamic _flatMapFunction(String path) {
-		switch (path) {
-			case 'ok': return 'Ok';
-			case 'addPodcastDialog.title': return 'Lisää podcast RSS-syötteellä';
-			case 'addPodcastDialog.textFieldHint': return 'Rss-url';
-			case 'importListenedEpisodesDialog.title': return 'Tuo kuunnellut jaksot';
-			case 'importListenedEpisodesDialog.textFieldHint': return 'Kuunneltujen jaksojen JSON-url';
-			case 'errorScreen.somethingWentWrong': return 'Jotain meni pieleen.';
-			case 'errorScreen.tryReloading': return 'Yritä ladata sivu uudelleen';
-			case 'logOutDialog.title': return 'Kirjaudu ulos?';
-			case 'logOutDialog.content': return 'Jos kirjaudut ulos, sinun on kirjauduttava uudelleen sisään.';
-			case 'logOutDialog.stayLoggedIn': return 'Pysy kirjautuneena';
-			case 'logOutDialog.logOut': return 'Kirjaudu ulos';
-			case 'episodeListItem.imageSemanticLabel': return 'Jakson kuva';
-			case 'episodeListItem.played': return 'Toistettu jakso';
-			case 'episodeListItem.unplayed': return 'Toistamaton jakso';
-			case 'episodeListItem.duration': return ({required Object duration}) => ' • ${duration}';
-			case 'episodeDetailsScreen.podcastTitle': return 'Podcastin nimi';
-			case 'episodeDetailsScreen.episodeTitle': return 'Jakson nimi';
-			case 'playEpisodeButton.playEpisodeTooltip': return ({required Object title}) => 'Toista jakso ${title}';
-			case 'playEpisodeButton.playEpisodeSemanticLabel': return 'Toista jakso';
-			case 'podcastDetailsScreen.episodes': return 'Jaksot';
-			case 'podcastDetailsScreen.markUnlistened': return 'Merkitse kuuntelemattomaksi';
-			case 'podcastDetailsScreen.markListened': return 'Merkitse kuunnelluksi';
-			case 'podcastSearchScreen.searchForPodcasts': return 'Etsi podcasteja';
-			case 'podcastSearchScreen.somethingWentWrong': return 'Jotain meni pieleen.\nLähetä virheraportti osoitteeseen podcast@lohnn.se hakusanallasi.';
-			case 'podcastSearchScreen.podcastArtwork': return 'Podcastin kansikuva';
-			case 'episodePlayerModal.episodeImage': return 'Jakson kuva';
-			case 'episodePlayerModal.showPlaylist': return 'Näytä soittolista';
-			case 'currentlyPlayingInformation.showPlaylist': return 'Näytä soittolista';
-			case 'currentlyPlayingInformation.inYourQueue': return 'Jonossasi:';
-			case 'filterEpisodesPopup.filterEpisodes': return 'Suodata jaksoja';
-			case 'filterEpisodesPopup.clearAllFilters': return 'Poista kaikki suodattimet';
-			case 'filterEpisodesPopup.hidePlayedEpisodes': return 'Piilota toistetut jaksot';
-			case 'filterEpisodesPopup.sortBy': return 'Järjestä';
-			case 'filterEpisodesPopup.changeSortOrder': return 'Vaihda järjestystä';
-			case 'filterEpisodesPopup.sortAscending': return 'Järjestä nousevasti';
-			case 'filterEpisodesPopup.sortDescending': return 'Järjestä laskevasti';
-			case 'mediaEvents.rewind': return 'Kelaa taaksepäin';
-			case 'mediaEvents.fastForward': return 'Kelaa eteenpäin';
-			case 'mediaPlayer.play': return 'Toista';
-			case 'mediaPlayer.pause': return 'Tauko';
-			case 'mediaPlayer.rewind10': return 'Kelaa 10 sekuntia taaksepäin';
-			case 'mediaPlayer.rewind5': return 'Kelaa 5 sekuntia taaksepäin';
-			case 'mediaPlayer.rewind30': return 'Kelaa 30 sekuntia taaksepäin';
-			case 'mediaPlayer.forward10': return 'Hyppää 10 sekuntia eteenpäin';
-			case 'mediaPlayer.forward5': return 'Hyppää 5 sekuntia eteenpäin';
-			case 'mediaPlayer.forward30': return 'Hyppää 30 sekuntia eteenpäin';
-			case 'podcastDetails.podcastImage': return 'Podcastin kuva';
-			case 'podcastDetails.rssFeed': return 'Rss-syöte';
-			case 'podcastDetails.expandDescription': return 'Laajenna kuvaus';
-			case 'podcastDetails.showLess': return 'Näytä vähemmän';
-			case 'podcastDetails.showMore': return 'Näytä lisää';
-			case 'podcastDetails.loading': return 'Ladataan...';
-			case 'podcastDetails.areYouSureToUnsubscribe': return 'Haluatko varmasti lopettaa tilauksen?';
-			case 'podcastDetails.yes': return 'Kyllä';
-			case 'podcastDetails.no': return 'Ei';
-			case 'podcastDetails.unsubscribe': return 'Lopeta tilaus';
-			case 'podcastDetails.addPodcast': return 'Lisää podcast';
-			case 'settings.title': return 'Asetukset';
-			case 'smallMediaPlayer.errorLoadingEpisode': return 'Virhe ladattaessa jaksoa';
-			case 'smallMediaPlayer.nothingIsPlaying': return 'Mitään ei toisteta juuri nyt';
-			case 'exitDialog.title': return 'Haluatko varmasti poistua?';
-			case 'exitDialog.yes': return 'Kyllä';
-			case 'exitDialog.no': return 'Ei';
-			case 'queue.addToQueue': return 'Lisää jonoon';
-			case 'queue.removeFromQueue': return 'Poista jonosta';
-			default: return null;
-		}
+		return switch (path) {
+			'ok' => 'Ok',
+			'addPodcastDialog.title' => 'Lisää podcast RSS-syötteellä',
+			'addPodcastDialog.textFieldHint' => 'Rss-url',
+			'importListenedEpisodesDialog.title' => 'Tuo kuunnellut jaksot',
+			'importListenedEpisodesDialog.textFieldHint' => 'Kuunneltujen jaksojen JSON-url',
+			'errorScreen.somethingWentWrong' => 'Jotain meni pieleen.',
+			'errorScreen.tryReloading' => 'Yritä ladata sivu uudelleen',
+			'logOutDialog.title' => 'Kirjaudu ulos?',
+			'logOutDialog.content' => 'Jos kirjaudut ulos, sinun on kirjauduttava uudelleen sisään.',
+			'logOutDialog.stayLoggedIn' => 'Pysy kirjautuneena',
+			'logOutDialog.logOut' => 'Kirjaudu ulos',
+			'episodeListItem.imageSemanticLabel' => 'Jakson kuva',
+			'episodeListItem.played' => 'Toistettu jakso',
+			'episodeListItem.unplayed' => 'Toistamaton jakso',
+			'episodeListItem.duration' => ({required Object duration}) => ' • ${duration}',
+			'episodeDetailsScreen.podcastTitle' => 'Podcastin nimi',
+			'episodeDetailsScreen.episodeTitle' => 'Jakson nimi',
+			'playEpisodeButton.playEpisodeTooltip' => ({required Object title}) => 'Toista jakso ${title}',
+			'playEpisodeButton.playEpisodeSemanticLabel' => 'Toista jakso',
+			'podcastDetailsScreen.episodes' => 'Jaksot',
+			'podcastDetailsScreen.markUnlistened' => 'Merkitse kuuntelemattomaksi',
+			'podcastDetailsScreen.markListened' => 'Merkitse kuunnelluksi',
+			'podcastSearchScreen.searchForPodcasts' => 'Etsi podcasteja',
+			'podcastSearchScreen.somethingWentWrong' => 'Jotain meni pieleen.\nLähetä virheraportti osoitteeseen podcast@lohnn.se hakusanallasi.',
+			'podcastSearchScreen.podcastArtwork' => 'Podcastin kansikuva',
+			'episodePlayerModal.episodeImage' => 'Jakson kuva',
+			'episodePlayerModal.showPlaylist' => 'Näytä soittolista',
+			'currentlyPlayingInformation.showPlaylist' => 'Näytä soittolista',
+			'currentlyPlayingInformation.inYourQueue' => 'Jonossasi:',
+			'filterEpisodesPopup.filterEpisodes' => 'Suodata jaksoja',
+			'filterEpisodesPopup.clearAllFilters' => 'Poista kaikki suodattimet',
+			'filterEpisodesPopup.hidePlayedEpisodes' => 'Piilota toistetut jaksot',
+			'filterEpisodesPopup.sortBy' => 'Järjestä',
+			'filterEpisodesPopup.changeSortOrder' => 'Vaihda järjestystä',
+			'filterEpisodesPopup.sortAscending' => 'Järjestä nousevasti',
+			'filterEpisodesPopup.sortDescending' => 'Järjestä laskevasti',
+			'mediaEvents.rewind' => 'Kelaa taaksepäin',
+			'mediaEvents.fastForward' => 'Kelaa eteenpäin',
+			'mediaPlayer.play' => 'Toista',
+			'mediaPlayer.pause' => 'Tauko',
+			'mediaPlayer.rewind10' => 'Kelaa 10 sekuntia taaksepäin',
+			'mediaPlayer.rewind5' => 'Kelaa 5 sekuntia taaksepäin',
+			'mediaPlayer.rewind30' => 'Kelaa 30 sekuntia taaksepäin',
+			'mediaPlayer.forward10' => 'Hyppää 10 sekuntia eteenpäin',
+			'mediaPlayer.forward5' => 'Hyppää 5 sekuntia eteenpäin',
+			'mediaPlayer.forward30' => 'Hyppää 30 sekuntia eteenpäin',
+			'podcastDetails.podcastImage' => 'Podcastin kuva',
+			'podcastDetails.rssFeed' => 'Rss-syöte',
+			'podcastDetails.expandDescription' => 'Laajenna kuvaus',
+			'podcastDetails.showLess' => 'Näytä vähemmän',
+			'podcastDetails.showMore' => 'Näytä lisää',
+			'podcastDetails.loading' => 'Ladataan...',
+			'podcastDetails.areYouSureToUnsubscribe' => 'Haluatko varmasti lopettaa tilauksen?',
+			'podcastDetails.yes' => 'Kyllä',
+			'podcastDetails.no' => 'Ei',
+			'podcastDetails.unsubscribe' => 'Lopeta tilaus',
+			'podcastDetails.addPodcast' => 'Lisää podcast',
+			'settings.title' => 'Asetukset',
+			'smallMediaPlayer.errorLoadingEpisode' => 'Virhe ladattaessa jaksoa',
+			'smallMediaPlayer.nothingIsPlaying' => 'Mitään ei toisteta juuri nyt',
+			'exitDialog.title' => 'Haluatko varmasti poistua?',
+			'exitDialog.yes' => 'Kyllä',
+			'exitDialog.no' => 'Ei',
+			'queue.addToQueue' => 'Lisää jonoon',
+			'queue.removeFromQueue' => 'Poista jonosta',
+			_ => null,
+		};
 	}
 }
-
