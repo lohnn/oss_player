@@ -9,6 +9,7 @@ import 'package:podcast_core/data/podcast_search.model.dart';
 import 'package:podcast_core/gen/strings.g.dart';
 import 'package:podcast_core/providers/find_podcast_provider.dart';
 import 'package:podcast_core/providers/podcasts_provider.dart';
+import 'package:podcast_core/repository.dart';
 import 'package:podcast_core/widgets/rounded_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -249,7 +250,9 @@ class _SubscribeChip extends ConsumerWidget {
           );
           if (shouldDelete != true) return;
           // Unsubscribe from the podcast
-          await ref.read(findPodcastProvider.notifier).unsubscribe(rssUrl);
+          await ref
+              .read(repositoryProvider.future)
+              .then((repo) => repo.unsubscribeFromPodcast(rssUrl));
         },
         label: Row(
           mainAxisAlignment: MainAxisAlignment.center,

@@ -73,12 +73,6 @@ class PodcastSearchImplMapper extends ClassMapperBase<PodcastSearchImpl> {
     'url',
     _$url,
   );
-  static DateTime _$lastPublished(PodcastSearchImpl v) => v.lastPublished;
-  static const Field<PodcastSearchImpl, DateTime> _f$lastPublished = Field(
-    'lastPublished',
-    _$lastPublished,
-    mode: FieldMode.member,
-  );
 
   @override
   final MappableFields<PodcastSearchImpl> fields = const {
@@ -92,7 +86,6 @@ class PodcastSearchImplMapper extends ClassMapperBase<PodcastSearchImpl> {
     #newestItemPublishTime: _f$newestItemPublishTime,
     #title: _f$title,
     #url: _f$url,
-    #lastPublished: _f$lastPublished,
   };
 
   static PodcastSearchImpl _instantiate(DecodingData data) {

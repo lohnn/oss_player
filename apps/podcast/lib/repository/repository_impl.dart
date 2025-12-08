@@ -17,7 +17,6 @@ import 'package:podcast_core/data/episode.model.dart';
 import 'package:podcast_core/data/episode_with_status.dart';
 import 'package:podcast_core/data/podcast.model.dart';
 import 'package:podcast_core/data/podcast_search.model.dart';
-import 'package:podcast_core/data/podcast_with_status.dart';
 import 'package:podcast_core/data/user_episode_status.model.dart';
 import 'package:podcast_core/repository.dart' as core;
 
@@ -140,34 +139,6 @@ class HiveRepositoryImpl implements core.Repository {
     return box.values.toList()..sortedBy((podcast) => podcast.title);
   }
 
-  @override
-  Future<List<PodcastWithStatus>> getPodcastsWithCount() async {
-    final podcastBox = await this.podcastBox;
-    final userEpisodeStatusBox = await this.userEpisodeStatusBox;
-    final episodeBox = await this.episodeBox;
-
-    final lastSeenBox = await this.lastSeenBox;
-
-    return <PodcastWithStatus>[
-      for (final podcast in podcastBox.values)
-        if (episodeBox.values.where(
-              (episode) => episode.podcastId == podcast.id,
-            )
-            case final episodesForPodcast)
-          PodcastWithStatus(
-            podcast: podcast,
-            playedEpisodeCount: episodesForPodcast
-                .map((episode) => userEpisodeStatusBox.get(episode.id))
-                .nonNulls
-                .length,
-            episodeCount: episodesForPodcast.length,
-            hasUnseenEpisodes:
-                lastSeenBox.get(podcast.id)?.isBefore(podcast.lastPublished) ??
-                true,
-          ),
-    ];
-  }
-
   Future<UserEpisodeStatusImpl> getUserEpisodeStatus(Episode episode) async {
     final box = await userEpisodeStatusBox;
     return box.get(episode.id) ??
@@ -285,6 +256,34 @@ class HiveRepositoryImpl implements core.Repository {
       yield podcasts;
     }
   }
+
+  // @override
+  // Future<List<PodcastWithStatus>> getPodcastsWithCount() async {
+  //   final podcastBox = await this.podcastBox;
+  //   final userEpisodeStatusBox = await this.userEpisodeStatusBox;
+  //   final episodeBox = await this.episodeBox;
+  //
+  //   final lastSeenBox = await this.lastSeenBox;
+  //
+  //   return <PodcastWithStatus>[
+  //     for (final podcast in podcastBox.values)
+  //       if (episodeBox.values.where(
+  //             (episode) => episode.podcastId == podcast.id,
+  //       )
+  //       case final episodesForPodcast)
+  //         PodcastWithStatus(
+  //           podcast: podcast,
+  //           playedEpisodeCount: episodesForPodcast
+  //               .map((episode) => userEpisodeStatusBox.get(episode.id))
+  //               .nonNulls
+  //               .length,
+  //           episodeCount: episodesForPodcast.length,
+  //           hasUnseenEpisodes:
+  //           lastSeenBox.get(podcast.id)?.isBefore(podcast.lastPublished) ??
+  //               true,
+  //         ),
+  //   ];
+  // }
 
   @override
   Stream<List<UserEpisodeStatus>> watchUserEpisodeStatuses() async* {

@@ -24,6 +24,11 @@ class PodcastSearchScreen extends ConsumerWidget {
               autoFocus: true,
               hintText: context.t.podcastSearchScreen.searchForPodcasts,
               controller: controller,
+              onSubmitted: (searchTerm) {
+                ref
+                    .read(findPodcastProvider.notifier)
+                    .search(searchTerm, skipDebounce: true);
+              },
               padding: const WidgetStatePropertyAll(
                 EdgeInsets.symmetric(horizontal: 16),
               ),

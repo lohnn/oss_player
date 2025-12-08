@@ -67,7 +67,7 @@ final class PodcastDetailsScreenProvider
 }
 
 String _$podcastDetailsScreenHash() =>
-    r'26b1b8061bac54a962feea0081eb39f6e2555e7c';
+    r'15c2e1d8aa963108b8338bd999a8c9eda970b5cc';
 
 final class PodcastDetailsScreenFamily extends $Family
     with

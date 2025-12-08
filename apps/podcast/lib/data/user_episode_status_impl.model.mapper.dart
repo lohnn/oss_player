@@ -37,26 +37,12 @@ class UserEpisodeStatusImplMapper
       v.currentPosition;
   static const Field<UserEpisodeStatusImpl, Duration> _f$currentPosition =
       Field('currentPosition', _$currentPosition);
-  static EpisodeId _$episodeId(UserEpisodeStatusImpl v) => v.episodeId;
-  static const Field<UserEpisodeStatusImpl, EpisodeId> _f$episodeId = Field(
-    'episodeId',
-    _$episodeId,
-    mode: FieldMode.member,
-  );
-  static String _$episodeHiveId(UserEpisodeStatusImpl v) => v.episodeHiveId;
-  static const Field<UserEpisodeStatusImpl, String> _f$episodeHiveId = Field(
-    'episodeHiveId',
-    _$episodeHiveId,
-    mode: FieldMode.member,
-  );
 
   @override
   final MappableFields<UserEpisodeStatusImpl> fields = const {
     #backingEpisodeId: _f$backingEpisodeId,
     #isPlayed: _f$isPlayed,
     #currentPosition: _f$currentPosition,
-    #episodeId: _f$episodeId,
-    #episodeHiveId: _f$episodeHiveId,
   };
 
   static UserEpisodeStatusImpl _instantiate(DecodingData data) {

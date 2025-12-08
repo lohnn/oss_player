@@ -43,11 +43,6 @@ class PodcastImplMapper extends ClassMapperBase<PodcastImpl> {
     'backingArtwork',
     _$backingArtwork,
   );
-  static DateTime _$lastPublished(PodcastImpl v) => v.lastPublished;
-  static const Field<PodcastImpl, DateTime> _f$lastPublished = Field(
-    'lastPublished',
-    _$lastPublished,
-  );
   static String? _$language(PodcastImpl v) => v.language;
   static const Field<PodcastImpl, String> _f$language = Field(
     'language',
@@ -60,30 +55,6 @@ class PodcastImplMapper extends ClassMapperBase<PodcastImpl> {
     opt: true,
     def: const {},
   );
-  static PodcastRssUrl _$url(PodcastImpl v) => v.url;
-  static const Field<PodcastImpl, PodcastRssUrl> _f$url = Field(
-    'url',
-    _$url,
-    mode: FieldMode.member,
-  );
-  static Uri _$artwork(PodcastImpl v) => v.artwork;
-  static const Field<PodcastImpl, Uri> _f$artwork = Field(
-    'artwork',
-    _$artwork,
-    mode: FieldMode.member,
-  );
-  static PodcastId _$id(PodcastImpl v) => v.id;
-  static const Field<PodcastImpl, PodcastId> _f$id = Field(
-    'id',
-    _$id,
-    mode: FieldMode.member,
-  );
-  static Uri _$link(PodcastImpl v) => v.link;
-  static const Field<PodcastImpl, Uri> _f$link = Field(
-    'link',
-    _$link,
-    mode: FieldMode.member,
-  );
 
   @override
   final MappableFields<PodcastImpl> fields = const {
@@ -92,13 +63,8 @@ class PodcastImplMapper extends ClassMapperBase<PodcastImpl> {
     #title: _f$title,
     #description: _f$description,
     #backingArtwork: _f$backingArtwork,
-    #lastPublished: _f$lastPublished,
     #language: _f$language,
     #categories: _f$categories,
-    #url: _f$url,
-    #artwork: _f$artwork,
-    #id: _f$id,
-    #link: _f$link,
   };
 
   static PodcastImpl _instantiate(DecodingData data) {
@@ -108,7 +74,6 @@ class PodcastImplMapper extends ClassMapperBase<PodcastImpl> {
       title: data.dec(_f$title),
       description: data.dec(_f$description),
       backingArtwork: data.dec(_f$backingArtwork),
-      lastPublished: data.dec(_f$lastPublished),
       language: data.dec(_f$language),
       categories: data.dec(_f$categories),
     );
@@ -180,7 +145,6 @@ abstract class PodcastImplCopyWith<$R, $In extends PodcastImpl, $Out>
     String? title,
     String? description,
     String? backingArtwork,
-    DateTime? lastPublished,
     String? language,
     Set<String>? categories,
   });
@@ -202,7 +166,6 @@ class _PodcastImplCopyWithImpl<$R, $Out>
     String? title,
     String? description,
     String? backingArtwork,
-    DateTime? lastPublished,
     Object? language = $none,
     Set<String>? categories,
   }) => $apply(
@@ -212,7 +175,6 @@ class _PodcastImplCopyWithImpl<$R, $Out>
       if (title != null) #title: title,
       if (description != null) #description: description,
       if (backingArtwork != null) #backingArtwork: backingArtwork,
-      if (lastPublished != null) #lastPublished: lastPublished,
       if (language != $none) #language: language,
       if (categories != null) #categories: categories,
     }),
@@ -224,7 +186,6 @@ class _PodcastImplCopyWithImpl<$R, $Out>
     title: data.get(#title, or: $value.title),
     description: data.get(#description, or: $value.description),
     backingArtwork: data.get(#backingArtwork, or: $value.backingArtwork),
-    lastPublished: data.get(#lastPublished, or: $value.lastPublished),
     language: data.get(#language, or: $value.language),
     categories: data.get(#categories, or: $value.categories),
   );

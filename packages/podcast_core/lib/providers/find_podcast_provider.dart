@@ -15,10 +15,10 @@ class FindPodcast extends _$FindPodcast {
 
   @override
   Future<List<PodcastSearch>> build() async {
+    _repository = await ref.watch(repositoryProvider.future);
     _mounted = true;
     ref.onDispose(() => _mounted = false);
     try {
-      _repository = await ref.watch(repositoryProvider.future);
       return _repository.findPodcasts();
     } catch (e, stackTrace) {
       debugPrint(e.toString());
@@ -27,9 +27,10 @@ class FindPodcast extends _$FindPodcast {
     }
   }
 
-  Future<void> search(String searchTerm) async {
+  Future<void> search(String searchTerm, {bool skipDebounce = false}) async {
     state = const AsyncLoading();
-    _searchDebouncer.run(() async {
+
+    Future<void> runFindPodcast() async {
       try {
         final podcasts = await _repository.findPodcasts(searchTerm);
 
@@ -40,7 +41,13 @@ class FindPodcast extends _$FindPodcast {
 
         if (_mounted) state = AsyncError(e, stackTrace);
       }
-    });
+    }
+
+    if (skipDebounce) {
+      _searchDebouncer.cancel();
+      return runFindPodcast();
+    }
+    _searchDebouncer.run(runFindPodcast);
   }
 
   Future<void> subscribe(PodcastRssUrl podcast) async {

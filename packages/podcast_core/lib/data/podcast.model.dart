@@ -31,9 +31,6 @@ abstract class Podcast {
   /// The URL of the podcast's artwork.
   Uri get artwork;
 
-  /// The date when the podcast was last published.
-  DateTime? get lastPublished;
-
   /// The language of the podcast.
   String? get language;
 
