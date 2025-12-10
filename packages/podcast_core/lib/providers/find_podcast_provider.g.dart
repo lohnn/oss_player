@@ -33,7 +33,7 @@ final class FindPodcastProvider
   FindPodcast create() => FindPodcast();
 }
 
-String _$findPodcastHash() => r'35b7bdb54a43756480b27c4c735ea13b1336859e';
+String _$findPodcastHash() => r'562d36f31b4818a1fba36220d464e3c7e125d05f';
 
 abstract class _$FindPodcast extends $AsyncNotifier<List<PodcastSearch>> {
   FutureOr<List<PodcastSearch>> build();
