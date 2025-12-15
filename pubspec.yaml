@@ -5,7 +5,7 @@ workspace:
   - packages/podcast_common
 
 environment:
-  sdk: ">=3.10.3 <4.0.0"
+  sdk: ">=3.10.4 <4.0.0"
 
 dependencies:
   collection: ^1.19.1
@@ -23,8 +23,8 @@ melos:
       branch: main
     bootstrap:
       environment:
-        sdk: '>=3.9.2 <4.0.0'
-        flutter: 3.38.4
+        sdk: ">=3.10.4 <4.0.0"
+        flutter: 3.38.5
   
   scripts:
     generate:
