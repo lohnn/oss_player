@@ -27,16 +27,18 @@ class UserEpisodeStatusImplMapper
   static const Field<UserEpisodeStatusImpl, String> _f$backingEpisodeId = Field(
     'backingEpisodeId',
     _$backingEpisodeId,
+    key: r'backing_episode_id',
   );
   static bool _$isPlayed(UserEpisodeStatusImpl v) => v.isPlayed;
   static const Field<UserEpisodeStatusImpl, bool> _f$isPlayed = Field(
     'isPlayed',
     _$isPlayed,
+    key: r'is_played',
   );
   static Duration _$currentPosition(UserEpisodeStatusImpl v) =>
       v.currentPosition;
   static const Field<UserEpisodeStatusImpl, Duration> _f$currentPosition =
-      Field('currentPosition', _$currentPosition);
+      Field('currentPosition', _$currentPosition, key: r'current_position');
 
   @override
   final MappableFields<UserEpisodeStatusImpl> fields = const {
