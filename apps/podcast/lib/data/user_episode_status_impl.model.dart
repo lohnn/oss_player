@@ -4,7 +4,7 @@ import 'package:podcast_core/data/user_episode_status.model.dart';
 
 part 'user_episode_status_impl.model.mapper.dart';
 
-@MappableClass(caseStyle: CaseStyle.snakeCase)
+@MappableClass()
 class UserEpisodeStatusImpl
     with UserEpisodeStatusImplMappable
     implements UserEpisodeStatus {

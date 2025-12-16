@@ -3,7 +3,7 @@ import 'package:podcast_core/data/podcast.model.dart';
 
 part 'podcast_with_status.mapper.dart';
 
-@MappableClass(caseStyle: CaseStyle.snakeCase)
+@MappableClass()
 class PodcastWithStatus with PodcastWithStatusMappable {
   final Podcast podcast;
   final int? episodeCount;
