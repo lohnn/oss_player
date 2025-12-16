@@ -93,18 +93,30 @@ class AudioPlayerPod extends _$AudioPlayerPod {
   }
 
   Future<void> updateQueue(List<Episode> queue) async {
-    if (queue.isNotEmpty) {
-      await _player.setQueue(queue);
+    try {
+      if (queue.isNotEmpty) {
+        await _player.setQueue(queue);
 
-      final nextEpisode = queue.firstOrNull;
-      if (nextEpisode != null) {
-        await loadNextEpisode(nextEpisode);
-        state = AsyncData(await _getStatusForEpisode(nextEpisode));
+        final nextEpisode = queue.firstOrNull;
+        if (nextEpisode != null) {
+          await loadNextEpisode(nextEpisode);
+          state = AsyncData(
+            // TODO: This never completes
+            await _getStatusForEpisode(
+              nextEpisode,
+            ).timeout(const Duration(seconds: 10)),
+          );
+        } else {
+          state = const AsyncData(null);
+        }
       } else {
         state = const AsyncData(null);
       }
-    } else {
-      state = const AsyncData(null);
+    } catch (e, stackTrace) {
+      debugPrint(e.toString());
+      debugPrintStack(stackTrace: stackTrace);
+      state = AsyncError(e, stackTrace);
+      rethrow;
     }
   }
 
@@ -162,6 +174,7 @@ class AudioPlayerPod extends _$AudioPlayerPod {
   }
 
   Future<EpisodeWithStatus> _getStatusForEpisode(Episode episode) async {
+    // TODO: Reads wont work with UserEpisodeStatusPod stream if no data is present yet
     final status = await ref.read(userEpisodeStatusProvider(episode.id).future);
     return EpisodeWithStatus(episode: episode, status: status);
   }

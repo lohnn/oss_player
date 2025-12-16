@@ -33,9 +33,6 @@ class PodcastSearchImpl
   final DateTime? lastUpdateTime;
 
   @override
-  DateTime get lastPublished => newestItemPublishTime ?? lastUpdateTime!;
-
-  @override
   final String title;
 
   PodcastSearchImpl({

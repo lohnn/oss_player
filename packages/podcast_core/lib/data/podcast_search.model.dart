@@ -15,8 +15,6 @@ abstract class PodcastSearch {
 
   Uri get artwork;
 
-  DateTime get lastPublished;
-
   String get language;
 
   Map<int, String> get categories;

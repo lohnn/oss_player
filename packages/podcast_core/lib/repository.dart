@@ -40,8 +40,6 @@ abstract class Repository {
 
   Future<void> refreshPodcast(PodcastRssUrl podcast);
 
-  Future<List<PlayQueueItem>> getPlayQueue();
-
   Future<PlayQueueItem> getPlayQueueItem(Episode episode);
 
   Stream<List<PlayQueueItem>> watchPlayQueue();
