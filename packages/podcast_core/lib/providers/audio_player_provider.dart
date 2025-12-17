@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:podcast_core/data/episode.model.dart';
 import 'package:podcast_core/data/episode_with_status.dart';
-import 'package:podcast_core/exceptions/todo_exception.dart';
+
 import 'package:podcast_core/providers/app_lifecycle_state_provider.dart';
 import 'package:podcast_core/providers/episode_loader_provider.dart';
 import 'package:podcast_core/providers/playlist_pod_provider.dart';
@@ -183,10 +183,7 @@ class AudioPlayerPod extends _$AudioPlayerPod {
     await _player.stop();
 
     // Set listened to true in episode
-    TODO(
-      'Mark listened currently needs episodeWithStatus. Figure out how to handle that.',
-    );
-    // await _repository.markEpisodeListened(episodeWithStatus!);
+    await _repository.markEpisodeListened(episode.id);
 
     // Remove episode reference from user
     final nextItem = await ref

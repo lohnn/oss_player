@@ -161,11 +161,11 @@ class PodcastDetailsScreen
                         case _PopupActions.markListened:
                           await ref
                               .read(userEpisodeStatusPodProvider.notifier)
-                              .markListened(episodeWithStatus);
+                              .markListened(episodeWithStatus.episode.id);
                         case _PopupActions.markUnlistened:
                           await ref
                               .read(userEpisodeStatusPodProvider.notifier)
-                              .markUnlistened(episodeWithStatus);
+                              .markUnlistened(episodeWithStatus.episode.id);
                       }
                     },
                   ),

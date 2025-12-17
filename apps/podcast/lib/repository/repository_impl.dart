@@ -14,7 +14,7 @@ import 'package:podcast/repository/adapters/hive_registrar.g.dart';
 import 'package:podcast/repository/search_headers_interceptor.dart';
 import 'package:podcast_common/podcast_common.dart';
 import 'package:podcast_core/data/episode.model.dart';
-import 'package:podcast_core/data/episode_with_status.dart';
+
 import 'package:podcast_core/data/podcast.model.dart';
 import 'package:podcast_core/data/podcast_search.model.dart';
 import 'package:podcast_core/data/user_episode_status.model.dart';
@@ -298,24 +298,17 @@ class HiveRepositoryImpl implements core.Repository {
 
   @override
   Future<void> markEpisodeListened(
-    EpisodeWithStatus episodeWithStatus, {
+    EpisodeId episodeId, {
     bool isPlayed = true,
   }) async {
     final box = await userEpisodeStatusBox;
+    final existingStatus = box.get(episodeId);
 
-    final newStatus = switch (episodeWithStatus.status) {
-      UserEpisodeStatus(:final episodeId, :final currentPosition) =>
-        UserEpisodeStatusImpl.usingEpisodeId(
-          episodeId: episodeId,
-          currentPosition: currentPosition,
-          isPlayed: isPlayed,
-        ),
-      null => UserEpisodeStatusImpl.usingEpisodeId(
-        episodeId: episodeWithStatus.episode.id,
-        isPlayed: isPlayed,
-        currentPosition: Duration.zero,
-      ),
-    };
+    final newStatus = UserEpisodeStatusImpl.usingEpisodeId(
+      episodeId: episodeId,
+      currentPosition: existingStatus?.currentPosition ?? Duration.zero,
+      isPlayed: isPlayed,
+    );
     await box.put(newStatus.episodeHiveId, newStatus);
   }
 

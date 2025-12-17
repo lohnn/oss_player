@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:podcast_core/data/episode.model.dart';
-import 'package:podcast_core/data/episode_with_status.dart';
+
 import 'package:podcast_core/data/play_queue_item.model.dart';
 import 'package:podcast_core/data/podcast.model.dart';
 import 'package:podcast_core/data/podcast_search.model.dart';
@@ -19,10 +19,7 @@ Future<Repository> repository(Ref ref) {
 abstract class Repository {
   Stream<List<UserEpisodeStatus>> watchUserEpisodeStatuses();
 
-  Future<void> markEpisodeListened(
-    EpisodeWithStatus episodeWithStatus, {
-    bool isPlayed = true,
-  });
+  Future<void> markEpisodeListened(EpisodeId episodeId, {bool isPlayed = true});
 
   Future<void> updateEpisodePosition(Episode episode, Duration position);
 
