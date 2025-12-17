@@ -31,10 +31,7 @@ class PlaylistPod extends _$PlaylistPod {
 
   Future<void> _recalculateOrder() async {
     final queue = await future;
-    await [
-      for (final (index, episode) in queue.indexed)
-        _repository.updatePlayQueueItemPosition(episode, index),
-    ].wait;
+    return _repository.updatePlayQueueItemPositions(queue);
   }
 
   /// Removes the episode from the queue and returns the next episode in the queue

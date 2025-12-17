@@ -41,7 +41,7 @@ abstract class Repository {
 
   Stream<List<PlayQueueItem>> watchPlayQueue();
 
-  Future<void> updatePlayQueueItemPosition(Episode episode, int position);
+  Future<void> updatePlayQueueItemPositions(List<Episode> episodes);
 
   Future<void> deletePlayQueueItem(PlayQueueItem item);
 

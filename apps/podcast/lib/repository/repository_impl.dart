@@ -14,7 +14,6 @@ import 'package:podcast/repository/adapters/hive_registrar.g.dart';
 import 'package:podcast/repository/search_headers_interceptor.dart';
 import 'package:podcast_common/podcast_common.dart';
 import 'package:podcast_core/data/episode.model.dart';
-
 import 'package:podcast_core/data/podcast.model.dart';
 import 'package:podcast_core/data/podcast_search.model.dart';
 import 'package:podcast_core/data/user_episode_status.model.dart';
@@ -323,13 +322,15 @@ class HiveRepositoryImpl implements core.Repository {
   }
 
   @override
-  Future<void> updatePlayQueueItemPosition(
-    covariant EpisodeImpl episode,
-    int position,
+  Future<void> updatePlayQueueItemPositions(
+    //TODO: This might fail
+    covariant List<EpisodeImpl> episodes,
   ) async {
     final box = await queueItemBox;
-    final queueItem = PlayQueueItem(episode: episode, queueOrder: position);
-    await box.put(queueItem.episodeHiveId, queueItem);
+    for (final (index, episode) in episodes.indexed) {
+      final queueItem = PlayQueueItem(episode: episode, queueOrder: index);
+      await box.put(queueItem.episodeHiveId, queueItem);
+    }
   }
 }
 
