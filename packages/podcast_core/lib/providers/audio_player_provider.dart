@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:podcast_core/data/episode.model.dart';
 import 'package:podcast_core/data/episode_with_status.dart';
+import 'package:podcast_core/exceptions/todo_exception.dart';
 import 'package:podcast_core/providers/app_lifecycle_state_provider.dart';
 import 'package:podcast_core/providers/episode_loader_provider.dart';
 import 'package:podcast_core/providers/playlist_pod_provider.dart';
@@ -61,7 +62,7 @@ class AudioPlayerPod extends _$AudioPlayerPod {
   final _log = Logger('se.lohnn.podcast.AudioPlayerPod');
 
   @override
-  Future<EpisodeWithStatus?> build() async {
+  Future<Episode?> build() async {
     try {
       _player = await ref.watch(_audioServicePodProvider.future);
       _repository = await ref.watch(repositoryProvider.future);
@@ -100,12 +101,7 @@ class AudioPlayerPod extends _$AudioPlayerPod {
         final nextEpisode = queue.firstOrNull;
         if (nextEpisode != null) {
           await loadNextEpisode(nextEpisode);
-          state = AsyncData(
-            // TODO: This never completes
-            await _getStatusForEpisode(
-              nextEpisode,
-            ).timeout(const Duration(seconds: 10)),
-          );
+          state = AsyncData(nextEpisode);
         } else {
           state = const AsyncData(null);
         }
@@ -180,19 +176,22 @@ class AudioPlayerPod extends _$AudioPlayerPod {
   }
 
   Future<void> _onEpisodeFinished() async {
-    final episodeWithStatus = await future;
+    final episode = await future;
 
-    _log.fine('Episode finished: ${episodeWithStatus?.episode.title}');
+    _log.fine('Episode finished: ${episode!.title}');
 
     await _player.stop();
 
     // Set listened to true in episode
-    await _repository.markEpisodeListened(episodeWithStatus!);
+    TODO(
+      'Mark listened currently needs episodeWithStatus. Figure out how to handle that.',
+    );
+    // await _repository.markEpisodeListened(episodeWithStatus!);
 
     // Remove episode reference from user
     final nextItem = await ref
         .read(playlistPodProvider.notifier)
-        .removeFromQueue(episodeWithStatus.episode);
+        .removeFromQueue(episode);
 
     // Start next episode from queue? (if not automatic)
     if (nextItem case final nextItem?) {
@@ -204,8 +203,7 @@ class AudioPlayerPod extends _$AudioPlayerPod {
   }
 
   Future<void> playEpisode(Episode episode, {bool autoPlay = true}) async {
-    final status = await _getStatusForEpisode(episode);
-    state = AsyncData(status);
+    state = AsyncData(episode);
 
     await ref.read(playlistPodProvider.notifier).addToTopOfQueue(episode);
 

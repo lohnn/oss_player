@@ -53,7 +53,7 @@ class SmallMediaPlayerControls extends HookConsumerWidget {
               null => Center(
                 child: Text(context.t.smallMediaPlayer.nothingIsPlaying),
               ),
-              EpisodeWithStatus(:final episode) => InkWell(
+              final episode => InkWell(
                 onTap: () async {
                   final action =
                       await showModalBottomSheet<
