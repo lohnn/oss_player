@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:podcast_core/data/episode_with_status.dart';
 import 'package:podcast_core/gen/strings.g.dart';
 import 'package:podcast_core/intents/play_pause_intent.dart';
 import 'package:podcast_core/providers/audio_player_provider.dart';
@@ -119,9 +118,7 @@ class SmallMediaPlayerControls extends HookConsumerWidget {
                             height: safeAreaBottom,
                             child: ClipRect(
                               child: BackdropFilter(
-                                filter: ImageFilter.blur(
-                                  sigmaX: 10.0,
-                                ),
+                                filter: ImageFilter.blur(sigmaX: 10.0),
                                 child: ColoredBox(
                                   color: theme.colorScheme.surfaceContainerLow
                                       .withValues(alpha: 0.6),

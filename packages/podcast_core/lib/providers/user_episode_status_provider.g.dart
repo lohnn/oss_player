@@ -115,7 +115,7 @@ final class UserEpisodeStatusPodProvider
 }
 
 String _$userEpisodeStatusPodHash() =>
-    r'12b4848b473e0a4fb56ee48cd706c9f4490f730e';
+    r'e1923ec82371b4e3c7044a555c1c2996511241b7';
 
 abstract class _$UserEpisodeStatusPod
     extends $StreamNotifier<EquatableMap<EpisodeId, UserEpisodeStatus>> {

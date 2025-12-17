@@ -16,7 +16,9 @@ import 'package:podcast_common/podcast_common.dart';
 import 'package:podcast_core/data/episode.model.dart';
 import 'package:podcast_core/data/podcast.model.dart';
 import 'package:podcast_core/data/podcast_search.model.dart';
+import 'package:podcast_core/data/podcast_with_status.dart';
 import 'package:podcast_core/data/user_episode_status.model.dart';
+import 'package:podcast_core/exceptions/todo_exception.dart';
 import 'package:podcast_core/repository.dart' as core;
 
 class HiveRepositoryImpl implements core.Repository {
@@ -245,15 +247,16 @@ class HiveRepositoryImpl implements core.Repository {
   }
 
   @override
-  Stream<List<PodcastImpl>> watchPodcasts() async* {
+  Stream<List<PodcastWithStatus>> watchPodcasts() async* {
     final box = await podcastBox;
-    yield box.values.toList(growable: false);
+    TODO('Implement this');
+    // yield box.values.toList(growable: false);
 
-    await for (final values in box.stream()) {
-      final podcasts = values.toList(growable: false)
-        ..sortBy((podcast) => podcast.title);
-      yield podcasts;
-    }
+    // await for (final values in box.stream()) {
+    //   final podcasts = values.toList(growable: false)
+    //     ..sortBy((podcast) => podcast.title);
+    //   yield podcasts;
+    // }
   }
 
   // @override

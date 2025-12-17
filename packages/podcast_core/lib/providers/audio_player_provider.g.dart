@@ -121,7 +121,7 @@ final class AudioPlayerPodProvider
   AudioPlayerPod create() => AudioPlayerPod();
 }
 
-String _$audioPlayerPodHash() => r'49e99d9c65df4b3ef28a25384a00b5e6230b8d68';
+String _$audioPlayerPodHash() => r'cefa7cd0a9a12d3f89918264fbb9ab38b157afc0';
 
 abstract class _$AudioPlayerPod extends $AsyncNotifier<Episode?> {
   FutureOr<Episode?> build();

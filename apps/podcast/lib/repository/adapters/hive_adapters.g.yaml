@@ -37,12 +37,12 @@ types:
         index: 3
   PlayQueueItem:
     typeId: 2
-    nextIndex: 2
+    nextIndex: 3
     fields:
-      episode:
-        index: 0
       queueOrder:
         index: 1
+      episode:
+        index: 2
   UserEpisodeStatusImpl:
     typeId: 4
     nextIndex: 4

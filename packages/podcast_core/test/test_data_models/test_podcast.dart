@@ -1,4 +1,5 @@
 import 'package:podcast_core/data/podcast.model.dart';
+
 export 'package:podcast_core/data/podcast.model.dart';
 
 class TestPodcast implements Podcast {
@@ -15,8 +16,6 @@ class TestPodcast implements Podcast {
   @override
   final Uri artwork;
   @override
-  final DateTime? lastPublished;
-  @override
   final String? language;
   @override
   final Set<String> categories;
@@ -28,7 +27,6 @@ class TestPodcast implements Podcast {
     required this.title,
     required this.description,
     required this.artwork,
-    this.lastPublished,
     this.language,
     this.categories = const {},
   });
