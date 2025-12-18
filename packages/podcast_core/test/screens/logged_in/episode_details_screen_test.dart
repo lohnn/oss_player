@@ -151,7 +151,7 @@ void main() {
         find.byKey(const Key('EpisodeDetailsScreen.theme')),
         findsOneWidget,
       );
-      // TODO: Further testing would involve overriding the provider and checking specific theme properties.
+      // @TODO: Further testing would involve overriding the provider and checking specific theme properties.
     });
 
     testWidgets('tapping on a URL in HTML description launches the URL', (
@@ -166,8 +166,8 @@ void main() {
       // This often involves setting up a mock channel for url_launcher.
     });
 
-    // TODO: Add more tests for accessibility, e.g., focus traversal, minimum tap targets, etc.
-    // TODO: Test cases for when description is null, pubDate is null, etc.
+    // @TODO: Add more tests for accessibility, e.g., focus traversal, minimum tap targets, etc.
+    // @TODO: Test cases for when description is null, pubDate is null, etc.
 
     testWidgets('Screen is selectable for text copying', (
       WidgetTester tester,
