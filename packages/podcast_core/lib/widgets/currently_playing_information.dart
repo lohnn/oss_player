@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:podcast_core/data/episode.model.dart';
+import 'package:podcast_core/exceptions/todo_exception.dart';
 import 'package:podcast_core/gen/strings.g.dart';
 import 'package:podcast_core/providers/playlist_pod_provider.dart';
 import 'package:podcast_core/providers/podcasts_with_status_provider.dart';
@@ -62,9 +63,13 @@ class CurrentlyPlayingInformation extends ConsumerWidget {
                       );
 
                       if (!context.mounted) return;
-                      // TODO: We should probably alert logging tool if podcast was not returned
+                      if (podcast == null) {
+                        TODO(
+                          'We should alert logging tool if podcast was not returned',
+                        );
+                      }
                       onNavigate(
-                        '/${podcast!.podcast.id.safe}/${queue[index].id.safe}',
+                        '/${podcast.podcast.id.safe}/${queue[index].id.safe}',
                       );
                     },
                     flexWeights: [

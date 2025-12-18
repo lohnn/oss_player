@@ -330,10 +330,12 @@ class HiveRepositoryImpl implements core.Repository {
     covariant List<EpisodeImpl> episodes,
   ) async {
     final box = await queueItemBox;
-    for (final (index, episode) in episodes.indexed) {
-      final queueItem = PlayQueueItem(episode: episode, queueOrder: index);
-      await box.put(queueItem.episodeHiveId, queueItem);
-    }
+
+    final itemsToPut = {
+      for (final (index, episode) in episodes.indexed)
+        episode.id.id: PlayQueueItem(episode: episode, queueOrder: index),
+    };
+    await box.putAll(itemsToPut);
   }
 }
 

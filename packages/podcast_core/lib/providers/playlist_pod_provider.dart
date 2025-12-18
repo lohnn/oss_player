@@ -16,10 +16,10 @@ class PlaylistPod extends _$PlaylistPod {
     _repository = await ref.watch(repositoryProvider.future);
 
     await for (final queue in _repository.watchPlayQueue()) {
-      yield [
+      yield await [
         for (final item in queue)
-          await ref.read(episodeProvider(item.episodeId).future),
-      ];
+          ref.read(episodeProvider(item.episodeId).future),
+      ].wait;
     }
   }
 
