@@ -14,11 +14,11 @@ import 'package:podcast/repository/adapters/hive_registrar.g.dart';
 import 'package:podcast/repository/search_headers_interceptor.dart';
 import 'package:podcast_common/podcast_common.dart';
 import 'package:podcast_core/data/episode.model.dart';
-import 'package:podcast_core/data/episode_with_status.dart';
 import 'package:podcast_core/data/podcast.model.dart';
 import 'package:podcast_core/data/podcast_search.model.dart';
 import 'package:podcast_core/data/podcast_with_status.dart';
 import 'package:podcast_core/data/user_episode_status.model.dart';
+import 'package:podcast_core/exceptions/todo_exception.dart';
 import 'package:podcast_core/repository.dart' as core;
 
 class HiveRepositoryImpl implements core.Repository {
@@ -93,6 +93,17 @@ class HiveRepositoryImpl implements core.Repository {
   }
 
   @override
+  Future<Episode> getEpisode(EpisodeId episodeId) {
+    return episodeBox.then((box) {
+      final episode = box.get(episodeId);
+      if (episode == null) {
+        throw Exception('Episode not found');
+      }
+      return episode;
+    });
+  }
+
+  @override
   Future<void> deletePlayQueueItem(covariant PlayQueueItem queueItem) async {
     final box = await queueItemBox;
     await box.delete(queueItem.episodeId);
@@ -127,34 +138,6 @@ class HiveRepositoryImpl implements core.Repository {
   Future<List<PodcastImpl>> getPodcasts() async {
     final box = await podcastBox;
     return box.values.toList()..sortedBy((podcast) => podcast.title);
-  }
-
-  @override
-  Future<List<PodcastWithStatus>> getPodcastsWithCount() async {
-    final podcastBox = await this.podcastBox;
-    final userEpisodeStatusBox = await this.userEpisodeStatusBox;
-    final episodeBox = await this.episodeBox;
-
-    final lastSeenBox = await this.lastSeenBox;
-
-    return <PodcastWithStatus>[
-      for (final podcast in podcastBox.values)
-        if (episodeBox.values.where(
-              (episode) => episode.podcastId == podcast.id,
-            )
-            case final episodesForPodcast)
-          PodcastWithStatus(
-            podcast: podcast,
-            listenedEpisodes: episodesForPodcast
-                .map((episode) => userEpisodeStatusBox.get(episode.id))
-                .nonNulls
-                .length,
-            totalEpisodes: episodesForPodcast.length,
-            hasUnseenEpisodes:
-                lastSeenBox.get(podcast.id)?.isBefore(podcast.lastPublished) ??
-                true,
-          ),
-    ];
   }
 
   Future<UserEpisodeStatusImpl> getUserEpisodeStatus(Episode episode) async {
@@ -264,16 +247,45 @@ class HiveRepositoryImpl implements core.Repository {
   }
 
   @override
-  Stream<List<PodcastImpl>> watchPodcasts() async* {
+  Stream<List<PodcastWithStatus>> watchPodcasts() async* {
     final box = await podcastBox;
-    yield box.values.toList(growable: false);
+    TODO('Implement this');
+    // yield box.values.toList(growable: false);
 
-    await for (final values in box.stream()) {
-      final podcasts = values.toList(growable: false)
-        ..sortBy((podcast) => podcast.title);
-      yield podcasts;
-    }
+    // await for (final values in box.stream()) {
+    //   final podcasts = values.toList(growable: false)
+    //     ..sortBy((podcast) => podcast.title);
+    //   yield podcasts;
+    // }
   }
+
+  // @override
+  // Future<List<PodcastWithStatus>> getPodcastsWithCount() async {
+  //   final podcastBox = await this.podcastBox;
+  //   final userEpisodeStatusBox = await this.userEpisodeStatusBox;
+  //   final episodeBox = await this.episodeBox;
+  //
+  //   final lastSeenBox = await this.lastSeenBox;
+  //
+  //   return <PodcastWithStatus>[
+  //     for (final podcast in podcastBox.values)
+  //       if (episodeBox.values.where(
+  //             (episode) => episode.podcastId == podcast.id,
+  //       )
+  //       case final episodesForPodcast)
+  //         PodcastWithStatus(
+  //           podcast: podcast,
+  //           playedEpisodeCount: episodesForPodcast
+  //               .map((episode) => userEpisodeStatusBox.get(episode.id))
+  //               .nonNulls
+  //               .length,
+  //           episodeCount: episodesForPodcast.length,
+  //           hasUnseenEpisodes:
+  //           lastSeenBox.get(podcast.id)?.isBefore(podcast.lastPublished) ??
+  //               true,
+  //         ),
+  //   ];
+  // }
 
   @override
   Stream<List<UserEpisodeStatus>> watchUserEpisodeStatuses() async* {
@@ -288,24 +300,17 @@ class HiveRepositoryImpl implements core.Repository {
 
   @override
   Future<void> markEpisodeListened(
-    EpisodeWithStatus episodeWithStatus, {
+    EpisodeId episodeId, {
     bool isPlayed = true,
   }) async {
     final box = await userEpisodeStatusBox;
+    final existingStatus = box.get(episodeId);
 
-    final newStatus = switch (episodeWithStatus.status) {
-      UserEpisodeStatus(:final episodeId, :final currentPosition) =>
-        UserEpisodeStatusImpl.usingEpisodeId(
-          episodeId: episodeId,
-          currentPosition: currentPosition,
-          isPlayed: isPlayed,
-        ),
-      null => UserEpisodeStatusImpl.usingEpisodeId(
-        episodeId: episodeWithStatus.episode.id,
-        isPlayed: isPlayed,
-        currentPosition: Duration.zero,
-      ),
-    };
+    final newStatus = UserEpisodeStatusImpl.usingEpisodeId(
+      episodeId: episodeId,
+      currentPosition: existingStatus?.currentPosition ?? Duration.zero,
+      isPlayed: isPlayed,
+    );
     await box.put(newStatus.episodeHiveId, newStatus);
   }
 
@@ -320,13 +325,17 @@ class HiveRepositoryImpl implements core.Repository {
   }
 
   @override
-  Future<void> updatePlayQueueItemPosition(
-    covariant EpisodeImpl episode,
-    int position,
+  Future<void> updatePlayQueueItemPositions(
+    // @TODO: This might fail
+    covariant List<EpisodeImpl> episodes,
   ) async {
     final box = await queueItemBox;
-    final queueItem = PlayQueueItem(episode: episode, queueOrder: position);
-    await box.put(queueItem.episodeHiveId, queueItem);
+
+    final itemsToPut = {
+      for (final (index, episode) in episodes.indexed)
+        episode.id.id: PlayQueueItem(episode: episode, queueOrder: index),
+    };
+    await box.putAll(itemsToPut);
   }
 }
 

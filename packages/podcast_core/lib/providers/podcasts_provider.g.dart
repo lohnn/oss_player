@@ -9,29 +9,29 @@ part of 'podcasts_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(subscribedPodcast)
-const subscribedPodcastProvider = SubscribedPodcastFamily._();
+@ProviderFor(isSubscribedToRss)
+const isSubscribedToRssProvider = IsSubscribedToRssFamily._();
 
-final class SubscribedPodcastProvider
+final class IsSubscribedToRssProvider
     extends $FunctionalProvider<AsyncValue<bool?>, bool?, FutureOr<bool?>>
     with $FutureModifier<bool?>, $FutureProvider<bool?> {
-  const SubscribedPodcastProvider._({
-    required SubscribedPodcastFamily super.from,
+  const IsSubscribedToRssProvider._({
+    required IsSubscribedToRssFamily super.from,
     required PodcastRssUrl super.argument,
   }) : super(
          retry: null,
-         name: r'subscribedPodcastProvider',
+         name: r'isSubscribedToRssProvider',
          isAutoDispose: true,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
 
   @override
-  String debugGetCreateSourceHash() => _$subscribedPodcastHash();
+  String debugGetCreateSourceHash() => _$isSubscribedToRssHash();
 
   @override
   String toString() {
-    return r'subscribedPodcastProvider'
+    return r'isSubscribedToRssProvider'
         ''
         '($argument)';
   }
@@ -44,12 +44,12 @@ final class SubscribedPodcastProvider
   @override
   FutureOr<bool?> create(Ref ref) {
     final argument = this.argument as PodcastRssUrl;
-    return subscribedPodcast(ref, rssUrl: argument);
+    return isSubscribedToRss(ref, rssUrl: argument);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is SubscribedPodcastProvider && other.argument == argument;
+    return other is IsSubscribedToRssProvider && other.argument == argument;
   }
 
   @override
@@ -58,204 +58,22 @@ final class SubscribedPodcastProvider
   }
 }
 
-String _$subscribedPodcastHash() => r'5f80849651ddef8fb949a0704dd6b2fd0b4b2a61';
+String _$isSubscribedToRssHash() => r'5149c1901eeae18c6c761212721892823de3a51d';
 
-final class SubscribedPodcastFamily extends $Family
+final class IsSubscribedToRssFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<bool?>, PodcastRssUrl> {
-  const SubscribedPodcastFamily._()
+  const IsSubscribedToRssFamily._()
     : super(
         retry: null,
-        name: r'subscribedPodcastProvider',
+        name: r'isSubscribedToRssProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
         isAutoDispose: true,
       );
 
-  SubscribedPodcastProvider call({required PodcastRssUrl rssUrl}) =>
-      SubscribedPodcastProvider._(argument: rssUrl, from: this);
+  IsSubscribedToRssProvider call({required PodcastRssUrl rssUrl}) =>
+      IsSubscribedToRssProvider._(argument: rssUrl, from: this);
 
   @override
-  String toString() => r'subscribedPodcastProvider';
-}
-
-@ProviderFor(_subscribedPodcastRssUrls)
-const _subscribedPodcastRssUrlsProvider = _SubscribedPodcastRssUrlsProvider._();
-
-final class _SubscribedPodcastRssUrlsProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<Iterable<PodcastRssUrl>?>,
-          Iterable<PodcastRssUrl>?,
-          FutureOr<Iterable<PodcastRssUrl>?>
-        >
-    with
-        $FutureModifier<Iterable<PodcastRssUrl>?>,
-        $FutureProvider<Iterable<PodcastRssUrl>?> {
-  const _SubscribedPodcastRssUrlsProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'_subscribedPodcastRssUrlsProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$_subscribedPodcastRssUrlsHash();
-
-  @$internal
-  @override
-  $FutureProviderElement<Iterable<PodcastRssUrl>?> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<Iterable<PodcastRssUrl>?> create(Ref ref) {
-    return _subscribedPodcastRssUrls(ref);
-  }
-}
-
-String _$_subscribedPodcastRssUrlsHash() =>
-    r'5c45b5aa5f10dfdfbcedd7d02ca3b862f90691bc';
-
-@ProviderFor(PodcastPod)
-const podcastPodProvider = PodcastPodFamily._();
-
-final class PodcastPodProvider
-    extends $AsyncNotifierProvider<PodcastPod, Podcast> {
-  const PodcastPodProvider._({
-    required PodcastPodFamily super.from,
-    required PodcastId super.argument,
-  }) : super(
-         retry: null,
-         name: r'podcastPodProvider',
-         isAutoDispose: true,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
-
-  @override
-  String debugGetCreateSourceHash() => _$podcastPodHash();
-
-  @override
-  String toString() {
-    return r'podcastPodProvider'
-        ''
-        '($argument)';
-  }
-
-  @$internal
-  @override
-  PodcastPod create() => PodcastPod();
-
-  @override
-  bool operator ==(Object other) {
-    return other is PodcastPodProvider && other.argument == argument;
-  }
-
-  @override
-  int get hashCode {
-    return argument.hashCode;
-  }
-}
-
-String _$podcastPodHash() => r'ee544b4a42034cc2fac8e73989173030d5881d0d';
-
-final class PodcastPodFamily extends $Family
-    with
-        $ClassFamilyOverride<
-          PodcastPod,
-          AsyncValue<Podcast>,
-          Podcast,
-          FutureOr<Podcast>,
-          PodcastId
-        > {
-  const PodcastPodFamily._()
-    : super(
-        retry: null,
-        name: r'podcastPodProvider',
-        dependencies: null,
-        $allTransitiveDependencies: null,
-        isAutoDispose: true,
-      );
-
-  PodcastPodProvider call(PodcastId podcastId) =>
-      PodcastPodProvider._(argument: podcastId, from: this);
-
-  @override
-  String toString() => r'podcastPodProvider';
-}
-
-abstract class _$PodcastPod extends $AsyncNotifier<Podcast> {
-  late final _$args = ref.$arg as PodcastId;
-  PodcastId get podcastId => _$args;
-
-  FutureOr<Podcast> build(PodcastId podcastId);
-  @$mustCallSuper
-  @override
-  void runBuild() {
-    final created = build(_$args);
-    final ref = this.ref as $Ref<AsyncValue<Podcast>, Podcast>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<AsyncValue<Podcast>, Podcast>,
-              AsyncValue<Podcast>,
-              Object?,
-              Object?
-            >;
-    element.handleValue(ref, created);
-  }
-}
-
-@ProviderFor(Podcasts)
-const podcastsProvider = PodcastsProvider._();
-
-final class PodcastsProvider
-    extends $StreamNotifierProvider<Podcasts, EquatableList<Podcast>> {
-  const PodcastsProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'podcastsProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$podcastsHash();
-
-  @$internal
-  @override
-  Podcasts create() => Podcasts();
-}
-
-String _$podcastsHash() => r'bb98a52d6621e97e36bc8e2a30ead07e44dc89cd';
-
-abstract class _$Podcasts extends $StreamNotifier<EquatableList<Podcast>> {
-  Stream<EquatableList<Podcast>> build();
-  @$mustCallSuper
-  @override
-  void runBuild() {
-    final created = build();
-    final ref =
-        this.ref
-            as $Ref<AsyncValue<EquatableList<Podcast>>, EquatableList<Podcast>>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<
-                AsyncValue<EquatableList<Podcast>>,
-                EquatableList<Podcast>
-              >,
-              AsyncValue<EquatableList<Podcast>>,
-              Object?,
-              Object?
-            >;
-    element.handleValue(ref, created);
-  }
+  String toString() => r'isSubscribedToRssProvider';
 }

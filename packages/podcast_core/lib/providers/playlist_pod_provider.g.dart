@@ -33,7 +33,7 @@ final class PlaylistPodProvider
   PlaylistPod create() => PlaylistPod();
 }
 
-String _$playlistPodHash() => r'397a331777de529c18d8e96869b0ac1a126b5b7b';
+String _$playlistPodHash() => r'ea4470469537e523808ffd942f0917eecd3298b0';
 
 abstract class _$PlaylistPod extends $StreamNotifier<List<Episode>> {
   Stream<List<Episode>> build();

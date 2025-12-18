@@ -15,7 +15,7 @@ Future<ColorScheme?> currentPlayingEpisodeColorScheme(
     return ref
         .watch(
           colorSchemeFromRemoteImageProvider(
-            episode.episode.imageUrl,
+            episode.imageUrl,
             brightness,
           ),
         )

@@ -7,8 +7,8 @@ import 'package:podcast_core/data/podcast.model.dart';
 import 'package:podcast_core/extensions/text_style_extensions.dart';
 import 'package:podcast_core/gen/strings.g.dart';
 import 'package:podcast_core/providers/color_scheme_from_remote_image_provider.dart';
-import 'package:podcast_core/providers/episodes_provider.dart';
 import 'package:podcast_core/screens/async_value_screen.dart';
+import 'package:podcast_core/screens/logged_in/episode_details_screen/episode_details_screen_provider.dart';
 import 'package:podcast_core/widgets/play_episode_button.dart';
 import 'package:podcast_core/widgets/pub_date_text.dart';
 import 'package:podcast_core/widgets/queue_button.dart';
@@ -27,8 +27,8 @@ class EpisodeDetailsScreen
   });
 
   @override
-  EpisodePodProvider get provider =>
-      episodePodProvider(podcastId: podcastId, episodeId: episodeId);
+  EpisodeDetailsScreenProvider get provider =>
+      episodeDetailsScreenProvider(podcastId: podcastId, episodeId: episodeId);
 
   @override
   Widget buildWithData(
@@ -67,7 +67,8 @@ class EpisodeDetailsScreen
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       RoundedImage(
-                        semanticLabel: context.t.episodePlayerModal.episodeImage,
+                        semanticLabel:
+                            context.t.episodePlayerModal.episodeImage,
                         imageUri: episode.imageUrl,
                         imageSize: 100,
                       ),

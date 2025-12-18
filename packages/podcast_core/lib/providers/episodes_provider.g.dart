@@ -9,180 +9,47 @@ part of 'episodes_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(EpisodePod)
-const episodePodProvider = EpisodePodFamily._();
+@ProviderFor(episode)
+const episodeProvider = EpisodeFamily._();
 
-final class EpisodePodProvider
-    extends
-        $NotifierProvider<
-          EpisodePod,
-          AsyncValue<(Podcast, EpisodeWithStatus)>
-        > {
-  const EpisodePodProvider._({
-    required EpisodePodFamily super.from,
-    required ({PodcastId podcastId, EpisodeId episodeId}) super.argument,
+final class EpisodeProvider
+    extends $FunctionalProvider<AsyncValue<Episode>, Episode, FutureOr<Episode>>
+    with $FutureModifier<Episode>, $FutureProvider<Episode> {
+  const EpisodeProvider._({
+    required EpisodeFamily super.from,
+    required EpisodeId super.argument,
   }) : super(
          retry: null,
-         name: r'episodePodProvider',
-         isAutoDispose: true,
+         name: r'episodeProvider',
+         isAutoDispose: false,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
 
   @override
-  String debugGetCreateSourceHash() => _$episodePodHash();
+  String debugGetCreateSourceHash() => _$episodeHash();
 
   @override
   String toString() {
-    return r'episodePodProvider'
-        ''
-        '$argument';
-  }
-
-  @$internal
-  @override
-  EpisodePod create() => EpisodePod();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(AsyncValue<(Podcast, EpisodeWithStatus)> value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride:
-          $SyncValueProvider<AsyncValue<(Podcast, EpisodeWithStatus)>>(value),
-    );
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is EpisodePodProvider && other.argument == argument;
-  }
-
-  @override
-  int get hashCode {
-    return argument.hashCode;
-  }
-}
-
-String _$episodePodHash() => r'b02c69e276b6cbb11048beb9eb29a8d89d930a61';
-
-final class EpisodePodFamily extends $Family
-    with
-        $ClassFamilyOverride<
-          EpisodePod,
-          AsyncValue<(Podcast, EpisodeWithStatus)>,
-          AsyncValue<(Podcast, EpisodeWithStatus)>,
-          AsyncValue<(Podcast, EpisodeWithStatus)>,
-          ({PodcastId podcastId, EpisodeId episodeId})
-        > {
-  const EpisodePodFamily._()
-    : super(
-        retry: null,
-        name: r'episodePodProvider',
-        dependencies: null,
-        $allTransitiveDependencies: null,
-        isAutoDispose: true,
-      );
-
-  EpisodePodProvider call({
-    required PodcastId podcastId,
-    required EpisodeId episodeId,
-  }) => EpisodePodProvider._(
-    argument: (podcastId: podcastId, episodeId: episodeId),
-    from: this,
-  );
-
-  @override
-  String toString() => r'episodePodProvider';
-}
-
-abstract class _$EpisodePod
-    extends $Notifier<AsyncValue<(Podcast, EpisodeWithStatus)>> {
-  late final _$args = ref.$arg as ({PodcastId podcastId, EpisodeId episodeId});
-  PodcastId get podcastId => _$args.podcastId;
-  EpisodeId get episodeId => _$args.episodeId;
-
-  AsyncValue<(Podcast, EpisodeWithStatus)> build({
-    required PodcastId podcastId,
-    required EpisodeId episodeId,
-  });
-  @$mustCallSuper
-  @override
-  void runBuild() {
-    final created = build(
-      podcastId: _$args.podcastId,
-      episodeId: _$args.episodeId,
-    );
-    final ref =
-        this.ref
-            as $Ref<
-              AsyncValue<(Podcast, EpisodeWithStatus)>,
-              AsyncValue<(Podcast, EpisodeWithStatus)>
-            >;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<
-                AsyncValue<(Podcast, EpisodeWithStatus)>,
-                AsyncValue<(Podcast, EpisodeWithStatus)>
-              >,
-              AsyncValue<(Podcast, EpisodeWithStatus)>,
-              Object?,
-              Object?
-            >;
-    element.handleValue(ref, created);
-  }
-}
-
-@ProviderFor(Episodes)
-const episodesProvider = EpisodesFamily._();
-
-final class EpisodesProvider
-    extends
-        $NotifierProvider<
-          Episodes,
-          AsyncValue<(Podcast, List<EpisodeWithStatus>)>
-        > {
-  const EpisodesProvider._({
-    required EpisodesFamily super.from,
-    required PodcastId super.argument,
-  }) : super(
-         retry: null,
-         name: r'episodesProvider',
-         isAutoDispose: true,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
-
-  @override
-  String debugGetCreateSourceHash() => _$episodesHash();
-
-  @override
-  String toString() {
-    return r'episodesProvider'
+    return r'episodeProvider'
         ''
         '($argument)';
   }
 
   @$internal
   @override
-  Episodes create() => Episodes();
+  $FutureProviderElement<Episode> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
 
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(
-    AsyncValue<(Podcast, List<EpisodeWithStatus>)> value,
-  ) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride:
-          $SyncValueProvider<AsyncValue<(Podcast, List<EpisodeWithStatus>)>>(
-            value,
-          ),
-    );
+  @override
+  FutureOr<Episode> create(Ref ref) {
+    final argument = this.argument as EpisodeId;
+    return episode(ref, argument);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is EpisodesProvider && other.argument == argument;
+    return other is EpisodeProvider && other.argument == argument;
   }
 
   @override
@@ -191,41 +58,107 @@ final class EpisodesProvider
   }
 }
 
-String _$episodesHash() => r'4549065ed14d288296483c43dcde5c744d2aedbc';
+String _$episodeHash() => r'aa712a9e50098698143a8157a860948f8a40645a';
 
-final class EpisodesFamily extends $Family
-    with
-        $ClassFamilyOverride<
-          Episodes,
-          AsyncValue<(Podcast, List<EpisodeWithStatus>)>,
-          AsyncValue<(Podcast, List<EpisodeWithStatus>)>,
-          AsyncValue<(Podcast, List<EpisodeWithStatus>)>,
-          PodcastId
-        > {
-  const EpisodesFamily._()
+final class EpisodeFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<Episode>, EpisodeId> {
+  const EpisodeFamily._()
     : super(
         retry: null,
-        name: r'episodesProvider',
+        name: r'episodeProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  EpisodeProvider call(EpisodeId episodeId) =>
+      EpisodeProvider._(argument: episodeId, from: this);
+
+  @override
+  String toString() => r'episodeProvider';
+}
+
+@ProviderFor(EpisodesWithStatusForPodcast)
+const episodesWithStatusForPodcastProvider =
+    EpisodesWithStatusForPodcastFamily._();
+
+final class EpisodesWithStatusForPodcastProvider
+    extends
+        $AsyncNotifierProvider<
+          EpisodesWithStatusForPodcast,
+          List<EpisodeWithStatus>
+        > {
+  const EpisodesWithStatusForPodcastProvider._({
+    required EpisodesWithStatusForPodcastFamily super.from,
+    required PodcastId super.argument,
+  }) : super(
+         retry: null,
+         name: r'episodesWithStatusForPodcastProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$episodesWithStatusForPodcastHash();
+
+  @override
+  String toString() {
+    return r'episodesWithStatusForPodcastProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  EpisodesWithStatusForPodcast create() => EpisodesWithStatusForPodcast();
+
+  @override
+  bool operator ==(Object other) {
+    return other is EpisodesWithStatusForPodcastProvider &&
+        other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$episodesWithStatusForPodcastHash() =>
+    r'6cbad76398c9ce926980529505d3a5dc715a441b';
+
+final class EpisodesWithStatusForPodcastFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          EpisodesWithStatusForPodcast,
+          AsyncValue<List<EpisodeWithStatus>>,
+          List<EpisodeWithStatus>,
+          FutureOr<List<EpisodeWithStatus>>,
+          PodcastId
+        > {
+  const EpisodesWithStatusForPodcastFamily._()
+    : super(
+        retry: null,
+        name: r'episodesWithStatusForPodcastProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
         isAutoDispose: true,
       );
 
-  EpisodesProvider call({required PodcastId podcastId}) =>
-      EpisodesProvider._(argument: podcastId, from: this);
+  EpisodesWithStatusForPodcastProvider call({required PodcastId podcastId}) =>
+      EpisodesWithStatusForPodcastProvider._(argument: podcastId, from: this);
 
   @override
-  String toString() => r'episodesProvider';
+  String toString() => r'episodesWithStatusForPodcastProvider';
 }
 
-abstract class _$Episodes
-    extends $Notifier<AsyncValue<(Podcast, List<EpisodeWithStatus>)>> {
+abstract class _$EpisodesWithStatusForPodcast
+    extends $AsyncNotifier<List<EpisodeWithStatus>> {
   late final _$args = ref.$arg as PodcastId;
   PodcastId get podcastId => _$args;
 
-  AsyncValue<(Podcast, List<EpisodeWithStatus>)> build({
-    required PodcastId podcastId,
-  });
+  FutureOr<List<EpisodeWithStatus>> build({required PodcastId podcastId});
   @$mustCallSuper
   @override
   void runBuild() {
@@ -233,17 +166,17 @@ abstract class _$Episodes
     final ref =
         this.ref
             as $Ref<
-              AsyncValue<(Podcast, List<EpisodeWithStatus>)>,
-              AsyncValue<(Podcast, List<EpisodeWithStatus>)>
+              AsyncValue<List<EpisodeWithStatus>>,
+              List<EpisodeWithStatus>
             >;
     final element =
         ref.element
             as $ClassProviderElement<
               AnyNotifier<
-                AsyncValue<(Podcast, List<EpisodeWithStatus>)>,
-                AsyncValue<(Podcast, List<EpisodeWithStatus>)>
+                AsyncValue<List<EpisodeWithStatus>>,
+                List<EpisodeWithStatus>
               >,
-              AsyncValue<(Podcast, List<EpisodeWithStatus>)>,
+              AsyncValue<List<EpisodeWithStatus>>,
               Object?,
               Object?
             >;

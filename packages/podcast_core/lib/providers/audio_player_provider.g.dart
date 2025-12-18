@@ -101,7 +101,7 @@ abstract class _$AudioServicePod extends $AsyncNotifier<PodcastAudioHandler> {
 const audioPlayerPodProvider = AudioPlayerPodProvider._();
 
 final class AudioPlayerPodProvider
-    extends $AsyncNotifierProvider<AudioPlayerPod, EpisodeWithStatus?> {
+    extends $AsyncNotifierProvider<AudioPlayerPod, Episode?> {
   const AudioPlayerPodProvider._()
     : super(
         from: null,
@@ -121,21 +121,20 @@ final class AudioPlayerPodProvider
   AudioPlayerPod create() => AudioPlayerPod();
 }
 
-String _$audioPlayerPodHash() => r'a3093d04d4e476163a2d539daa07f2a6d2c666a8';
+String _$audioPlayerPodHash() => r'cefa7cd0a9a12d3f89918264fbb9ab38b157afc0';
 
-abstract class _$AudioPlayerPod extends $AsyncNotifier<EpisodeWithStatus?> {
-  FutureOr<EpisodeWithStatus?> build();
+abstract class _$AudioPlayerPod extends $AsyncNotifier<Episode?> {
+  FutureOr<Episode?> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref =
-        this.ref as $Ref<AsyncValue<EpisodeWithStatus?>, EpisodeWithStatus?>;
+    final ref = this.ref as $Ref<AsyncValue<Episode?>, Episode?>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<EpisodeWithStatus?>, EpisodeWithStatus?>,
-              AsyncValue<EpisodeWithStatus?>,
+              AnyNotifier<AsyncValue<Episode?>, Episode?>,
+              AsyncValue<Episode?>,
               Object?,
               Object?
             >;

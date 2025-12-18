@@ -58,48 +58,6 @@ class EpisodeImplMapper extends ClassMapperBase<EpisodeImpl> {
     'backingPodcastId',
     _$backingPodcastId,
   );
-  static EpisodeId _$id(EpisodeImpl v) => v.id;
-  static const Field<EpisodeImpl, EpisodeId> _f$id = Field(
-    'id',
-    _$id,
-    mode: FieldMode.member,
-  );
-  static Uri _$url(EpisodeImpl v) => v.url;
-  static const Field<EpisodeImpl, Uri> _f$url = Field(
-    'url',
-    _$url,
-    mode: FieldMode.member,
-  );
-  static DateTime _$pubDate(EpisodeImpl v) => v.pubDate;
-  static const Field<EpisodeImpl, DateTime> _f$pubDate = Field(
-    'pubDate',
-    _$pubDate,
-    mode: FieldMode.member,
-  );
-  static String _$localFilePath(EpisodeImpl v) => v.localFilePath;
-  static const Field<EpisodeImpl, String> _f$localFilePath = Field(
-    'localFilePath',
-    _$localFilePath,
-    mode: FieldMode.member,
-  );
-  static Uri _$imageUrl(EpisodeImpl v) => v.imageUrl;
-  static const Field<EpisodeImpl, Uri> _f$imageUrl = Field(
-    'imageUrl',
-    _$imageUrl,
-    mode: FieldMode.member,
-  );
-  static Duration? _$duration(EpisodeImpl v) => v.duration;
-  static const Field<EpisodeImpl, Duration> _f$duration = Field(
-    'duration',
-    _$duration,
-    mode: FieldMode.member,
-  );
-  static PodcastId _$podcastId(EpisodeImpl v) => v.podcastId;
-  static const Field<EpisodeImpl, PodcastId> _f$podcastId = Field(
-    'podcastId',
-    _$podcastId,
-    mode: FieldMode.member,
-  );
 
   @override
   final MappableFields<EpisodeImpl> fields = const {
@@ -111,13 +69,6 @@ class EpisodeImplMapper extends ClassMapperBase<EpisodeImpl> {
     #backingImageUrl: _f$backingImageUrl,
     #backingDuration: _f$backingDuration,
     #backingPodcastId: _f$backingPodcastId,
-    #id: _f$id,
-    #url: _f$url,
-    #pubDate: _f$pubDate,
-    #localFilePath: _f$localFilePath,
-    #imageUrl: _f$imageUrl,
-    #duration: _f$duration,
-    #podcastId: _f$podcastId,
   };
 
   static EpisodeImpl _instantiate(DecodingData data) {

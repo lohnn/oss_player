@@ -4,53 +4,55 @@ import 'package:collection/collection.dart';
 import 'package:podcast_core/data/episode.model.dart';
 import 'package:podcast_core/data/episode_with_status.dart';
 import 'package:podcast_core/data/podcast.model.dart';
-import 'package:podcast_core/extensions/async_value_extensions.dart';
 import 'package:podcast_core/helpers/equatable_list.dart';
 import 'package:podcast_core/helpers/equatable_map.dart';
 import 'package:podcast_core/providers/app_lifecycle_state_provider.dart';
 import 'package:podcast_core/providers/episodes_filter_provider.dart';
-import 'package:podcast_core/providers/podcasts_provider.dart';
 import 'package:podcast_core/providers/user_episode_status_provider.dart';
 import 'package:podcast_core/repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'episodes_provider.g.dart';
 
-@riverpod
-class EpisodePod extends _$EpisodePod {
-  @override
-  AsyncValue<(Podcast, EpisodeWithStatus)> build({
-    required PodcastId podcastId,
-    required EpisodeId episodeId,
-  }) {
-    return ref.watch(episodesProvider(podcastId: podcastId)).whenData((pair) {
-      final (podcast, episodes) = pair;
-      final episode = episodes.firstWhere(
-        (episodeWithStatus) => episodeWithStatus.episode.id == episodeId,
-      );
-
-      return (podcast, episode);
-    });
-  }
+@Riverpod(keepAlive: true)
+Future<Episode> episode(Ref ref, EpisodeId episodeId) async {
+  final repository = await ref.watch(repositoryProvider.future);
+  return repository.getEpisode(episodeId);
 }
 
-@riverpod
-class Episodes extends _$Episodes {
-  @override
-  AsyncValue<(Podcast, List<EpisodeWithStatus>)> build({
-    required PodcastId podcastId,
-  }) {
-    final filterState = ref.watch(episodesFilterProvider);
+// @riverpod
+// class PodcastAndEpisodePod extends _$PodcastAndEpisodePod {
+//   @override
+//   AsyncValue<(Podcast, EpisodeWithStatus)> build({
+//     required PodcastId podcastId,
+//     required EpisodeId episodeId,
+//   }) {
+//     return ref.watch(podcastAndEpisodesProvider(podcastId: podcastId)).whenData(
+//       (pair) {
+//         final (podcast, episodes) = pair;
+//         final episode = episodes.firstWhere(
+//           (episodeWithStatus) => episodeWithStatus.episode.id == episodeId,
+//         );
+//
+//         return (podcast, episode);
+//       },
+//     );
+//   }
+// }
 
-    final podcast = ref.watch(podcastPodProvider(podcastId));
+@riverpod
+class EpisodesWithStatusForPodcast extends _$EpisodesWithStatusForPodcast {
+  @override
+  Future<List<EpisodeWithStatus>> build({required PodcastId podcastId}) async {
+    final filterState = ref.watch(episodesFilterProvider);
 
     final userEpisodeStatusList =
         ref.watch(userEpisodeStatusPodProvider).value ??
         const EquatableMap.empty();
 
-    final episodes = ref
-        .watch(_episodesImplProvider(podcastId))
-        .whenData((episodes) {
+    return await ref
+        .watch(_episodesImplProvider(podcastId).future)
+        .then((episodes) {
           return episodes.map(
             (episode) => EpisodeWithStatus(
               episode: episode,
@@ -58,7 +60,7 @@ class Episodes extends _$Episodes {
             ),
           );
         })
-        .whenData((episodes) {
+        .then((episodes) {
           // Filtering and sorting
 
           final filteredEpisodes = switch (filterState.hideListenedEpisodes) {
@@ -68,33 +70,75 @@ class Episodes extends _$Episodes {
 
           return filterState.sortEpisodes(filteredEpisodes);
         })
-        .whenData(EquatableList.new);
-
-    return (podcast, episodes).pack();
-  }
-
-  /// Update the last seen timestamp for the podcast
-  Future<void> updateLastSeen() {
-    return ref.read(podcastPodProvider(podcastId).notifier).updateLastSeen();
-  }
-
-  Future<void> updateList() {
-    final (podcast, _) = state.requireValue;
-    return ref.read(podcastsProvider.notifier).refresh(podcast);
-  }
-
-  Future<void> markListened(EpisodeWithStatus episodeWithStatus) {
-    return ref
-        .read(userEpisodeStatusPodProvider.notifier)
-        .markListened(episodeWithStatus);
-  }
-
-  Future<void> markUnlistened(EpisodeWithStatus episodeWithStatus) {
-    return ref
-        .read(userEpisodeStatusPodProvider.notifier)
-        .markUnlistened(episodeWithStatus);
+        .then(EquatableList.new);
   }
 }
+
+// @riverpod
+// class PodcastAndEpisodes extends _$PodcastAndEpisodes {
+//   @override
+//   AsyncValue<(PodcastWithStatus, List<EpisodeWithStatus>)> build({
+//     required PodcastId podcastId,
+//   }) {
+//     final filterState = ref.watch(episodesFilterProvider);
+//
+//     final podcast = ref.watch(podcastWithStatusProvider(podcastId));
+//
+//     final userEpisodeStatusList =
+//         ref.watch(userEpisodeStatusPodProvider).value ??
+//         const EquatableMap.empty();
+//
+//     final episodes = ref
+//         .watch(_episodesImplProvider(podcastId))
+//         .whenData((episodes) {
+//           return episodes.map(
+//             (episode) => EpisodeWithStatus(
+//               episode: episode,
+//               status: userEpisodeStatusList[episode.id],
+//             ),
+//           );
+//         })
+//         .whenData((episodes) {
+//           // Filtering and sorting
+//
+//           final filteredEpisodes = switch (filterState.hideListenedEpisodes) {
+//             true => episodes.whereNot((episode) => episode.isPlayed),
+//             false => episodes,
+//           };
+//
+//           return filterState.sortEpisodes(filteredEpisodes);
+//         })
+//         .whenData(EquatableList.new);
+//
+//     return (podcast, episodes).pack();
+//   }
+//
+//   /// Update the last seen timestamp for the podcast
+//   Future<void> updateLastSeen() {
+//     return ref
+//         .read(podcastsWithStatusProvider.notifier)
+//         .updateLastSeen(podcastId);
+//   }
+//
+//   Future<void> updateList() {
+//     final (podcast, _) = state.requireValue;
+//     return ref
+//         .read(podcastsWithStatusProvider.notifier)
+//         .refresh(podcast.podcast);
+//   }
+//
+//   Future<void> markListened(EpisodeWithStatus episodeWithStatus) {
+//     return ref
+//         .read(userEpisodeStatusPodProvider.notifier)
+//         .markListened(episodeWithStatus);
+//   }
+//
+//   Future<void> markUnlistened(EpisodeWithStatus episodeWithStatus) {
+//     return ref
+//         .read(userEpisodeStatusPodProvider.notifier)
+//         .markUnlistened(episodeWithStatus);
+//   }
+// }
 
 @riverpod
 Stream<List<Episode>> _episodesImpl(Ref ref, PodcastId podcast) async* {

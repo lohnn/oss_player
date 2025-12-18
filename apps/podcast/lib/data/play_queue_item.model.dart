@@ -7,7 +7,6 @@ part 'play_queue_item.model.mapper.dart';
 
 @MappableClass()
 class PlayQueueItem with PlayQueueItemMappable implements core.PlayQueueItem {
-  @override
   final EpisodeImpl episode;
   @override
   final int queueOrder;

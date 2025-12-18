@@ -32,25 +32,11 @@ class PlayQueueItemMapper extends ClassMapperBase<PlayQueueItem> {
     'queueOrder',
     _$queueOrder,
   );
-  static EpisodeId _$episodeId(PlayQueueItem v) => v.episodeId;
-  static const Field<PlayQueueItem, EpisodeId> _f$episodeId = Field(
-    'episodeId',
-    _$episodeId,
-    mode: FieldMode.member,
-  );
-  static String _$episodeHiveId(PlayQueueItem v) => v.episodeHiveId;
-  static const Field<PlayQueueItem, String> _f$episodeHiveId = Field(
-    'episodeHiveId',
-    _$episodeHiveId,
-    mode: FieldMode.member,
-  );
 
   @override
   final MappableFields<PlayQueueItem> fields = const {
     #episode: _f$episode,
     #queueOrder: _f$queueOrder,
-    #episodeId: _f$episodeId,
-    #episodeHiveId: _f$episodeHiveId,
   };
 
   static PlayQueueItem _instantiate(DecodingData data) {

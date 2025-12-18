@@ -11,9 +11,22 @@ abstract class AsyncValueWidget<T> extends HookConsumerWidget {
 
   Widget buildWithData(BuildContext context, WidgetRef ref, T data);
 
+  Widget? buildError(BuildContext context, WidgetRef ref, AsyncError<T> error) {
+    return null;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncValue = ref.watch(provider);
+
+    // Check for custom error handling first, even if we have data
+    if (asyncValue case AsyncError<T>()) {
+      final customErrorWidget = buildError(context, ref, asyncValue);
+      if (customErrorWidget != null) {
+        return Material(child: customErrorWidget);
+      }
+    }
+
     return Material(
       child: switch (asyncValue) {
         AsyncValue<T>(value: final T data, hasValue: true) => buildWithData(

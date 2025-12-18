@@ -40,8 +40,8 @@ class PodcastListScreen extends AsyncValueWidget<List<PodcastWithStatus>> {
               {
                 final PodcastWithStatus(
                   :podcast,
-                  :listenedEpisodes,
-                  :totalEpisodes,
+                  playedEpisodeCount:listenedEpisodes,
+                  episodeCount:totalEpisodes,
                   :hasUnseenEpisodes,
                 ) = podcasts[index];
 

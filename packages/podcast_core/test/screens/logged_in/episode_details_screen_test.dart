@@ -5,8 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 import 'package:podcast_core/data/episode_with_status.dart';
 import 'package:podcast_core/providers/color_scheme_from_remote_image_provider.dart';
-import 'package:podcast_core/providers/episodes_provider.dart';
-import 'package:podcast_core/screens/logged_in/episode_details_screen.dart';
+import 'package:podcast_core/screens/logged_in/episode_details_screen/episode_details_screen.dart';
+import 'package:podcast_core/screens/logged_in/episode_details_screen/episode_details_screen_provider.dart';
 import 'package:podcast_core/widgets/queue_button.dart';
 
 import '../../helpers/widget_tester_helpers.dart';
@@ -50,12 +50,10 @@ void main() {
         () => tester.pumpWidget(
           ProviderScope(
             overrides: [
-              episodePodProvider(
+              episodeDetailsScreenProvider(
                 podcastId: PodcastId('1'),
                 episodeId: EpisodeId('1'),
-              ).overrideWithBuild(
-                (_, _) => AsyncData((testPodcast, testEpisodeWithStatus)),
-              ),
+              ).overrideWith((_) => (testPodcast, testEpisodeWithStatus)),
               colorSchemeFromRemoteImageProvider(
                 Uri.parse('http://example.com/episode_image.png'),
                 Brightness.light,
@@ -153,7 +151,7 @@ void main() {
         find.byKey(const Key('EpisodeDetailsScreen.theme')),
         findsOneWidget,
       );
-      // TODO: Further testing would involve overriding the provider and checking specific theme properties.
+      // @TODO: Further testing would involve overriding the provider and checking specific theme properties.
     });
 
     testWidgets('tapping on a URL in HTML description launches the URL', (
@@ -168,8 +166,8 @@ void main() {
       // This often involves setting up a mock channel for url_launcher.
     });
 
-    // TODO: Add more tests for accessibility, e.g., focus traversal, minimum tap targets, etc.
-    // TODO: Test cases for when description is null, pubDate is null, etc.
+    // @TODO: Add more tests for accessibility, e.g., focus traversal, minimum tap targets, etc.
+    // @TODO: Test cases for when description is null, pubDate is null, etc.
 
     testWidgets('Screen is selectable for text copying', (
       WidgetTester tester,

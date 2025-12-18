@@ -1,5 +1,5 @@
 import 'package:podcast_core/data/episode.model.dart';
-import 'package:podcast_core/data/episode_with_status.dart';
+
 import 'package:podcast_core/data/user_episode_status.model.dart';
 import 'package:podcast_core/helpers/equatable_map.dart';
 import 'package:podcast_core/providers/app_lifecycle_state_provider.dart';
@@ -32,11 +32,11 @@ class UserEpisodeStatusPod extends _$UserEpisodeStatusPod {
     }
   }
 
-  Future<void> markListened(EpisodeWithStatus episodeWithStatus) {
-    return _repository.markEpisodeListened(episodeWithStatus);
+  Future<void> markListened(EpisodeId episodeId) {
+    return _repository.markEpisodeListened(episodeId);
   }
 
-  Future<void> markUnlistened(EpisodeWithStatus episodeWithStatus) {
-    return _repository.markEpisodeListened(episodeWithStatus, isPlayed: false);
+  Future<void> markUnlistened(EpisodeId episodeId) {
+    return _repository.markEpisodeListened(episodeId, isPlayed: false);
   }
 }

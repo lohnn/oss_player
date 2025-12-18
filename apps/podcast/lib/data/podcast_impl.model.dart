@@ -17,8 +17,6 @@ class PodcastImpl with PodcastImplMappable implements Podcast {
   final String? language;
   @override
   final Set<String> categories;
-  @override
-  DateTime lastPublished;
 
   @override
   PodcastRssUrl get url => PodcastRssUrl.parse(backingUrl);
@@ -32,7 +30,6 @@ class PodcastImpl with PodcastImplMappable implements Podcast {
     required this.title,
     required this.description,
     required this.backingArtwork,
-    required this.lastPublished,
     required this.language,
     this.categories = const {},
   });
@@ -44,7 +41,6 @@ class PodcastImpl with PodcastImplMappable implements Podcast {
       title: rssPodcast.title,
       description: rssPodcast.description,
       backingArtwork: rssPodcast.artwork.toString(),
-      lastPublished: rssPodcast.lastPublished ?? DateTime.now(),
       language: rssPodcast.language,
       categories: rssPodcast.categories,
     );

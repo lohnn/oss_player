@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:podcast_core/data/episode.model.dart';
 import 'package:podcast_core/extensions/list_extension.dart';
+import 'package:podcast_core/providers/episodes_provider.dart';
 import 'package:podcast_core/repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -13,13 +14,12 @@ class PlaylistPod extends _$PlaylistPod {
   @override
   Stream<List<Episode>> build() async* {
     _repository = await ref.watch(repositoryProvider.future);
-    try {
-      // @TODO: This could the reason the player is loading for a long time when we have no internet
-      await _repository.getPlayQueue();
-    } catch (_) {}
 
     await for (final queue in _repository.watchPlayQueue()) {
-      yield [for (final item in queue) item.episode];
+      yield await [
+        for (final item in queue)
+          ref.read(episodeProvider(item.episodeId).future),
+      ].wait;
     }
   }
 
@@ -31,10 +31,7 @@ class PlaylistPod extends _$PlaylistPod {
 
   Future<void> _recalculateOrder() async {
     final queue = await future;
-    await [
-      for (final (index, episode) in queue.indexed)
-        _repository.updatePlayQueueItemPosition(episode, index),
-    ].wait;
+    return _repository.updatePlayQueueItemPositions(queue);
   }
 
   /// Removes the episode from the queue and returns the next episode in the queue

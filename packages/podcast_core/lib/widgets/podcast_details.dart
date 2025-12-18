@@ -9,6 +9,7 @@ import 'package:podcast_core/data/podcast_search.model.dart';
 import 'package:podcast_core/gen/strings.g.dart';
 import 'package:podcast_core/providers/find_podcast_provider.dart';
 import 'package:podcast_core/providers/podcasts_provider.dart';
+import 'package:podcast_core/repository.dart';
 import 'package:podcast_core/widgets/rounded_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -222,7 +223,7 @@ class _SubscribeChip extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).colorScheme;
-    return switch (ref.watch(subscribedPodcastProvider(rssUrl: rssUrl)).value) {
+    return switch (ref.watch(isSubscribedToRssProvider(rssUrl: rssUrl)).value) {
       null => Chip(label: Text(context.t.podcastDetails.loading)),
       true => ActionChip(
         backgroundColor: colors.errorContainer,
@@ -249,7 +250,9 @@ class _SubscribeChip extends ConsumerWidget {
           );
           if (shouldDelete != true) return;
           // Unsubscribe from the podcast
-          await ref.read(findPodcastProvider.notifier).unsubscribe(rssUrl);
+          await ref
+              .read(repositoryProvider.future)
+              .then((repo) => repo.unsubscribeFromPodcast(rssUrl));
         },
         label: Row(
           mainAxisAlignment: MainAxisAlignment.center,

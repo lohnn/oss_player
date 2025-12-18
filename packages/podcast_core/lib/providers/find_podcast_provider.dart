@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:podcast_core/data/podcast.model.dart';
 import 'package:podcast_core/data/podcast_search.model.dart';
 import 'package:podcast_core/helpers/debouncer.dart';
-import 'package:podcast_core/providers/podcasts_provider.dart';
 import 'package:podcast_core/repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -16,10 +15,10 @@ class FindPodcast extends _$FindPodcast {
 
   @override
   Future<List<PodcastSearch>> build() async {
+    _repository = await ref.watch(repositoryProvider.future);
     _mounted = true;
     ref.onDispose(() => _mounted = false);
     try {
-      _repository = await ref.watch(repositoryProvider.future);
       return _repository.findPodcasts();
     } catch (e, stackTrace) {
       debugPrint(e.toString());
@@ -28,9 +27,10 @@ class FindPodcast extends _$FindPodcast {
     }
   }
 
-  Future<void> search(String searchTerm) async {
+  Future<void> search(String searchTerm, {bool skipDebounce = false}) async {
     state = const AsyncLoading();
-    _searchDebouncer.run(() async {
+
+    Future<void> runFindPodcast() async {
       try {
         final podcasts = await _repository.findPodcasts(searchTerm);
 
@@ -41,14 +41,20 @@ class FindPodcast extends _$FindPodcast {
 
         if (_mounted) state = AsyncError(e, stackTrace);
       }
-    });
+    }
+
+    if (skipDebounce) {
+      _searchDebouncer.cancel();
+      return runFindPodcast();
+    }
+    _searchDebouncer.run(runFindPodcast);
   }
 
-  Future<void> subscribe(PodcastRssUrl podcast) {
-    return ref.read(podcastsProvider.notifier).subscribe(podcast);
+  Future<void> subscribe(PodcastRssUrl podcast) async {
+    await _repository.subscribeToPodcast(podcast);
   }
 
   Future<void> unsubscribe(PodcastRssUrl podcast) {
-    return ref.read(podcastsProvider.notifier).unsubscribe(podcast);
+    return _repository.unsubscribeFromPodcast(podcast);
   }
 }
