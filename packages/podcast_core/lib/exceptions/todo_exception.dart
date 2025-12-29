@@ -9,6 +9,7 @@ class _TodoException implements Exception {
   }
 }
 
+@pragma('vm:prefer-inline')
 // ignore: non_constant_identifier_names
 Never TODO([String message = 'You hit a TODO!']) {
   throw _TodoException(message);

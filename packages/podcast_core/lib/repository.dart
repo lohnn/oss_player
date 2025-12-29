@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:podcast_core/data/episode.model.dart';
-
 import 'package:podcast_core/data/play_queue_item.model.dart';
 import 'package:podcast_core/data/podcast.model.dart';
 import 'package:podcast_core/data/podcast_search.model.dart';
@@ -34,6 +33,8 @@ abstract class Repository {
   Future<void> subscribeToPodcast(PodcastRssUrl podcast);
 
   Future<void> unsubscribeFromPodcast(PodcastRssUrl podcast);
+
+  Future<UserEpisodeStatus> getUserEpisodeStatus(Episode episode);
 
   Future<void> refreshPodcast(PodcastRssUrl podcast);
 
