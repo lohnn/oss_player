@@ -140,6 +140,7 @@ class HiveRepositoryImpl implements core.Repository {
     return box.values.toList()..sortedBy((podcast) => podcast.title);
   }
 
+  @override
   Future<UserEpisodeStatusImpl> getUserEpisodeStatus(Episode episode) async {
     final box = await userEpisodeStatusBox;
     return box.get(episode.id) ??
