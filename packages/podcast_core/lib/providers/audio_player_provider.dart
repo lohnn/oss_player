@@ -98,6 +98,8 @@ class AudioPlayerPod extends _$AudioPlayerPod {
 
         final nextEpisode = queue.firstOrNull;
         if (nextEpisode != null) {
+          if (nextEpisode.id == state.value?.id) return;
+
           await loadNextEpisode(nextEpisode);
           state = AsyncData(nextEpisode);
         } else {
