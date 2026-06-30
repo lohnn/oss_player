@@ -79,15 +79,30 @@ class LogEvent {
 /// Implementations MUST be non-throwing: a failure to report telemetry must
 /// never propagate into the business logic that called [log] (don't let the
 /// observer crash the observed).
-abstract interface class LogSink {
+///
+/// This is an `abstract class` (not an `abstract interface class`) on purpose:
+/// it is both extendable and implementable. Real sinks should `extends LogSink`
+/// so they inherit the shared [reportError] convenience; test stubs may still
+/// `implements LogSink` when they want to satisfy the contract without the base
+/// behaviour.
+abstract class LogSink {
+  const LogSink();
+
   /// Report a structured event. Must not throw.
   void log(LogEvent event);
 
   /// Convenience for reporting a caught error at [LogLevel.error].
   ///
-  /// Placed on the interface so call sites that previously did
-  /// `catch → debugPrint → rethrow` can switch to
-  /// `catch → sink.reportError(...) → rethrow` and actually reach the backend.
+  /// This is shared behaviour: always wrap the error as a [LogLevel.error]
+  /// [LogEvent] and then call [log]. It lives once on the base class so sinks
+  /// don't each reimplement it — they customise *where* events go via [log],
+  /// not by overriding [reportError]. (Under the old `implements` contract Dart
+  /// did not inherit method bodies, so every sink was forced to duplicate this;
+  /// switching to an extendable base removes that duplication.)
+  ///
+  /// Lets call sites that previously did `catch → debugPrint → rethrow` switch
+  /// to `catch → sink.reportError(...) → rethrow` and actually reach the
+  /// backend.
   void reportError(
     Object error,
     StackTrace stackTrace, {
@@ -109,27 +124,18 @@ abstract interface class LogSink {
 }
 
 /// A [LogSink] that does nothing. The safe default for the OSS app and tests.
-class NoopLogSink implements LogSink {
-  const NoopLogSink();
+class NoopLogSink extends LogSink {
+  const NoopLogSink() : super();
 
   @override
   void log(LogEvent event) {}
-
-  @override
-  void reportError(
-    Object error,
-    StackTrace stackTrace, {
-    String? message,
-    String? name,
-    Map<String, Object?> context = const {},
-  }) {}
 }
 
 /// A [LogSink] that prints to the debug console only. Useful for the OSS app so
 /// a developer running it locally can still see core telemetry, while shipping
 /// nothing anywhere in release builds.
-class DebugPrintLogSink implements LogSink {
-  const DebugPrintLogSink();
+class DebugPrintLogSink extends LogSink {
+  const DebugPrintLogSink() : super();
 
   @override
   void log(LogEvent event) {
@@ -139,28 +145,11 @@ class DebugPrintLogSink implements LogSink {
     if (event.error != null) {
       debugPrint('  error: ${event.error}');
     }
+    if (event.context.isNotEmpty) {
+      debugPrint('  context: ${event.context}');
+    }
     if (event.stackTrace != null) {
       debugPrintStack(stackTrace: event.stackTrace);
     }
-  }
-
-  @override
-  void reportError(
-    Object error,
-    StackTrace stackTrace, {
-    String? message,
-    String? name,
-    Map<String, Object?> context = const {},
-  }) {
-    log(
-      LogEvent(
-        level: LogLevel.error,
-        message: message ?? error.toString(),
-        name: name,
-        error: error,
-        stackTrace: stackTrace,
-        context: context,
-      ),
-    );
   }
 }

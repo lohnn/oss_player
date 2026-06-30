@@ -17,8 +17,12 @@ class FindPodcast extends _$FindPodcast {
 
   @override
   Future<List<PodcastSearch>> build() async {
-    _repository = await ref.watch(repositoryProvider.future);
+    // Assign the (synchronous) log sink BEFORE the first `await` so a notifier
+    // method invoked between build() suspending and resuming cannot read an
+    // unassigned `late _logSink` (LateInitializationError). `logSinkProvider`
+    // is synchronous, so this is safe; `watch` keeps it reactive.
     _logSink = ref.watch(logSinkProvider);
+    _repository = await ref.watch(repositoryProvider.future);
     _mounted = true;
     ref.onDispose(() => _mounted = false);
     try {
