@@ -63,10 +63,6 @@ class AudioPlayerPod extends _$AudioPlayerPod {
 
   @override
   Future<Episode?> build() async {
-    // Assign the (synchronous) log sink BEFORE the first `await` so a notifier
-    // method invoked between build() suspending and resuming cannot read an
-    // unassigned `late _logSink` (LateInitializationError). `logSinkProvider`
-    // is synchronous, so this is safe; `watch` keeps it reactive.
     _logSink = ref.watch(logSinkProvider);
     try {
       _player = await ref.watch(_audioServicePodProvider.future);
