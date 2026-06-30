@@ -11,13 +11,14 @@ part of 'log_sink_provider.dart';
 /// The [LogSink] shared business logic reports through.
 ///
 /// Defaults to [NoopLogSink] so the core package and the OSS app build and
-/// behave with no backend logging. The production app overrides this provider
-/// with an adapter that fans events out to the Loki buffer + Crashlytics.
+/// behave with no backend logging. Host apps override this provider with their
+/// own adapter that fans events out to whatever telemetry or logging backend
+/// they provide.
 ///
 /// ```dart
 /// ProviderScope(
 ///   overrides: [
-///     logSinkProvider.overrideWithValue(myLokiCrashlyticsSink),
+///     logSinkProvider.overrideWithValue(myLogSink),
 ///   ],
 ///   ...
 /// )
@@ -29,13 +30,14 @@ const logSinkProvider = LogSinkProvider._();
 /// The [LogSink] shared business logic reports through.
 ///
 /// Defaults to [NoopLogSink] so the core package and the OSS app build and
-/// behave with no backend logging. The production app overrides this provider
-/// with an adapter that fans events out to the Loki buffer + Crashlytics.
+/// behave with no backend logging. Host apps override this provider with their
+/// own adapter that fans events out to whatever telemetry or logging backend
+/// they provide.
 ///
 /// ```dart
 /// ProviderScope(
 ///   overrides: [
-///     logSinkProvider.overrideWithValue(myLokiCrashlyticsSink),
+///     logSinkProvider.overrideWithValue(myLogSink),
 ///   ],
 ///   ...
 /// )
@@ -47,13 +49,14 @@ final class LogSinkProvider
   /// The [LogSink] shared business logic reports through.
   ///
   /// Defaults to [NoopLogSink] so the core package and the OSS app build and
-  /// behave with no backend logging. The production app overrides this provider
-  /// with an adapter that fans events out to the Loki buffer + Crashlytics.
+  /// behave with no backend logging. Host apps override this provider with their
+  /// own adapter that fans events out to whatever telemetry or logging backend
+  /// they provide.
   ///
   /// ```dart
   /// ProviderScope(
   ///   overrides: [
-  ///     logSinkProvider.overrideWithValue(myLokiCrashlyticsSink),
+  ///     logSinkProvider.overrideWithValue(myLogSink),
   ///   ],
   ///   ...
   /// )

@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 
 /// Severity of a telemetry event reported through a [LogSink].
 ///
-/// Mirrors the well-known levels of `package:logging` so the production app's
-/// adapter can map straight onto its backend buffer, while staying free of any
+/// Mirrors the well-known levels of `package:logging` so a host app's adapter
+/// can map straight onto its telemetry backend, while staying free of any
 /// dependency on a concrete logging backend.
 enum LogLevel {
   debug,
@@ -19,8 +19,8 @@ enum LogLevel {
 ///
 /// This is a presentation-agnostic value object (I-069): the core defines the
 /// *shape* of what it wants to report, and each app provides an adapter that
-/// projects it onto a concrete backend (Loki + Crashlytics in production, debug
-/// console / nothing in the OSS app).
+/// projects it onto whatever telemetry or logging backend the host app
+/// provides (debug console / nothing in the OSS app).
 ///
 /// [context] holds structured fields — podcast/episode/screen ids, request
 /// ids, etc. — as plain JSON-encodable values, never bare interpolated
@@ -71,10 +71,10 @@ class LogEvent {
 /// The seam through which shared business logic in `podcast_core` reports
 /// observability events without knowing where they go.
 ///
-/// The OSS app injects [NoopLogSink] (or a debug-printing sink); the production
-/// app injects an adapter that fans the event out to the batched Loki buffer
-/// and Firebase Crashlytics. Core code depends only on this interface, so it
-/// stays buildable and unit-testable against a stub sink (I-069).
+/// The OSS app injects [NoopLogSink] (or a debug-printing sink); a host app can
+/// inject an adapter that fans the event out to whatever telemetry or logging
+/// backend it provides. Core code depends only on this interface, so it stays
+/// buildable and unit-testable against a stub sink (I-069).
 ///
 /// Implementations MUST be non-throwing: a failure to report telemetry must
 /// never propagate into the business logic that called [log] (don't let the
