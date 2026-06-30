@@ -1,8 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:podcast_core/data/podcast.model.dart';
 import 'package:podcast_core/data/podcast_search.model.dart';
 import 'package:podcast_core/helpers/debouncer.dart';
 import 'package:podcast_core/repository.dart';
+import 'package:podcast_core/services/logging/log_sink.dart';
+import 'package:podcast_core/services/logging/log_sink_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'find_podcast_provider.g.dart';
@@ -11,18 +12,24 @@ part 'find_podcast_provider.g.dart';
 class FindPodcast extends _$FindPodcast {
   final _searchDebouncer = Debouncer.long();
   late Repository _repository;
+  late LogSink _logSink;
   late bool _mounted;
 
   @override
   Future<List<PodcastSearch>> build() async {
     _repository = await ref.watch(repositoryProvider.future);
+    _logSink = ref.watch(logSinkProvider);
     _mounted = true;
     ref.onDispose(() => _mounted = false);
     try {
       return _repository.findPodcasts();
     } catch (e, stackTrace) {
-      debugPrint(e.toString());
-      debugPrintStack(stackTrace: stackTrace);
+      _logSink.reportError(
+        e,
+        stackTrace,
+        name: 'FindPodcast',
+        message: 'Initial findPodcasts failed',
+      );
       rethrow;
     }
   }
@@ -36,8 +43,13 @@ class FindPodcast extends _$FindPodcast {
 
         if (_mounted) state = AsyncData(podcasts);
       } catch (e, stackTrace) {
-        debugPrint(e.toString());
-        debugPrintStack(stackTrace: stackTrace);
+        _logSink.reportError(
+          e,
+          stackTrace,
+          name: 'FindPodcast',
+          message: 'findPodcasts search failed',
+          context: {'search_term': searchTerm},
+        );
 
         if (_mounted) state = AsyncError(e, stackTrace);
       }
