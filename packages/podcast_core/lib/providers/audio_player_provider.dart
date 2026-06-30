@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
-import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:podcast_core/data/episode.model.dart';
 import 'package:podcast_core/data/episode_with_status.dart';
@@ -10,6 +9,8 @@ import 'package:podcast_core/providers/app_lifecycle_state_provider.dart';
 import 'package:podcast_core/providers/episode_loader_provider.dart';
 import 'package:podcast_core/providers/playlist_pod_provider.dart';
 import 'package:podcast_core/repository.dart';
+import 'package:podcast_core/services/logging/log_sink.dart';
+import 'package:podcast_core/services/logging/log_sink_provider.dart';
 import 'package:podcast_core/services/podcast_audio_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/rxdart.dart';
@@ -56,11 +57,13 @@ class _AudioServicePod extends _$AudioServicePod {
 class AudioPlayerPod extends _$AudioPlayerPod {
   late PodcastAudioHandler _player;
   late Repository _repository;
+  late LogSink _logSink;
 
   final _log = Logger('se.lohnn.podcast.AudioPlayerPod');
 
   @override
   Future<Episode?> build() async {
+    _logSink = ref.watch(logSinkProvider);
     try {
       _player = await ref.watch(_audioServicePodProvider.future);
       _repository = await ref.watch(repositoryProvider.future);
@@ -85,8 +88,12 @@ class AudioPlayerPod extends _$AudioPlayerPod {
 
       return future;
     } catch (e, stackTrace) {
-      debugPrint(e.toString());
-      debugPrintStack(stackTrace: stackTrace);
+      _logSink.reportError(
+        e,
+        stackTrace,
+        name: 'AudioPlayerPod',
+        message: 'Audio player build failed',
+      );
       rethrow;
     }
   }
@@ -109,8 +116,13 @@ class AudioPlayerPod extends _$AudioPlayerPod {
         state = const AsyncData(null);
       }
     } catch (e, stackTrace) {
-      debugPrint(e.toString());
-      debugPrintStack(stackTrace: stackTrace);
+      _logSink.reportError(
+        e,
+        stackTrace,
+        name: 'AudioPlayerPod',
+        message: 'updateQueue failed',
+        context: {'queue_length': queue.length},
+      );
       state = AsyncError(e, stackTrace);
       rethrow;
     }
