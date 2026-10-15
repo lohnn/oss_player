@@ -1,3 +1,4 @@
+import 'package:meta/meta.dart';
 import 'package:podcast_core/data/episode_with_status.dart';
 import 'package:podcast_core/providers/episode_loader_provider.dart';
 
@@ -8,14 +9,19 @@ import 'package:podcast_core/providers/episode_loader_provider.dart';
 /// Counters are exposed for tests:
 /// - [statusFetchCount]: how many times the persisted playback status was read.
 /// - [appliedLoadCount]: how many times the player load was invoked.
+
+/// Drives a single load transition on the player: the episode source to load
+/// ([episodeUri]), the resolved persisted status it should start from, and
+/// whether playback should begin immediately.
+typedef EpisodeLoadHandler = Future<void> Function({
+  required Uri episodeUri,
+  required EpisodeWithStatus status,
+  required bool autoPlay,
+});
+
 class EpisodeLoadSequencer {
   final Future<EpisodeWithStatus> Function() loadStatus;
-  final Future<void> Function({
-    required Uri episodeUri,
-    required EpisodeWithStatus status,
-    required bool autoPlay,
-  })
-  load;
+  final EpisodeLoadHandler load;
 
   int _statusFetchCount = 0;
   int _appliedLoadCount = 0;
@@ -23,12 +29,7 @@ class EpisodeLoadSequencer {
 
   factory EpisodeLoadSequencer({
     required Future<EpisodeWithStatus> Function() loadStatus,
-    required Future<void> Function({
-      required Uri episodeUri,
-      required EpisodeWithStatus status,
-      required bool autoPlay,
-    })
-    load,
+    required EpisodeLoadHandler load,
   }) => EpisodeLoadSequencer._(
     loadStatus: loadStatus,
     load: load,
@@ -37,9 +38,11 @@ class EpisodeLoadSequencer {
   EpisodeLoadSequencer._({required this.loadStatus, required this.load});
 
   /// How many times the download-sequence had to read the persisted status.
+  @visibleForTesting
   int get statusFetchCount => _statusFetchCount;
 
   /// How many times the player was actually driven to (re)load a source.
+  @visibleForTesting
   int get appliedLoadCount => _appliedLoadCount;
 
   /// The download stream has produced a new [fileResponse]. Downloader
