@@ -186,18 +186,32 @@ class PodcastAudioHandler extends BaseAudioHandler
     required EpisodeWithStatus status,
     bool autoPlay = false,
   }) async {
-    // If the player is already playing the same file, don't reload it.
+    // If the player is already playing the same file, don't reload it. Never
+    // re-assert play() here: during an episode's progress-tick stream this
+    // method used to run constantly, and `if (autoPlay) await play()` undid
+    // every explicit user pause until the download finished. Auto-play
+    // belongs to the actual source transition below.
     if (_player.audioSource case UriAudioSource(
       :final uri,
     ) when uri == episodeUri) {
-      if (autoPlay) await play();
       return;
     }
 
     _stopPositionStream();
 
-    final seekToPosition = status.status?.currentPosition;
-    log.fine('Loading episode: ${episode.title} - $seekToPosition');
+    final persistedPosition = status.status?.currentPosition;
+    log.fine('Loading episode: ${episode.title} - $persistedPosition');
+
+    // When the same episode switches source (e.g. a background download
+    // finishing and taking over from the remote stream), the live playback
+    // position is the truth — the persisted snapshot can lag behind by the
+    // position-save throttle, which used to audibly rewind the episode.
+    var seekToPosition = persistedPosition;
+    if (mediaItem.valueOrNull?.episode == episode &&
+        seekToPosition != null &&
+        _player.position > seekToPosition) {
+      seekToPosition = _player.position;
+    }
 
     final duration = await _player.setAudioSource(
       AudioSource.uri(episodeUri),

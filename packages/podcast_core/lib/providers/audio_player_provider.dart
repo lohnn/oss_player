@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 import 'package:podcast_core/data/episode.model.dart';
 import 'package:podcast_core/data/episode_with_status.dart';
 import 'package:podcast_core/providers/app_lifecycle_state_provider.dart';
+import 'package:podcast_core/providers/episode_load_sequencer.dart';
 import 'package:podcast_core/providers/episode_loader_provider.dart';
 import 'package:podcast_core/providers/playlist_pod_provider.dart';
 import 'package:podcast_core/repository.dart';
@@ -145,6 +146,24 @@ class AudioPlayerPod extends _$AudioPlayerPod {
 
     final completer = Completer<void>();
 
+    // The download stream emits one event per progress tick. The sequencer
+    // collapses repeats of the same URI, so the status is read and the player
+    // is loaded once per URI transition — not per tick.
+    final sequencer = EpisodeLoadSequencer(
+      loadStatus: () => _getStatusForEpisode(episode),
+      load: ({
+        required Uri episodeUri,
+        required EpisodeWithStatus status,
+        required bool autoPlay,
+      }) =>
+          _player.loadEpisode(
+            episode,
+            episodeUri: episodeUri,
+            status: status,
+            autoPlay: autoPlay,
+          ),
+    );
+
     _downloadSubscription = ref
         .read(episodeLoaderProvider(episode).notifier)
         .tryDownload()
@@ -155,12 +174,7 @@ class AudioPlayerPod extends _$AudioPlayerPod {
         })
         .listen(
           (fileResponse) async {
-            await _player.loadEpisode(
-              episode,
-              episodeUri: fileResponse.currentUri,
-              autoPlay: autoPlay,
-              status: await _getStatusForEpisode(episode),
-            );
+            await sequencer.handleFileResponse(fileResponse, autoPlay: autoPlay);
 
             if (!completer.isCompleted) {
               completer.complete();
