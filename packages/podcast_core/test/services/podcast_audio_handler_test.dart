@@ -11,13 +11,13 @@ import '../helpers/fake_just_audio_platform.dart';
 import '../test_data_models/test_episode.dart';
 import '../test_data_models/test_user_episode_status.dart';
 
-/// The auto-advance pause bug (case study CS-1 in the repo's TDD notes).
-///
-/// RED-1 replicates the production incident: while a (now-)downloaded episode
-/// streams, every download progress tick re-ran `loadEpisode(autoPlay: true)`,
-/// whose same-URI guard called `play()` — undoing every pause press within
-/// milliseconds (a single episode transition generated thousands of
-/// unnecessary persisted-status reads along the way).
+/// The auto-advance pause bug (case study CS-1): while a (now-)downloaded
+/// episode streamed, every download progress tick re-ran
+/// `loadEpisode(autoPlay: true)`, whose same-URI guard called `play()` —
+/// undoing every pause press within milliseconds — and the download's final
+/// transition re-applied a stale persisted position, audibly rewinding
+/// playback. A single transition also generated thousands of unnecessary
+/// persisted-status reads along the way.
 class _StubRepository implements Repository {
   int updateEpisodePositionCalls = 0;
 
@@ -87,7 +87,8 @@ void main() {
   }
 
   test(
-    'RED-1: explicit pause survives a same-URI loadEpisode(autoPlay: true)',
+    'loadEpisode: an explicit pause survives repeated same-URI auto-play '
+    'loads (was: undone by the download progress ticks within ~3 ms)',
     () async {
       // This is the auto-advance path: every download progress tick used to
       // hit loadEpisode with the same URI and autoPlay=true.
@@ -129,13 +130,13 @@ void main() {
       expect(handler.isPlaying, isFalse,
           reason:
               'A same-URI loadEpisode must not re-assert play and thereby '
-              'override an explicit pause (CS-1 / RED-1)');
+              'override an explicit pause');
     },
     timeout: const Timeout(Duration(seconds: 30)),
   );
 
   test(
-    'RED-2 (pin): same-URI loadEpisode never reloads the underlying source',
+    'loadEpisode: a same-URI load never reloads the underlying source',
     () async {
       final harness = _AudioHarness();
       JustAudioPlatform.instance = harness.fake;
@@ -153,8 +154,9 @@ void main() {
   );
 
   test(
-    'RED-3: switching remote->local mid-episode applies the live position, '
-    'not a stale DB snapshot',
+    'loadEpisode: switching sources mid-episode applies the live position, '
+    'not the stale persisted snapshot (was: rewound by the persisted '
+    'snapshot lag)',
     () async {
       final harness = _AudioHarness();
       JustAudioPlatform.instance = harness.fake;
@@ -197,7 +199,7 @@ void main() {
         const Duration(seconds: 28),
         reason:
             'Cache takeover for the SAME episode must prefer the live position '
-            'over the stale persisted snapshot (CS-1 / RED-3)',
+            'over the stale persisted snapshot',
       );
     },
     timeout: const Timeout(Duration(seconds: 30)),

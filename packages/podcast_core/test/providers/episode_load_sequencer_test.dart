@@ -39,7 +39,8 @@ void main() {
   }
 
   test(
-    'RED-4: 500 same-URI progress events fetch status once and load once',
+    'handleFileResponse: repeated same-URI progress events fetch status and '
+    'load once (was: once per progress chunk)',
     () async {
       final loads = <Uri>[];
       var statusFetches = 0;
@@ -74,7 +75,8 @@ void main() {
   );
 
   test(
-    'RED-5: a changed URI (cache takeover) applies once, with its own fetch',
+    'handleFileResponse: a changed URI (cache takeover) applies once, with '
+    'its own status fetch',
     () async {
       final loads = <Uri>[];
       var statusFetches = 0;
