@@ -171,12 +171,14 @@ class EpisodeFileService {
 class EpisodeCacheManager {
   static EpisodeCacheManager? _instance;
 
-  factory EpisodeCacheManager() {
+  /// [episodeFileService] is for tests: production callers get the real
+  /// network service and the singleton keeps behaving exactly as before.
+  factory EpisodeCacheManager({EpisodeFileService? episodeFileService}) {
     if (_instance case final instance?) {
       return instance;
     }
     return _instance = EpisodeCacheManager._(
-      episodeFileService: EpisodeFileService(),
+      episodeFileService: episodeFileService ?? EpisodeFileService(),
     );
   }
 

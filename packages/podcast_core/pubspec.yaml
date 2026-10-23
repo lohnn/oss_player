@@ -39,6 +39,7 @@ dependencies:
   url_launcher: ^6.3.2
 
 dev_dependencies:
+  audio_service_platform_interface: ^0.1.3
   build_runner: ^2.10.4
   custom_lint: ^0.8.1
   dart_mappable_builder: ^4.6.1
