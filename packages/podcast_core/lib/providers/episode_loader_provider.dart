@@ -253,6 +253,15 @@ class EpisodeCacheManager {
       return;
     }
 
+    // Another subscriber may have registered the download while this call
+    // was awaiting the directory/filesystem above: joining it beats a second
+    // concurrent full download of the same episode into the same temp file
+    // (CS-2: the incident's media was fetched twice within one millisecond).
+    if (_downloads[episode] case final controller?) {
+      yield* controller.stream;
+      return;
+    }
+
     // The get function is closing the sink
     // ignore: close_sinks
     final subject = _downloads[episode] = episodeFileService.get(

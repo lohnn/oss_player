@@ -131,6 +131,16 @@ class AudioPlayerPod extends _$AudioPlayerPod {
 
   StreamSubscription<EpisodeFileResponse>? _downloadSubscription;
 
+  /// In-flight next-episode loads, single-flight per episode (CS-2,
+  /// oss_player#97): during the end-of-episode transition the playlist echo
+  /// (`updateQueue`, via `removeFromQueue`'s re-emission) and `playEpisode`
+  /// both request the same next episode milliseconds apart. The second call
+  /// used to cancel and restart the first one's download — the server saw
+  /// the media fetched twice within the same millisecond — and whichever
+  /// load happened to run last decided the play state: when the echo's
+  /// `autoPlay: false` ran, the next episode loaded but never started.
+  final Map<String, _EpisodeLoadFlight> _inFlightLoads = {};
+
   /// Loads the next episode in the queue and starts playing it.
   ///
   /// If [autoPlay] is set to true, the episode will start playing immediately.
@@ -139,12 +149,40 @@ class AudioPlayerPod extends _$AudioPlayerPod {
   /// It will check for already downloaded episodes and start playing it. If
   /// the episode is not downloaded, it will start downloading it.
   ///
-  /// Returns a future that completes when the episode has been loaded from the
-  /// first source.
+  /// Loads are single-flight per episode: a concurrent request for the same
+  /// episode joins the load that is already running instead of restarting it,
+  /// and the strongest play intent among the racing callers wins.
+  ///
+  /// Returns a future that completes when the episode has been loaded from
+  /// the first source, or completes with the error that failed the load —
+  /// failures are also reported through the [LogSink] (they used to be
+  /// swallowed here, leaving the player on the finished episode).
   Future<void> loadNextEpisode(Episode episode, {bool autoPlay = false}) {
-    _downloadSubscription?.cancel();
+    final episodeKey = episode.id.id;
+    final inFlight = _inFlightLoads[episodeKey];
+    if (inFlight case final flight?) {
+      // Join the running load; never restart the download.
+      if (autoPlay) flight.requestPlay = true;
+      if (flight.isCompleted) {
+        // The shared load already applied, possibly before this join
+        // upgraded the play intent — start playback now, the same way
+        // playEpisode does after a fresh load.
+        return _playIfRequested(flight);
+      }
+      return flight.future;
+    }
 
-    final completer = Completer<void>();
+    final flight = _EpisodeLoadFlight()..requestPlay = autoPlay;
+    _inFlightLoads[episodeKey] = flight;
+    final completer = flight.completer;
+
+    void forgetFlight() {
+      if (_inFlightLoads[episodeKey] == flight) {
+        _inFlightLoads.remove(episodeKey);
+      }
+    }
+
+    _downloadSubscription?.cancel();
 
     // The download stream emits one event per progress tick. The sequencer
     // collapses repeats of the same URI, so the status is read and the player
@@ -171,28 +209,62 @@ class AudioPlayerPod extends _$AudioPlayerPod {
           if (!completer.isCompleted) {
             completer.complete();
           }
+          forgetFlight();
         })
         .listen(
           (fileResponse) async {
-            await sequencer.handleFileResponse(fileResponse, autoPlay: autoPlay);
-
+            try {
+              await sequencer.handleFileResponse(
+                fileResponse,
+                autoPlay: flight.requestPlay,
+              );
+            } catch (e, stackTrace) {
+              _reportFailedLoad(episodeKey, e, stackTrace);
+              if (!completer.isCompleted) {
+                completer.completeError(e, stackTrace);
+              }
+              forgetFlight();
+              return;
+            }
             if (!completer.isCompleted) {
               completer.complete();
             }
           },
-          onError: (e, stackTrace) {
+          onError: (Object e, StackTrace stackTrace) {
+            _reportFailedLoad(episodeKey, e, stackTrace);
             if (!completer.isCompleted) {
-              completer.complete();
+              completer.completeError(e, stackTrace);
             }
+            forgetFlight();
           },
           onDone: () {
             if (!completer.isCompleted) {
               completer.complete();
             }
+            forgetFlight();
           },
         );
 
     return completer.future;
+  }
+
+  void _reportFailedLoad(String episodeKey, Object e, StackTrace stackTrace) {
+    _logSink.reportError(
+      e,
+      stackTrace,
+      name: 'se.lohnn.podcast.AudioPlayerPod',
+      message: 'Episode load failed',
+      context: {'episode_id': episodeKey},
+    );
+  }
+
+  /// Starts playback when the joined play intent says so but the shared load
+  /// ran before the intent was upgraded.
+  Future<void> _playIfRequested(_EpisodeLoadFlight flight) {
+    if (flight.requestPlay && !_player.isPlaying) {
+      return _player.play();
+    }
+    return Future<void>.value();
   }
 
   Future<EpisodeWithStatus> _getStatusForEpisode(Episode episode) async {
@@ -279,4 +351,22 @@ currentPosition(Ref ref) async* {
 Stream<PlaybackState> audioState(Ref ref) async* {
   final audioPlayer = await ref.watch(_audioServicePodProvider.future);
   yield* audioPlayer.playbackState;
+}
+
+/// One episode-load attempt, joinable by concurrent callers (CS-2).
+///
+/// [requestPlay] carries the strongest `autoPlay` intent seen among the
+/// racing callers — `updateQueue`'s echo loads with `autoPlay: false` while
+/// `playEpisode` wants playback; the shared load reads the flag at event
+/// time so a later join still gets music, not a paused episode.
+class _EpisodeLoadFlight {
+  bool requestPlay = false;
+
+  final Completer<void> _completer = Completer<void>();
+
+  Completer<void> get completer => _completer;
+
+  Future<void> get future => _completer.future;
+
+  bool get isCompleted => _completer.isCompleted;
 }
