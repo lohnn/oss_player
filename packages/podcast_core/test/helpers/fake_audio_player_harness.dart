@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:audio_service_platform_interface/audio_service_platform_interface.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -26,9 +25,12 @@ import 'fake_playlist_pod.dart';
 ///
 /// - [playlist]: a controllable play-queue stream (the CS-2 seam) that drives
 ///   `updateQueue` exactly like the app's realtime echo does.
-/// - [loader]: a controllable download stream whose event timing decides
-///   whether the racing transition loads collide like they did in the
-///   incident.
+/// - [loader]: the download seam. Its `tryDownloadCalls` count is the
+///   streaming contract's red line: the streaming-only load must never
+///   consult the download pipeline, so any consult fails the test. The
+///   streams self-emit one remote event, which makes the CURRENT download
+///   driven path complete like a streaming load would (same source-set,
+///   no test-side timing), while the count still exposes the difference.
 /// - [repository]: canned episode statuses (a fresh episode = no row).
 /// - [logSink]: records every reported telemetry event.
 ///
@@ -98,25 +100,24 @@ class AudioPlayerPodHarness {
 
     // Start the build. Its returned `future` only settles after the first
     // state assignment, which — like in the app — happens once the playlist
-    // listener's initial `updateQueue` load gets its first download event.
+    // listener's initial `updateQueue` load completes. The auto-emit fake
+    // loader hands out an immediately-emitting stream, so the load completes
+    // on subscription without test-side event timing.
     container.read(audioPlayerPodProvider);
-    await pumpEventQueue(times: 10);
-    final first = playlist.queue.firstOrNull;
-    if (first != null) {
-      final loader = loaderFor(first);
-      for (var i = 0; i < loader.tryDownloadCalls; i++) {
-        loader.call(i).emitRemote(first.url);
-      }
-    }
     await container.read(audioPlayerPodProvider.future);
     await pumpEventQueue(times: 10);
   }
 }
 
 /// Controllable replacement for the download provider. Every `tryDownload()`
-/// call hands out a FRESH stream, matching the production cache manager's
-/// observed behaviour when two racing callers both believe they are the
-/// first subscriber (the incident showed two same-millisecond media GETs).
+/// call hands out a stream that immediately reports the episode's remote URI
+/// and closes: the CURRENT (download-driven) path needs one event to load
+/// and complete, and this makes it observably equivalent to a streaming
+/// load — same single remote source-set, no timing dependence in tests —
+/// while `tryDownloadCalls` keeps recording that the download pipeline was
+/// consulted at all, which is exactly the thing the streaming-only
+/// contract ("load the episode's remote URL directly, never consult a
+/// download stream") counts.
 class FakeEpisodeLoader extends EpisodeLoader {
   int tryDownloadCalls = 0;
   final _downloads = <_FakeEpisodeDownload>[];
@@ -133,15 +134,28 @@ class FakeEpisodeLoader extends EpisodeLoader {
   @override
   Stream<EpisodeFileResponse> tryDownload() {
     tryDownloadCalls++;
-    final download = _FakeEpisodeDownload();
+    // Emit the remote-URI event and STAY OPEN: closing here would make the
+    // stream's done event race the in-flight player load (onDone would
+    // complete the flight before the load applied — the exact
+    // silent-failure shape the loader must never manufacture). The current
+    // download path keeps its stream open across the download; so does this
+    // fake.
+    final download = _FakeEpisodeDownload(episode)
+      ..controller.add(RemoteEpisodeFile(remoteUri: episode.url));
     _downloads.add(download);
     return download.stream;
   }
 }
 
-/// One handed-out download stream, test-driveable.
+/// One handed-out download stream, test-driveable. A single-subscription
+/// controller: the self-emitted event buffers until whoever subscribes
+/// (the current code always has exactly one subscriber — the flight join
+/// means racing callers never hand out a second stream).
 class _FakeEpisodeDownload {
-  final controller = StreamController<EpisodeFileResponse>.broadcast();
+  final Episode episode;
+  final controller = StreamController<EpisodeFileResponse>();
+
+  _FakeEpisodeDownload(this.episode);
 
   Stream<EpisodeFileResponse> get stream => controller.stream;
 

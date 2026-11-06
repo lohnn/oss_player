@@ -34,6 +34,11 @@ class FakePlatformAudioPlayer extends AudioPlayerPlatform {
   /// Duration every successful [load] reports back to the player.
   Duration fakeDuration = const Duration(hours: 2);
 
+  /// When armed, the next [load] throws instead of loading — the failure
+  /// injection for the streaming-era load path, where load errors arrive
+  /// from the platform (source fetch/decode), not from a download stream.
+  bool throwOnLoad = false;
+
   /// Current position reported via [emitEvent].
   Duration fakePosition = Duration.zero;
 
@@ -66,6 +71,9 @@ class FakePlatformAudioPlayer extends AudioPlayerPlatform {
 
   @override
   Future<LoadResponse> load(LoadRequest request) async {
+    if (throwOnLoad) {
+      throw StateError('fake platform load failure');
+    }
     loadCount++;
     // just_audio wraps even a single source in a (playlist) concatenating
     // message; the real source is its first child.

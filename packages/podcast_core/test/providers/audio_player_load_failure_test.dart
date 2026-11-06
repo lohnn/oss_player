@@ -4,11 +4,14 @@ import '../helpers/fake_audio_player_harness.dart';
 import '../helpers/fake_playlist_pod.dart';
 
 /// The silent-load-failure family behind the same user's 2026-10-21 report
-/// ("När jag tryckte på play hände det inget", zero media requests in that
-/// session) and today's stuck bar: failures inside the next-episode load
+/// and the stuck bar of 2026-10-23: failures inside the next-episode load
 /// path were swallowed, leaving the player on the finished episode (its
 /// completed state reads as the progress bar stuck at the end) with nothing
-/// surfaced anywhere.
+/// surfaced anywhere. Streaming era: load errors arrive from the platform
+/// (source fetch/decode), so the failure is injected on the recording fake
+/// platform instead of a download stream; the guarantee is unchanged — the
+/// caller's future throws AND the failure reaches the telemetry sink with
+/// the episode in context (the cemented RED signature in TDD.md).
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   setUp(mockAudioSessionChannel);
@@ -23,22 +26,16 @@ void main() {
       final harness = AudioPlayerPodHarness(episodes: [episodeA, episodeB]);
       await harness.boot();
 
-      // The next episode's load is asked for and still pending when the
-      // download stream fails — the incident's shape. The expectation is
-      // attached before the failure is delivered so the opportunity to
-      // observe it is not a race.
+      // The next episode's load is asked for while still pending when the
+      // platform-level load fails. The expectation is attached before the
+      // failure is delivered so the opportunity to observe it is not a race.
       final loadFuture = harness.pod().loadNextEpisode(
             episodeB,
             autoPlay: true,
           );
-      final failure = expectLater(loadFuture, throwsA(isA<Exception>()));
+      final failure = expectLater(loadFuture, throwsA(isA<StateError>()));
+      harness.platformPlayer.throwOnLoad = true;
       await pumpEventQueue(times: 10);
-
-      // The download stream fails, like the incident's broken load did.
-      await emitErrorOnEveryHandedOutStream(
-        harness.loaderFor(episodeB),
-        Exception('download failed'),
-      );
       await failure;
 
       // The failure must reach the telemetry sink with the episode in
