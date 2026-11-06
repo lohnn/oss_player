@@ -6,15 +6,12 @@ import 'package:logging/logging.dart';
 import 'package:podcast_core/data/episode.model.dart';
 import 'package:podcast_core/data/episode_with_status.dart';
 import 'package:podcast_core/providers/app_lifecycle_state_provider.dart';
-import 'package:podcast_core/providers/episode_load_sequencer.dart';
-import 'package:podcast_core/providers/episode_loader_provider.dart';
 import 'package:podcast_core/providers/playlist_pod_provider.dart';
 import 'package:podcast_core/repository.dart';
 import 'package:podcast_core/services/logging/log_sink.dart';
 import 'package:podcast_core/services/logging/log_sink_provider.dart';
 import 'package:podcast_core/services/podcast_audio_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:rxdart/rxdart.dart';
 
 part 'audio_player_provider.g.dart';
 
@@ -129,39 +126,37 @@ class AudioPlayerPod extends _$AudioPlayerPod {
     }
   }
 
-  StreamSubscription<EpisodeFileResponse>? _downloadSubscription;
-
   /// In-flight next-episode loads, single-flight per episode (CS-2,
   /// oss_player#97): during the end-of-episode transition the playlist echo
   /// (`updateQueue`, via `removeFromQueue`'s re-emission) and `playEpisode`
-  /// both request the same next episode milliseconds apart. The second call
-  /// used to cancel and restart the first one's download — the server saw
-  /// the media fetched twice within the same millisecond — and whichever
-  /// load happened to run last decided the play state: when the echo's
-  /// `autoPlay: false` ran, the next episode loaded but never started.
+  /// both request the same next episode milliseconds apart. Racing callers
+  /// join the shared load; the strongest play intent wins.
   final Map<String, _EpisodeLoadFlight> _inFlightLoads = {};
 
-  /// Loads the next episode in the queue and starts playing it.
+  /// Loads the next episode and starts playing it.
   ///
   /// If [autoPlay] is set to true, the episode will start playing immediately.
   /// If [autoPlay] is set to false, the episode will be loaded but not played.
   ///
-  /// It will check for already downloaded episodes and start playing it. If
-  /// the episode is not downloaded, it will start downloading it.
+  /// The load is direct: the persisted status is read exactly once and the
+  /// episode's remote URL becomes THE audio source (implicit full-episode
+  /// downloads are gone — the app streams directly; a future explicit
+  /// download can be added on top of this simpler floor when offline
+  /// playback comes back as a real feature).
   ///
   /// Loads are single-flight per episode: a concurrent request for the same
-  /// episode joins the load that is already running instead of restarting it,
+  /// episode joins the load that is already running instead of racing it,
   /// and the strongest play intent among the racing callers wins.
   ///
-  /// Returns a future that completes when the episode has been loaded from
-  /// the first source, or completes with the error that failed the load —
-  /// failures are also reported through the [LogSink] (they used to be
-  /// swallowed here, leaving the player on the finished episode).
+  /// Returns a future that completes when the episode has been loaded, or
+  /// completes with the error that failed the load — failures are also
+  /// reported through the [LogSink] (they used to be swallowed here,
+  /// leaving the player on the finished episode).
   Future<void> loadNextEpisode(Episode episode, {bool autoPlay = false}) {
     final episodeKey = episode.id.id;
     final inFlight = _inFlightLoads[episodeKey];
     if (inFlight case final flight?) {
-      // Join the running load; never restart the download.
+      // Join the running load; never restart it.
       if (autoPlay) flight.requestPlay = true;
       if (flight.isCompleted) {
         // The shared load already applied, possibly before this join
@@ -182,70 +177,57 @@ class AudioPlayerPod extends _$AudioPlayerPod {
       }
     }
 
-    _downloadSubscription?.cancel();
-
-    // The download stream emits one event per progress tick. The sequencer
-    // collapses repeats of the same URI, so the status is read and the player
-    // is loaded once per URI transition — not per tick.
-    final sequencer = EpisodeLoadSequencer(
-      loadStatus: () => _getStatusForEpisode(episode),
-      load: ({
-        required Uri episodeUri,
-        required EpisodeWithStatus status,
-        required bool autoPlay,
-      }) =>
-          _player.loadEpisode(
-            episode,
-            episodeUri: episodeUri,
-            status: status,
-            autoPlay: autoPlay,
-          ),
+    _applyEpisodeLoad(
+      episode,
+      flight: flight,
+      completer: completer,
+      forgetFlight: forgetFlight,
     );
 
-    _downloadSubscription = ref
-        .read(episodeLoaderProvider(episode).notifier)
-        .tryDownload()
-        .doOnCancel(() {
-          if (!completer.isCompleted) {
-            completer.complete();
-          }
-          forgetFlight();
-        })
-        .listen(
-          (fileResponse) async {
-            try {
-              await sequencer.handleFileResponse(
-                fileResponse,
-                autoPlay: flight.requestPlay,
-              );
-            } catch (e, stackTrace) {
-              _reportFailedLoad(episodeKey, e, stackTrace);
-              if (!completer.isCompleted) {
-                completer.completeError(e, stackTrace);
-              }
-              forgetFlight();
-              return;
-            }
-            if (!completer.isCompleted) {
-              completer.complete();
-            }
-          },
-          onError: (Object e, StackTrace stackTrace) {
-            _reportFailedLoad(episodeKey, e, stackTrace);
-            if (!completer.isCompleted) {
-              completer.completeError(e, stackTrace);
-            }
-            forgetFlight();
-          },
-          onDone: () {
-            if (!completer.isCompleted) {
-              completer.complete();
-            }
-            forgetFlight();
-          },
-        );
-
     return completer.future;
+  }
+
+  /// The single streaming load behind one flight: read the persisted status
+  /// and drive the player directly. Racing callers never get a second one
+  /// (they join the flight), so errors and completion — including the
+  /// silent-failure family this exact shape used to produce — land on the
+  /// awaiters and the [LogSink], never on a done event.
+  Future<void> _applyEpisodeLoad(
+    Episode episode, {
+    required _EpisodeLoadFlight flight,
+    required Completer<void> completer,
+    required void Function() forgetFlight,
+  }) async {
+    try {
+      final status = await _getStatusForEpisode(episode);
+      await _player.loadEpisode(
+        episode,
+        episodeUri: episode.url,
+        status: status,
+        autoPlay: flight.requestPlay,
+      );
+      // A racing caller may have upgraded the play intent while this load
+      // was applying — and the handler's same-URI guard (blindly correct:
+      // never RE-load the active source) skips its own auto-play, so the
+      // intent must be honoured here or the next episode sat loaded but
+      // never started (the CS-2 symptom). One re-assertion per flight is
+      // safe: the per-progress-tick flood that made `if (autoPlay) play()`
+      // undo explicit pauses in CS-1 is structurally gone — one load per
+      // episode transition, ever.
+      if (flight.requestPlay && !_player.isPlaying) {
+        await _player.play();
+      }
+      if (!completer.isCompleted) {
+        completer.complete();
+      }
+    } catch (e, stackTrace) {
+      _reportFailedLoad(episode.id.id, e, stackTrace);
+      if (!completer.isCompleted) {
+        completer.completeError(e, stackTrace);
+      }
+    } finally {
+      forgetFlight();
+    }
   }
 
   void _reportFailedLoad(String episodeKey, Object e, StackTrace stackTrace) {

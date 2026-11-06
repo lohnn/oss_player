@@ -29,9 +29,9 @@ void main() {
       expect(await harness.isPlaying(), isTrue);
       expect(harness.platformPlayer.lastLoadedUri, episodeB.url);
       expect(harness.repository.episodeStatusReads, greaterThan(0));
-      // The streaming contract: the load went straight to the player; the
-      // download pipeline was never consulted.
-      expect(harness.loaderFor(episodeB).tryDownloadCalls, 0);
+      // The streaming contract: the load went straight to the player; there
+      // is no download pipeline left to consult (that half of the pin was
+      // the RED run of the removal and retired with the pipeline).
     },
     timeout: const Timeout(Duration(seconds: 30)),
   );

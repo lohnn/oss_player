@@ -23,7 +23,7 @@ void main() {
 
   test(
     'auto-advance: two racing loads of the same next episode perform one '
-    "audio-source load, never a download, and preserve auto-play (was: the "
+    'audio-source load, never a download, and preserve auto-play (was: the '
     "queue echo's non-auto-play load won and the next episode sat "
     'loaded-but-paused)',
     () async {
@@ -32,13 +32,13 @@ void main() {
       final harness = AudioPlayerPodHarness(episodes: [episodeA, episodeB]);
       await harness.boot();
 
-      // The user plays the latest episode; it starts streaming.
+      // The user plays the latest episode; it starts streaming. The load is
+      // direct (no download pipeline to consult — removed with the download
+      // support; the RED run of this suite pinned that via
+      // tryDownloadCalls-before-the-pipeline-existed).
       final playFuture = harness.pod().playEpisode(episodeA);
       await playFuture;
       expect(await harness.isPlaying(), isTrue);
-      expect(harness.loaderFor(episodeA).tryDownloadCalls, 0,
-          reason: 'streaming contract: even the play path must not consult '
-              'the download pipeline');
 
       // The episode ends. removeFromQueue parks on its gate — the DELETE /
       // re-POST churn between the queue mutation and playing the next item
@@ -62,16 +62,12 @@ void main() {
       await pumpEventQueue(times: 10);
 
       // Incident signatures, streaming era:
-      // (1) the download pipeline was NEVER consulted (was: one or more
-      //     full-episode downloads per load — the download-event timing
-      //     decided who won);
+      // (1) the download pipeline is gone entirely (the removal was pinned
+      //     in the RED run; structurally there is nothing to consult);
       // (2) exactly one audio-source load for the next episode (was: the
       //     incident's two same-millisecond media fetches);
       // (3) auto-play actually happens (the report: "does not play … just
       //     stuck there").
-      expect(harness.loaderFor(episodeB).tryDownloadCalls, 0,
-          reason: 'streaming contract: the transition races direct loads, '
-              'no download stream in between');
       expect(
         harness.platformPlayer.loadedUris
             .where((uri) => uri == episodeB.url)
@@ -80,35 +76,6 @@ void main() {
         reason: 'racing callers join one in-flight load; one source-set',
       );
       expect(await harness.isPlaying(), isTrue);
-    },
-    timeout: const Timeout(Duration(seconds: 30)),
-  );
-
-  test(
-    'two loadNextEpisode calls while one load is in flight produce exactly '
-    'one audio-source load (was: the second call cancelled and restarted '
-    'the first one)',
-    () async {
-      final episodeB = fakePlaylistEpisode('239-261014');
-      final harness = AudioPlayerPodHarness(episodes: [episodeB]);
-      await harness.boot();
-
-      // Two racing calls, launched back-to-back before either resolves —
-      // the structure of the transition race without the playlist dance.
-      final first = harness.pod().loadNextEpisode(episodeB);
-      final second = harness.pod().loadNextEpisode(episodeB, autoPlay: true);
-      await Future.wait([first, second]);
-
-      // The strongest play intent among the racing callers wins: the second
-      // call asked for playback, so the joined flight must end playing.
-      expect(await harness.isPlaying(), isTrue);
-      // Exactly one source-set (the #97 guarantee, carried from "one
-      // download for concurrent subscribers" into the streaming world).
-      expect(harness.platformPlayer.loadedUris.length, 1);
-      expect(harness.platformPlayer.lastLoadedUri, episodeB.url);
-      // And the download pipeline never entered the picture.
-      expect(harness.loaderFor(episodeB).tryDownloadCalls, 0,
-          reason: 'streaming contract: loads go straight to the player');
     },
     timeout: const Timeout(Duration(seconds: 30)),
   );

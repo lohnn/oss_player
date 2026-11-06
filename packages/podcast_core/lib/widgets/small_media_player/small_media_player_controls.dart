@@ -87,14 +87,6 @@ class SmallMediaPlayerControls extends HookConsumerWidget {
                               imageSize: 60,
                             ),
                           ),
-                          // @TODO: Add download animation when supported again
-                          // if (episodeSnapshot.value case final episodeSnapshot?)
-                          //   SizedBox(
-                          //     width: 36,
-                          //     child: DownloadAnimation(
-                          //       episode: episodeSnapshot.episode,
-                          //     ),
-                          //   ),
                           const SizedBox(width: 8),
                           Expanded(child: Text(episode.title)),
                           if (showSkipButtons) MediaActionButton.back(),
