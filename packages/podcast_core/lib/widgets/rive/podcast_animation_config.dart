@@ -21,6 +21,8 @@ abstract class PodcastAnimationConfig {
   static PodcastAnimationConfig queue({required bool isAlreadyInQueue}) =>
       QueueAnimation(isActive: isAlreadyInQueue);
 
+  /// Kept as scaffolding for a future download re-implementation; see PR #99
+  /// review thread — download logic itself was removed in that rework.
   static PodcastAnimationConfig download({required double? progress}) =>
       DownloadAnimation(progress: progress);
 
@@ -38,6 +40,8 @@ class IdleAnimation extends PodcastAnimationConfig {
   Map<String, dynamic> params(BuildContext context) => {};
 }
 
+/// Kept as scaffolding for a future download re-implementation; see PR #99
+/// review thread — download logic itself was removed in that rework.
 class DownloadAnimation extends PodcastAnimationConfig {
   const DownloadAnimation({required this.progress});
 
