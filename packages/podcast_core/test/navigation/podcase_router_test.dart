@@ -11,8 +11,14 @@ import 'package:podcast_core/data/podcast_search.model.dart';
 import 'package:podcast_core/data/podcast_with_status.dart';
 import 'package:podcast_core/data/user_episode_status.model.dart';
 import 'package:podcast_core/gen/strings.g.dart';
+import 'package:podcast_core/exceptions/not_found_exceptions.dart';
 import 'package:podcast_core/navigation/podcase_router.dart';
 import 'package:podcast_core/repository.dart';
+import 'package:podcast_core/screens/error_screen.dart';
+import 'package:podcast_core/screens/logged_in/episode_details_screen/episode_details_screen_provider.dart';
+import 'package:podcast_core/screens/logged_in/podcast_details_screen/podcast_details_screen_provider.dart';
+import 'package:podcast_core/services/logging/log_sink.dart';
+import 'package:podcast_core/services/logging/log_sink_provider.dart';
 import 'package:podcast_core/screens/logged_in/episode_details_screen/episode_details_screen.dart';
 import 'package:podcast_core/screens/logged_in/playlist_screen.dart';
 import 'package:podcast_core/screens/logged_in/podcast_details_screen/podcast_details_screen.dart';
@@ -55,6 +61,20 @@ class _TestPodcastSearch implements PodcastSearch {
 
 /// Records search calls so tests can pin what the search link actually
 /// fetched. Everything else is the pre-existing empty behavior.
+/// Records error events so tests can pin that failures are reported, not
+/// swallowed (the silent-load-failure canon family).
+class _RecordingLogSink extends LogSink {
+  final events = <LogEvent>[];
+
+  List<LogEvent> get errorEvents =>
+      events.where((event) => event.level == LogLevel.error).toList();
+
+  @override
+  void log(LogEvent event) {
+    events.add(event);
+  }
+}
+
 class _RoutingTestRepository implements Repository {
   _RoutingTestRepository({this.searchResults = const []});
 
@@ -659,4 +679,87 @@ void main() {
     });
   });
 
+  group('semantically-unknown ids', () {
+    const _unknownSha =
+        'f9e8d7c6b5a4938271605f4e3d2c1b0a998877665544332211ffeeddccbbaa0099';
+
+    testWidgets('a podcast link with a well-formed but unknown id renders the '
+        'error state and reports the id to the LogSink', (tester) async {
+      final repository = _RoutingTestRepository();
+      final logSink = _RecordingLogSink();
+
+      final router = await _pumpRouter(
+        tester,
+        homeBuilder: (_) => const _Marker('home-marker'),
+        initialLocation: '/p/${Uri.encodeComponent(_unknownSha)}',
+        overrides: [
+          repositoryProvider.overrideWith((ref) => repository),
+          logSinkProvider.overrideWithValue(logSink),
+        ],
+      );
+      await tester.pumpIdleFrames();
+
+      expect(find.byType(ErrorScreen), findsOneWidget);
+      expect(logSink.errorEvents, isNotEmpty);
+      expect(
+        logSink.errorEvents.first.context['podcast_id'],
+        _unknownSha,
+      );
+    });
+
+    test('podcast details provider throws PodcastNotFoundException and reports '
+        'it through the LogSink', () async {
+      final repository = _RoutingTestRepository();
+      final logSink = _RecordingLogSink();
+      final container = ProviderContainer(
+        overrides: [
+          repositoryProvider.overrideWith((ref) => repository),
+          logSinkProvider.overrideWithValue(logSink),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await expectLater(
+        container.read(
+          podcastDetailsScreenProvider(
+            podcastId: PodcastId(_unknownSha),
+          ).future,
+        ),
+        throwsA(isA<PodcastNotFoundException>()),
+      );
+      expect(logSink.errorEvents, isNotEmpty);
+      expect(
+        logSink.errorEvents.first.context['podcast_id'],
+        _unknownSha,
+      );
+    });
+
+    test('episode details provider throws EpisodeNotFoundException and reports '
+        'it through the LogSink', () async {
+      final repository = _RoutingTestRepository();
+      final logSink = _RecordingLogSink();
+      final container = ProviderContainer(
+        overrides: [
+          repositoryProvider.overrideWith((ref) => repository),
+          logSinkProvider.overrideWithValue(logSink),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      await expectLater(
+        container.read(
+          episodeDetailsScreenProvider(
+            podcastId: PodcastId(_unknownSha),
+            episodeId: EpisodeId(_guidUrl),
+          ).future,
+        ),
+        throwsA(isA<EpisodeNotFoundException>()),
+      );
+      expect(logSink.errorEvents, isNotEmpty);
+      expect(
+        logSink.errorEvents.first.context['episode_id'],
+        _guidUrl,
+      );
+    });
+  });
 }
