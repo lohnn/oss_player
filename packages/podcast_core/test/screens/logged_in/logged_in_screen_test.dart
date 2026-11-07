@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
-import 'package:podcast_core/data/episode.model.dart' show EpisodeId;
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:podcast_core/data/podcast.model.dart' show PodcastId;
 import 'package:podcast_core/gen/strings.g.dart';
 import 'package:podcast_core/navigation/podcase_router.dart';
-import 'package:podcast_core/screens/logged_in/episode_details_screen/episode_details_screen.dart';
 import 'package:podcast_core/screens/logged_in/logged_in_screen.dart';
 import 'package:podcast_core/screens/logged_in/podcast_details_screen/podcast_details_screen.dart';
 
@@ -38,8 +37,10 @@ void main() {
     );
 
     await tester.pumpWidget(
-      TranslationProvider(
-        child: MaterialApp(home: LoggedInScreen(router: router)),
+      ProviderScope(
+        child: TranslationProvider(
+          child: MaterialApp(home: LoggedInScreen(router: router)),
+        ),
       ),
     );
     await tester.pump(const Duration(milliseconds: 16));
@@ -54,8 +55,10 @@ void main() {
     );
 
     await tester.pumpWidget(
-      TranslationProvider(
-        child: MaterialApp(home: LoggedInScreen(router: router)),
+      ProviderScope(
+        child: TranslationProvider(
+          child: MaterialApp(home: LoggedInScreen(router: router)),
+        ),
       ),
     );
     await tester.pump(const Duration(milliseconds: 16));
@@ -65,8 +68,12 @@ void main() {
     await tester.pump(const Duration(milliseconds: 16));
 
     // The embedded Router is the same instance: the push landed on the /p/
-    // table with the decoded id.
-    expect(router.routeInformationProvider.value.uri, Uri.parse('/p/$_encPodcast'));
+    // table with the decoded id. (routeInformationProvider only moves on
+    // go-level navigations, so the delegate's matched location is probed.)
+    expect(
+      router.routerDelegate.currentConfiguration.last.matchedLocation,
+      '/p/$_encPodcast',
+    );
     final details = tester.widget<PodcastDetailsScreen>(
       find.byType(PodcastDetailsScreen),
     );

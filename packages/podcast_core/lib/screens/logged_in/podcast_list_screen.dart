@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:hooks_riverpod/misc.dart';
 import 'package:podcast_core/data/podcast_with_status.dart';
+import 'package:podcast_core/navigation/podcase_router.dart';
 import 'package:podcast_core/providers/podcasts_with_status_provider.dart';
 import 'package:podcast_core/screens/async_value_screen.dart';
 import 'package:podcast_core/widgets/podcast_list_tile.dart';
@@ -25,7 +26,7 @@ class PodcastListScreen extends AsyncValueWidget<List<PodcastWithStatus>> {
         actions: [
           IconButton(
             tooltip: 'Search for podcasts',
-            onPressed: () => context.push('/search'),
+            onPressed: () => context.push('/s'),
             icon: const Icon(Icons.search),
           ),
         ],
@@ -49,7 +50,7 @@ class PodcastListScreen extends AsyncValueWidget<List<PodcastWithStatus>> {
                   podcast,
                   showDot: hasUnseenEpisodes,
                   onTap: () {
-                    context.push('/${podcast.id.safe}', extra: podcast);
+                    context.push(podcastDetailsPath(podcast.id), extra: podcast);
                   },
                   trailing: Text(
                     '${listenedEpisodes ?? '?'}/${totalEpisodes ?? '?'}',
