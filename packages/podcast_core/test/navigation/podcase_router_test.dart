@@ -10,19 +10,19 @@ import 'package:podcast_core/data/podcast.model.dart';
 import 'package:podcast_core/data/podcast_search.model.dart';
 import 'package:podcast_core/data/podcast_with_status.dart';
 import 'package:podcast_core/data/user_episode_status.model.dart';
-import 'package:podcast_core/gen/strings.g.dart';
 import 'package:podcast_core/exceptions/not_found_exceptions.dart';
+import 'package:podcast_core/gen/strings.g.dart';
 import 'package:podcast_core/navigation/podcase_router.dart';
 import 'package:podcast_core/repository.dart';
 import 'package:podcast_core/screens/error_screen.dart';
-import 'package:podcast_core/screens/logged_in/episode_details_screen/episode_details_screen_provider.dart';
-import 'package:podcast_core/screens/logged_in/podcast_details_screen/podcast_details_screen_provider.dart';
-import 'package:podcast_core/services/logging/log_sink.dart';
-import 'package:podcast_core/services/logging/log_sink_provider.dart';
 import 'package:podcast_core/screens/logged_in/episode_details_screen/episode_details_screen.dart';
+import 'package:podcast_core/screens/logged_in/episode_details_screen/episode_details_screen_provider.dart';
 import 'package:podcast_core/screens/logged_in/playlist_screen.dart';
 import 'package:podcast_core/screens/logged_in/podcast_details_screen/podcast_details_screen.dart';
+import 'package:podcast_core/screens/logged_in/podcast_details_screen/podcast_details_screen_provider.dart';
 import 'package:podcast_core/screens/logged_in/podcast_search_screen.dart';
+import 'package:podcast_core/services/logging/log_sink.dart';
+import 'package:podcast_core/services/logging/log_sink_provider.dart';
 
 /// Realistic identifiers: a podcast id is the sha256 of the feed URL (64 hex
 /// chars) and an episode id is `<podcastsha>:<guid>` where the guid may itself
@@ -88,14 +88,19 @@ class _RoutingTestRepository implements Repository {
   }
 
   @override
-  Stream<List<PodcastWithStatus>> watchPodcasts() => const Stream.empty();
+  Stream<List<PodcastWithStatus>> watchPodcasts() =>
+      Stream.value(const <PodcastWithStatus>[]);
 
   @override
   Future<void> updateLastSeenPodcast(PodcastId podcast) async {}
 
   @override
   Stream<List<UserEpisodeStatus>> watchUserEpisodeStatuses() =>
-      const Stream.empty();
+      Stream.value(const <UserEpisodeStatus>[]);
+
+  @override
+  Stream<List<Episode>> watchEpisodesFor({required PodcastId podcast}) =>
+      Stream.value(const <Episode>[]);
 
   @override
   dynamic noSuchMethod(Invocation invocation) {
@@ -680,7 +685,7 @@ void main() {
   });
 
   group('semantically-unknown ids', () {
-    const _unknownSha =
+    const unknownSha =
         'f9e8d7c6b5a4938271605f4e3d2c1b0a998877665544332211ffeeddccbbaa0099';
 
     testWidgets('a podcast link with a well-formed but unknown id renders the '
@@ -688,22 +693,28 @@ void main() {
       final repository = _RoutingTestRepository();
       final logSink = _RecordingLogSink();
 
-      final router = await _pumpRouter(
+      await _pumpRouter(
         tester,
         homeBuilder: (_) => const _Marker('home-marker'),
-        initialLocation: '/p/${Uri.encodeComponent(_unknownSha)}',
+        initialLocation: '/p/${Uri.encodeComponent(unknownSha)}',
         overrides: [
           repositoryProvider.overrideWith((ref) => repository),
           logSinkProvider.overrideWithValue(logSink),
         ],
       );
-      await tester.pumpIdleFrames();
+      // The not-found surfaces through async provider chains; settle until
+      // the error screen rendered (bounded).
+      for (var i = 0;
+          i < 20 && find.byType(ErrorScreen).evaluate().isEmpty;
+          i++) {
+        await tester.pump(const Duration(milliseconds: 50));
+      }
 
       expect(find.byType(ErrorScreen), findsOneWidget);
       expect(logSink.errorEvents, isNotEmpty);
       expect(
         logSink.errorEvents.first.context['podcast_id'],
-        _unknownSha,
+        unknownSha,
       );
     });
 
@@ -719,18 +730,24 @@ void main() {
       );
       addTearDown(container.dispose);
 
+      // Pin the autoDispose chain alive while its future throws.
+      final sub = container.listen(
+        podcastDetailsScreenProvider(podcastId: PodcastId(unknownSha)),
+        (_, _) {},
+      );
       await expectLater(
         container.read(
           podcastDetailsScreenProvider(
-            podcastId: PodcastId(_unknownSha),
+            podcastId: PodcastId(unknownSha),
           ).future,
         ),
         throwsA(isA<PodcastNotFoundException>()),
       );
+      sub.close();
       expect(logSink.errorEvents, isNotEmpty);
       expect(
         logSink.errorEvents.first.context['podcast_id'],
-        _unknownSha,
+        unknownSha,
       );
     });
 
@@ -746,15 +763,24 @@ void main() {
       );
       addTearDown(container.dispose);
 
+      // Pin the autoDispose chain alive while its future throws.
+      final sub = container.listen(
+        episodeDetailsScreenProvider(
+          podcastId: PodcastId(unknownSha),
+          episodeId: EpisodeId(_guidUrl),
+        ),
+        (_, _) {},
+      );
       await expectLater(
         container.read(
           episodeDetailsScreenProvider(
-            podcastId: PodcastId(_unknownSha),
+            podcastId: PodcastId(unknownSha),
             episodeId: EpisodeId(_guidUrl),
           ).future,
         ),
         throwsA(isA<EpisodeNotFoundException>()),
       );
+      sub.close();
       expect(logSink.errorEvents, isNotEmpty);
       expect(
         logSink.errorEvents.first.context['episode_id'],
