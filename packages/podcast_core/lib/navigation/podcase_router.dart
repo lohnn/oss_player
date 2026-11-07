@@ -207,7 +207,9 @@ GoRouter createPodcaseRouter({
         routes: [
           GoRoute(
             path: '/s',
-            builder: (context, state) => const PodcastSearchScreen(),
+            builder: (context, state) => PodcastSearchScreen(
+              initialQuery: state.uri.queryParameters['q'],
+            ),
           ),
           GoRoute(
             path: '/playlist',

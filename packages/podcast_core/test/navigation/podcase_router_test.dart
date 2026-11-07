@@ -605,7 +605,14 @@ void main() {
           ],
         );
       });
-      await tester.pumpIdleFrames();
+      // The seed triggers its search from a post-frame callback; settle until
+      // the fetch landed (bounded).
+      for (var i = 0;
+          i < 10 && !repository.findPodcastsCalls.contains('deep link');
+          i++) {
+        await tester.pump(const Duration(milliseconds: 50));
+      }
+      await tester.pump(const Duration(milliseconds: 16));
 
       // The query is seeded into the search field, fetched exactly once, and
       // the results render.
