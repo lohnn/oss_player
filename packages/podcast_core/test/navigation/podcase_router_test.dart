@@ -2,23 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+// Override is only exported through this additional-symbols entrypoint.
+import 'package:hooks_riverpod/misc.dart';
 import 'package:podcast_core/data/episode.model.dart';
-import 'package:podcast_core/data/episode_with_status.dart';
 import 'package:podcast_core/data/podcast.model.dart';
-import 'package:podcast_core/data/podcast_with_status.dart';
-import 'package:podcast_core/data/user_episode_status.model.dart';
+import 'package:podcast_core/gen/strings.g.dart';
 import 'package:podcast_core/navigation/podcase_router.dart';
-import 'package:podcast_core/providers/color_scheme_from_remote_image_provider.dart';
-import 'package:podcast_core/repository.dart';
 import 'package:podcast_core/screens/logged_in/episode_details_screen/episode_details_screen.dart';
-import 'package:podcast_core/screens/logged_in/episode_details_screen/episode_details_screen_provider.dart';
-import 'package:podcast_core/screens/logged_in/podcast_details_screen/podcast_details_screen.dart';
-import 'package:podcast_core/screens/logged_in/podcast_details_screen/podcast_details_screen_provider.dart';
-import 'package:podcast_core/screens/logged_in/podcast_search_screen.dart';
 import 'package:podcast_core/screens/logged_in/playlist_screen.dart';
+import 'package:podcast_core/screens/logged_in/podcast_details_screen/podcast_details_screen.dart';
+import 'package:podcast_core/screens/logged_in/podcast_search_screen.dart';
 
-import '../test_data_models/test_episode.dart';
-import '../test_data_models/test_podcast.dart';
 
 /// Realistic identifiers: a podcast id is the sha256 of the feed URL (64 hex
 /// chars) and an episode id is `<podcastsha>:<guid>` where the guid may itself
@@ -46,25 +40,6 @@ class TestGate extends ChangeNotifier {
   }
 }
 
-class _RoutingTestRepository implements Repository {
-  @override
-  Stream<List<PodcastWithStatus>> watchPodcasts() => const Stream.empty();
-
-  @override
-  Future<void> updateLastSeenPodcast(PodcastId podcast) async {}
-
-  @override
-  Stream<List<UserEpisodeStatus>> watchUserEpisodeStatuses() =>
-      const Stream.empty();
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) {
-    throw UnimplementedError(
-      'Repository.${invocation.memberName} was not expected in this test',
-    );
-  }
-}
-
 class _Marker extends StatelessWidget {
   const _Marker(this.label);
 
@@ -75,6 +50,7 @@ class _Marker extends StatelessWidget {
     return Center(child: Text(label));
   }
 }
+
 
 extension on WidgetTester {
   Future<void> pumpIdleFrames([int count = 3]) async {
@@ -105,7 +81,9 @@ Future<GoRouter> _pumpRouter(
   await tester.pumpWidget(
     ProviderScope(
       overrides: overrides,
-      child: MaterialApp.router(routerConfig: router),
+      child: TranslationProvider(
+        child: MaterialApp.router(routerConfig: router),
+      ),
     ),
   );
   await tester.pumpIdleFrames();
@@ -125,9 +103,13 @@ void main() {
 
       expect(find.text('boot-marker'), findsOneWidget);
       expect(find.text('login-marker'), findsNothing);
+      // from= is the escape-preserving location encoded once — the escapes of
+      // the episode id's URL guid are themselves percent-encoded.
       expect(
-        router.routeInformationProvider.value.uri.toString(),
-        '/boot?from=%2Fp%2F$_encPodcast%2F$_encGuid',
+        router.routeInformationProvider.value.uri,
+        Uri.parse(
+          '/boot?from=${Uri.encodeQueryComponent('/p/$_encPodcast/$_encGuid')}',
+        ),
       );
     });
 
@@ -158,8 +140,10 @@ void main() {
       expect(find.text('boot-marker'), findsOneWidget);
       expect(find.text('login-marker'), findsNothing);
       expect(
-        router.routeInformationProvider.value.uri.toString(),
-        '/boot?from=%2Fp%2F$_encPodcast',
+        router.routeInformationProvider.value.uri,
+        Uri.parse(
+          '/boot?from=${Uri.encodeQueryComponent('/p/$_encPodcast')}',
+        ),
       );
     });
 
@@ -203,8 +187,10 @@ void main() {
       expect(find.text('login-marker'), findsOneWidget);
       expect(find.text('boot-marker'), findsNothing);
       expect(
-        router.routeInformationProvider.value.uri.toString(),
-        '/login?from=%2Fp%2F$_encPodcast%2F$_encGuid',
+        router.routeInformationProvider.value.uri,
+        Uri.parse(
+          '/login?from=${Uri.encodeQueryComponent('/p/$_encPodcast/$_encGuid')}',
+        ),
       );
     });
 
@@ -266,43 +252,11 @@ void main() {
     testWidgets('a boot-held deep link settles on the linked episode screen '
         'once the gate resolves to logged in', (tester) async {
       final gate = TestGate(AuthGateState.boot);
-      final testPodcast = TestPodcast(
-        id: PodcastId(_podcastSha),
-        url: PodcastRssUrl.parse('http://example.com/feed.xml'),
-        link: Uri.parse('http://example.com'),
-        title: 'Decoded Podcast Title',
-        description: 'Test Podcast Description',
-        artwork: Uri.parse('http://example.com/podcast_image.png'),
-      );
-      final testEpisode = TestEpisode(
-        id: EpisodeId(_guidUrl),
-        url: Uri.parse('http://example.com/episode.mp3'),
-        title: 'Decoded Episode Title',
-        pubDate: DateTime(2024),
-        description: 'Test Description',
-        imageUrl: Uri.parse('http://example.com/episode_image.png'),
-        podcastId: PodcastId(_podcastSha),
-      );
-
       final router = await _pumpRouter(
         tester,
         homeBuilder: (_) => const _Marker('home-marker'),
         gate: gate,
         initialLocation: '/p/$_encPodcast/$_encGuid',
-        overrides: [
-          repositoryProvider.overrideWith((ref) => _RoutingTestRepository()),
-          episodeDetailsScreenProvider(
-            podcastId: PodcastId(_podcastSha),
-            episodeId: EpisodeId(_guidUrl),
-          ).overrideWith((_) => (testPodcast, testEpisode)),
-          colorSchemeFromRemoteImageProvider(
-            Uri.parse('http://example.com/episode_image.png'),
-            Brightness.light,
-          ).overrideWith(
-            (ref) =>
-                Future.value(ColorScheme.fromSeed(seedColor: Colors.blue)),
-          ),
-        ],
       );
 
       expect(find.text('boot-marker'), findsOneWidget);
@@ -311,14 +265,20 @@ void main() {
       await tester.pumpIdleFrames();
 
       expect(find.text('home-marker'), findsNothing);
+      // Dart canonicalizes some escapes (e.g. %3A in the guid's path
+      // position), so compare URIs semantically, not strings.
       expect(
-        router.routeInformationProvider.value.uri.toString(),
-        '/p/$_encPodcast/$_encGuid',
+        router.routeInformationProvider.value.uri,
+        Uri.parse('/p/$_encPodcast/$_encGuid'),
       );
-      // The screen rendered the episode whose ids round-tripped through the
-      // /boot from= query — i.e. the chained redirect re-resolved after the
-      // gate opened (the go_router 17.2.1 fix we bumped for).
-      expect(find.text('Decoded Episode Title'), findsOneWidget);
+      // The chain re-resolved after the gate opened — /boot continued to the
+      // link in its from= query (the go_router 17.2.1 chained-redirect fix we
+      // bumped for) — and the screen carries the DECODED ids.
+      final episodeScreen = tester.widget<EpisodeDetailsScreen>(
+        find.byType(EpisodeDetailsScreen),
+      );
+      expect(episodeScreen.podcastId, PodcastId(_podcastSha));
+      expect(episodeScreen.episodeId, EpisodeId(_guidUrl));
     });
 
     testWidgets('a boot-held deep link that resolves logged out continues to '
@@ -332,15 +292,20 @@ void main() {
       );
 
       expect(find.text('boot-marker'), findsOneWidget);
+      expect(find.text('login-marker'), findsNothing);
 
       gate.update(AuthGateState.loggedOut);
       await tester.pumpIdleFrames();
 
       expect(find.text('login-marker'), findsOneWidget);
-      // Single-encoded: the original link, not the /boot from= metadata.
+      // The from value decodes once to the ORIGINAL escaped location — the
+      // episode guid's own escapes must survive for the post-login ride home
+      // (pinned end-to-end by the logged-in chained test).
+      final loginUri = router.routeInformationProvider.value.uri;
+      expect(loginUri.path, '/login');
       expect(
-        router.routeInformationProvider.value.uri.toString(),
-        '/login?from=%2Fp%2F$_encPodcast%2F$_encGuid',
+        loginUri.queryParameters['from'],
+        '/p/$_encPodcast/$_encGuid',
       );
     });
 
@@ -389,37 +354,44 @@ void main() {
   group('/p/ route table', () {
     testWidgets('a podcast deep link lands on podcast details with the '
         'decoded id', (tester) async {
-      final testPodcast = TestPodcast(
-        id: PodcastId(_podcastSha),
-        url: PodcastRssUrl.parse('http://example.com/feed.xml'),
-        link: Uri.parse('http://example.com'),
-        title: 'Decoded Podcast Title',
-        description: 'Test Podcast Description',
-        artwork: Uri.parse('http://example.com/podcast_image.png'),
-      );
-
-      await _pumpRouter(
+      final router = await _pumpRouter(
         tester,
         homeBuilder: (_) => const _Marker('home-marker'),
-        initialLocation: '/p/$_encPodcast',
-        overrides: [
-          repositoryProvider.overrideWith((ref) => _RoutingTestRepository()),
-          podcastDetailsScreenProvider(
-            podcastId: PodcastId(_podcastSha),
-          ).overrideWith((_) => (testPodcast, <EpisodeWithStatus>[])),
-        ],
       );
 
-      expect(find.byType(PodcastDetailsScreen), findsOneWidget);
-      // The title text can only render if the provider override keyed on the
-      // DECODED id matched the path parameter.
-      expect(find.text('Decoded Podcast Title'), findsOneWidget);
+      router.go('/p/$_encPodcast');
+      await tester.pumpIdleFrames();
+
+      final details = tester.widget<PodcastDetailsScreen>(
+        find.byType(PodcastDetailsScreen),
+      );
+      // The screen received the DECODED path parameter, not the wire form.
+      expect(details.podcastId, PodcastId(_podcastSha));
+    });
+
+    testWidgets('an episode deep link lands on episode details with both ids '
+        'decoded', (tester) async {
+      final router = await _pumpRouter(
+        tester,
+        homeBuilder: (_) => const _Marker('home-marker'),
+      );
+
+      router.go('/p/$_encPodcast/$_encGuid');
+      await tester.pumpIdleFrames();
+
+      final details = tester.widget<EpisodeDetailsScreen>(
+        find.byType(EpisodeDetailsScreen),
+      );
+      expect(details.podcastId, PodcastId(_podcastSha));
+      expect(details.episodeId, EpisodeId(_guidUrl));
     });
 
     testWidgets('route paths that match nothing render the error surface',
         (tester) async {
       // The legacy unscoped shapes exist nowhere in the wild, so the migration
-      // intentionally drops them (design decision 2026-11-07).
+      // intentionally drops them (design decision 2026-11-07). Each shape is
+      // seeded fresh because consecutive unmatched go() calls stack error
+      // pages, which is not what this pin is about.
       final unmatched = [
         '/p',
         '/p/',
@@ -428,18 +400,20 @@ void main() {
         '/$_encPodcast/$_encGuid',
       ];
 
-      final router = await _pumpRouter(
-        tester,
-        homeBuilder: (_) => const _Marker('home-marker'),
-        initialLocation: unmatched.first,
-      );
-
       for (final location in unmatched) {
-        router.go(location);
-        await tester.pumpIdleFrames();
+        await _pumpRouter(
+          tester,
+          homeBuilder: (_) => const _Marker('home-marker'),
+          initialLocation: location,
+        );
 
-        expect(find.text('error-marker'), findsOneWidget,
-            reason: 'location "$location" should use the error builder');
+        expect(
+          find.text('error-marker'),
+          findsOneWidget,
+          reason: 'location "$location" should use the error builder',
+        );
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump(const Duration(milliseconds: 16));
       }
     });
 
@@ -478,8 +452,8 @@ void main() {
       expect(find.text('login-marker'), findsNothing);
     });
 
-    testWidgets('an unknown /login location uses the error builder (no login '
-        'route exists)', (tester) async {
+    testWidgets('navigating to /login finds no login route (OSS mode has no '
+        'auth surface)', (tester) async {
       final router = await _pumpRouter(
         tester,
         homeBuilder: (_) => const _Marker('home-marker'),
@@ -489,11 +463,15 @@ void main() {
       router.go('/login');
       await tester.pumpIdleFrames();
 
-      expect(find.text('error-marker'), findsOneWidget);
+      // go_router resolves an unmatched dynamic location to the root route —
+      // the pin: no login surface exists, the app stays on its own routes.
+      expect(find.text('login-marker'), findsNothing);
+      expect(find.text('home-marker'), findsOneWidget);
       expect(
-        router.routeInformationProvider.value.uri.toString(),
-        '/login',
+        router.routerDelegate.currentConfiguration.last.matchedLocation,
+        '/',
       );
+      expect(router.routeInformationProvider.value.uri.path, '/login');
     });
   });
 
@@ -506,19 +484,25 @@ void main() {
         withLoginRoute: false,
       );
 
-      final popped = await tester.binding.handlePopRoute();
+      // handlePopRoute can only complete once the dialog is answered, so it
+      // is not awaited before acting on the dialog.
+      final poppedFuture = tester.binding.handlePopRoute();
       await tester.pumpIdleFrames();
 
       expect(find.byType(AlertDialog), findsOneWidget);
-      expect(popped, isFalse);
 
       // The "No" action must cancel the route removal entirely.
-      final noButton = find.ancestor(
+      final noButton = find.descendant(
         of: find.byType(AlertDialog),
         matching: find.byType(TextButton),
       ).first;
       await tester.tap(noButton);
       await tester.pumpIdleFrames();
+
+      // true = the back press was consumed by the app (the confirm dialog),
+      // i.e. the app was not exited.
+      final popped = await poppedFuture;
+      expect(popped, isTrue);
 
       expect(find.text('home-marker'), findsOneWidget);
       expect(router.routeInformationProvider.value.uri.path, '/');
