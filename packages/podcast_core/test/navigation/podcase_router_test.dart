@@ -4,15 +4,19 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 // Override is only exported through this additional-symbols entrypoint.
 import 'package:hooks_riverpod/misc.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 import 'package:podcast_core/data/episode.model.dart';
 import 'package:podcast_core/data/podcast.model.dart';
+import 'package:podcast_core/data/podcast_search.model.dart';
+import 'package:podcast_core/data/podcast_with_status.dart';
+import 'package:podcast_core/data/user_episode_status.model.dart';
 import 'package:podcast_core/gen/strings.g.dart';
 import 'package:podcast_core/navigation/podcase_router.dart';
+import 'package:podcast_core/repository.dart';
 import 'package:podcast_core/screens/logged_in/episode_details_screen/episode_details_screen.dart';
 import 'package:podcast_core/screens/logged_in/playlist_screen.dart';
 import 'package:podcast_core/screens/logged_in/podcast_details_screen/podcast_details_screen.dart';
 import 'package:podcast_core/screens/logged_in/podcast_search_screen.dart';
-
 
 /// Realistic identifiers: a podcast id is the sha256 of the feed URL (64 hex
 /// chars) and an episode id is `<podcastsha>:<guid>` where the guid may itself
@@ -23,6 +27,63 @@ const _guidUrl = 'https://feeds.example.com/guid/1';
 final _encPodcast = Uri.encodeComponent(_podcastSha);
 final _encGuid = Uri.encodeComponent(_guidUrl);
 
+class _TestPodcastSearch implements PodcastSearch {
+  @override
+  PodcastSearchId get id => PodcastSearchId(1);
+
+  @override
+  PodcastRssUrl get url => PodcastRssUrl.parse('http://example.com/feed.xml');
+
+  @override
+  String get title => 'Deep Link Radio';
+
+  @override
+  String get description => 'A podcast found by deep link';
+
+  @override
+  String get author => 'Example';
+
+  @override
+  Uri get artwork => Uri.parse('http://example.com/artwork.png');
+
+  @override
+  String get language => 'en';
+
+  @override
+  Map<int, String> get categories => const {};
+}
+
+/// Records search calls so tests can pin what the search link actually
+/// fetched. Everything else is the pre-existing empty behavior.
+class _RoutingTestRepository implements Repository {
+  _RoutingTestRepository({this.searchResults = const []});
+
+  final List<PodcastSearch> searchResults;
+  final findPodcastsCalls = <String?>[];
+
+  @override
+  Future<List<PodcastSearch>> findPodcasts([String? searchTerm]) async {
+    findPodcastsCalls.add(searchTerm);
+    return searchResults;
+  }
+
+  @override
+  Stream<List<PodcastWithStatus>> watchPodcasts() => const Stream.empty();
+
+  @override
+  Future<void> updateLastSeenPodcast(PodcastId podcast) async {}
+
+  @override
+  Stream<List<UserEpisodeStatus>> watchUserEpisodeStatuses() =>
+      const Stream.empty();
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) {
+    throw UnimplementedError(
+      'Repository.${invocation.memberName} was not expected in this test',
+    );
+  }
+}
 /// A controllable gate standing in for the app shell's auth state, wired to
 /// the router through [refreshListenable] exactly like the closed app's user
 /// stream bridge will be.
@@ -526,4 +587,69 @@ void main() {
       expect(find.byType(AlertDialog), findsNothing);
     });
   });
+
+  group('search links (/s?q=)', () {
+    testWidgets('a search link with a query seeds the field and fetches '
+        'results', (tester) async {
+      final repository = _RoutingTestRepository(
+        searchResults: [_TestPodcastSearch()],
+      );
+
+      await mockNetworkImagesFor(() async {
+        await _pumpRouter(
+          tester,
+          homeBuilder: (_) => const _Marker('home-marker'),
+          initialLocation: '/s?q=deep%20link',
+          overrides: [
+            repositoryProvider.overrideWith((ref) => repository),
+          ],
+        );
+      });
+      await tester.pumpIdleFrames();
+
+      // The query is seeded into the search field, fetched exactly once, and
+      // the results render.
+      expect(find.text('deep link'), findsOneWidget);
+      expect(repository.findPodcastsCalls, contains('deep link'));
+      expect(find.text('Deep Link Radio'), findsOneWidget);
+    });
+
+    testWidgets('/s without a query behaves exactly like today: no seed, no '
+        'extra search', (tester) async {
+      final repository = _RoutingTestRepository();
+
+      await _pumpRouter(
+        tester,
+        homeBuilder: (_) => const _Marker('home-marker'),
+        initialLocation: '/s',
+        overrides: [
+          repositoryProvider.overrideWith((ref) => repository),
+        ],
+      );
+      await tester.pumpIdleFrames();
+
+      // Only the screen's initial untargeted findPodcasts() ran.
+      expect(repository.findPodcastsCalls, [isNull]);
+      expect(find.text('deep link'), findsNothing);
+    });
+
+    testWidgets('a blank query is harmless: no seed, no extra search',
+        (tester) async {
+      final repository = _RoutingTestRepository();
+
+      await _pumpRouter(
+        tester,
+        homeBuilder: (_) => const _Marker('home-marker'),
+        initialLocation: '/s?q=%20%20',
+        overrides: [
+          repositoryProvider.overrideWith((ref) => repository),
+        ],
+      );
+      await tester.pumpIdleFrames();
+
+      expect(repository.findPodcastsCalls, [isNull]);
+      expect(find.text('deep link'), findsNothing);
+    });
+  });
+
 }
