@@ -2,113 +2,28 @@ import 'package:audio_service/audio_service.dart';
 import 'package:custom_adaptive_scaffold/custom_adaptive_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:podcast_core/data/episode.model.dart';
-import 'package:podcast_core/data/podcast.model.dart';
-import 'package:podcast_core/extensions/nullability_extensions.dart';
-import 'package:podcast_core/gen/strings.g.dart';
 import 'package:podcast_core/intents/play_pause_intent.dart';
-import 'package:podcast_core/providers/app_lifecycle_state_provider.dart';
-import 'package:podcast_core/providers/audio_player_provider.dart';
-import 'package:podcast_core/screens/logged_in/episode_details_screen/episode_details_screen.dart';
-import 'package:podcast_core/screens/logged_in/playlist_screen.dart';
-import 'package:podcast_core/screens/logged_in/podcast_details_screen/podcast_details_screen.dart';
-import 'package:podcast_core/screens/logged_in/podcast_list_screen.dart';
-import 'package:podcast_core/screens/logged_in/podcast_search_screen.dart';
 import 'package:podcast_core/widgets/currently_playing_information.dart';
 import 'package:podcast_core/widgets/podcast_actions.dart';
 import 'package:podcast_core/widgets/small_media_player/small_media_player_controls.dart';
 
-class LoggedInScreen extends HookConsumerWidget {
-  final WidgetBuilder? podcastListScreenBuilder;
-  final NavigatorObserver? navigatorObserver;
+/// The logged-in app surface: hosts the app-level [router] for the
+/// [AdaptiveLayout] body.
+///
+/// The router is created by the app shell (via `createPodcaseRouter`) so it
+/// exists from process start and engine-native deep links survive the auth
+/// gate; this screen only consumes it.
+class LoggedInScreen extends StatelessWidget {
+  final GoRouter router;
 
   const LoggedInScreen({
     super.key,
-    this.podcastListScreenBuilder,
-    this.navigatorObserver,
+    required this.router,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final router = useMemoized(
-      () => GoRouter(
-        observers: [?navigatorObserver],
-        routes: [
-          GoRoute(
-            onExit: (context, _) async {
-              final shouldClose = await showDialog<bool>(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text(context.t.exitDialog.title),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: Text(context.t.exitDialog.no),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, true),
-                        child: Text(context.t.exitDialog.yes),
-                      ),
-                    ],
-                  );
-                },
-              );
-
-              if (!(shouldClose ?? false)) return false;
-
-              // Kill the app if the user tries to pop the main screen
-              // Stopping the audio player
-              await ref.read(audioPlayerPodProvider.notifier).dispose();
-              // Stopping all sockets
-              ref.read(appLifecycleStatePodProvider.notifier).close();
-              // Closing the app
-              await SystemNavigator.pop();
-              return false;
-            },
-            path: '/',
-            builder: (context, state) =>
-                podcastListScreenBuilder?.let((builder) => builder(context)) ??
-                const PodcastListScreen(),
-            routes: [
-              GoRoute(
-                path: '/search',
-                builder: (context, state) => const PodcastSearchScreen(),
-              ),
-              GoRoute(
-                path: '/playlist',
-                builder: (context, state) => const PlaylistScreen(),
-              ),
-              GoRoute(
-                path: '/:podcastId',
-                builder: (context, state) => PodcastDetailsScreen(
-                  PodcastId.fromPathParameter(
-                    state.pathParameters['podcastId']!,
-                  ),
-                ),
-                routes: [
-                  GoRoute(
-                    path: '/:episodeId',
-                    builder: (context, state) => EpisodeDetailsScreen(
-                      podcastId: PodcastId.fromPathParameter(
-                        state.pathParameters['podcastId']!,
-                      ),
-                      episodeId: EpisodeId.fromPathParameter(
-                        state.pathParameters['episodeId']!,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-
+  Widget build(BuildContext context) {
     return PodcastActions(
       child: Shortcuts(
         shortcuts: const {

@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:podcast_core/data/episode.model.dart';
 import 'package:podcast_core/exceptions/todo_exception.dart';
 import 'package:podcast_core/gen/strings.g.dart';
+import 'package:podcast_core/navigation/podcase_router.dart';
 import 'package:podcast_core/providers/playlist_pod_provider.dart';
 import 'package:podcast_core/providers/podcasts_with_status_provider.dart';
 import 'package:podcast_core/widgets/plasma_sphere_widget.dart';
@@ -69,7 +70,10 @@ class CurrentlyPlayingInformation extends ConsumerWidget {
                         );
                       }
                       onNavigate(
-                        '/${podcast.podcast.id.safe}/${queue[index].id.safe}',
+                        episodeDetailsPath(
+                          podcast.podcast.id,
+                          queue[index].id,
+                        ),
                       );
                     },
                     flexWeights: [

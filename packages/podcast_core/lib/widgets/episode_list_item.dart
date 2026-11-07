@@ -4,6 +4,7 @@ import 'package:podcast_core/data/episode.model.dart';
 import 'package:podcast_core/extensions/duration_extensions.dart';
 import 'package:podcast_core/extensions/string_extensions.dart';
 import 'package:podcast_core/gen/strings.g.dart';
+import 'package:podcast_core/navigation/podcase_router.dart';
 import 'package:podcast_core/widgets/play_episode_button.dart';
 import 'package:podcast_core/widgets/pub_date_text.dart';
 import 'package:podcast_core/widgets/queue_button.dart';
@@ -31,7 +32,10 @@ class EpisodeListItem extends StatelessWidget {
       child: InkWell(
         onTap: () {
           context.push(
-            '/${episodeWithStatus.podcastId.safe}/${episodeWithStatus.id.safe}',
+            episodeDetailsPath(
+              episodeWithStatus.podcastId,
+              episodeWithStatus.id,
+            ),
           );
         },
         child: Padding(

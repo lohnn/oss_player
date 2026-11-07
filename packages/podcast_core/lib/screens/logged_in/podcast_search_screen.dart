@@ -10,15 +10,52 @@ import 'package:podcast_core/screens/modals/podcast_details_modal.dart';
 import 'package:podcast_core/widgets/plasma_sphere_widget.dart';
 import 'package:podcast_core/widgets/rounded_image.dart';
 
-class PodcastSearchScreen extends ConsumerWidget {
-  const PodcastSearchScreen({super.key});
+class PodcastSearchScreen extends ConsumerStatefulWidget {
+  /// Deep-search links (`/s?q=...`) seed the field with the query and
+  /// trigger one search; client-side only. Null/blank behaves exactly like
+  /// the pre-link screen.
+  final String? initialQuery;
+
+  const PodcastSearchScreen({super.key, this.initialQuery});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<PodcastSearchScreen> createState() =>
+      _PodcastSearchScreenState();
+}
+
+class _PodcastSearchScreenState extends ConsumerState<PodcastSearchScreen> {
+  final _searchController = SearchController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    final query = widget.initialQuery?.trim();
+    if (query == null || query.isEmpty) return;
+
+    _searchController.text = query;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ref.read(findPodcastProvider.notifier).search(
+            query,
+            skipDebounce: true,
+          );
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(findPodcastProvider);
     return Scaffold(
       appBar: AppBar(
         title: SearchAnchor(
+          searchController: _searchController,
           builder: (context, controller) {
             return SearchBar(
               autoFocus: true,

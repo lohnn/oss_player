@@ -11,18 +11,24 @@ part 'find_podcast_provider.g.dart';
 @riverpod
 class FindPodcast extends _$FindPodcast {
   final _searchDebouncer = Debouncer.long();
-  late Repository _repository;
+
+  // Assigned by build(); search can legitimately arrive (deep-search links
+  // seed + search from a post-frame callback) before build()'s repository
+  // await has resumed, so it stays nullable instead of `late`.
+  Repository? _repository;
   late LogSink _logSink;
-  late bool _mounted;
+
+  // True from notifier construction; build() only arms the disposal flag.
+  bool _mounted = true;
 
   @override
   Future<List<PodcastSearch>> build() async {
     _logSink = ref.watch(logSinkProvider);
-    _repository = await ref.watch(repositoryProvider.future);
-    _mounted = true;
+    final repository = await ref.watch(repositoryProvider.future);
+    _repository = repository;
     ref.onDispose(() => _mounted = false);
     try {
-      return _repository.findPodcasts();
+      return repository.findPodcasts();
     } catch (e, stackTrace) {
       _logSink.reportError(
         e,
@@ -39,7 +45,9 @@ class FindPodcast extends _$FindPodcast {
 
     Future<void> runFindPodcast() async {
       try {
-        final podcasts = await _repository.findPodcasts(searchTerm);
+        final podcasts = await (await _repositoryOrBuild()).findPodcasts(
+          searchTerm,
+        );
 
         if (_mounted) state = AsyncData(podcasts);
       } catch (e, stackTrace) {
@@ -63,10 +71,18 @@ class FindPodcast extends _$FindPodcast {
   }
 
   Future<void> subscribe(PodcastRssUrl podcast) async {
-    await _repository.subscribeToPodcast(podcast);
+    await (await _repositoryOrBuild()).subscribeToPodcast(podcast);
   }
 
-  Future<void> unsubscribe(PodcastRssUrl podcast) {
-    return _repository.unsubscribeFromPodcast(podcast);
+  Future<void> unsubscribe(PodcastRssUrl podcast) async {
+    return (await _repositoryOrBuild()).unsubscribeFromPodcast(podcast);
+  }
+
+  /// build() awaits the repository asynchronously; callers that can race it
+  /// (a deep-link seeded search fires from a post-frame callback) fall back
+  /// to reading the same future instead of touching a barely-`late` field.
+  Future<Repository> _repositoryOrBuild() async {
+    final assigned = _repository;
+    return assigned ?? await ref.read(repositoryProvider.future);
   }
 }

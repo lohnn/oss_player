@@ -26,7 +26,7 @@ final class EpisodeDetailsScreenProvider
     required EpisodeDetailsScreenFamily super.from,
     required ({PodcastId podcastId, EpisodeId episodeId}) super.argument,
   }) : super(
-         retry: null,
+         retry: podcastNotFoundAwareRetry,
          name: r'episodeDetailsScreenProvider',
          isAutoDispose: true,
          dependencies: null,
@@ -72,7 +72,7 @@ final class EpisodeDetailsScreenProvider
 }
 
 String _$episodeDetailsScreenHash() =>
-    r'7bac143c79530163b77ebe1b1ef3a06fc07b0f1f';
+    r'd338fa2d3a4a43ba26c855ce34bd434c34392b63';
 
 final class EpisodeDetailsScreenFamily extends $Family
     with
@@ -82,7 +82,7 @@ final class EpisodeDetailsScreenFamily extends $Family
         > {
   const EpisodeDetailsScreenFamily._()
     : super(
-        retry: null,
+        retry: podcastNotFoundAwareRetry,
         name: r'episodeDetailsScreenProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
